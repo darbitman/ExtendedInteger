@@ -22,18 +22,16 @@ UnsignedExtendedInt::UnsignedExtendedInt(const char* s) {
     if (strLength > 0) {
         strLength--;
     }
-    UnsignedExtendedInt result;
     UnsignedExtendedInt TEN;
     UnsignedExtendedInt powersOfTen;
     powersOfTen.setValueAtIndex(1, 0);
     TEN.setValueAtIndex(10, 0);
     UnsignedExtendedInt readInt;
-    for (unsigned int i = strLength - 1; i >= 0; i--) {
+    for (int i = strLength - 1; i >= 0; i--) {
         readInt.setValueAtIndex(s[i] - '0', 0);
-        result = result + (powersOfTen * readInt);
+        *this = *this + (powersOfTen * readInt);
         powersOfTen = powersOfTen * TEN;
     }
-    return;
 }
 
 UnsignedExtendedInt::~UnsignedExtendedInt() {}
@@ -96,6 +94,8 @@ const UnsignedExtendedInt& UnsignedExtendedInt::operator*(const UnsignedExtended
     unsigned long long x = 0;
     unsigned long long y = 0;
     unsigned long long z = 0;
+    unsigned int upperResultBits = 0;
+    unsigned int lowerResultBits = 0;
     unsigned int leftShiftValue = 0;
     UnsignedExtendedInt* returnValue = new UnsignedExtendedInt();
     UnsignedExtendedInt uExtIntTemp;
@@ -105,18 +105,24 @@ const UnsignedExtendedInt& UnsignedExtendedInt::operator*(const UnsignedExtended
             x = this->ext_int[i];
             y = obj.ext_int[j];
             z = x * y;
+            lowerResultBits = z & 0xFFFFFFFF;
+            upperResultBits = (z >> 32) & 0xFFFFFFFF;
 
             /****** Clear Previous Temp Values ******/
-            if (leftShiftValue > 0) {
-                uExtIntTemp.setValueAtIndex(0, leftShiftValue - 1);
-                if (leftShiftValue > 1) {
-                    uExtIntTemp.setValueAtIndex(0, leftShiftValue - 2);
-                }
+            //if (leftShiftValue >= 0) {
+            //    uExtIntTemp.setValueAtIndex(0, leftShiftValue);
+            //    if (leftShiftValue > 0) {
+            //        uExtIntTemp.setValueAtIndex(0, leftShiftValue - 2);
+            //    }
+            //}
+            for (int k = 0; k < ARRAY_SIZE; k++) {
+                uExtIntTemp.setValueAtIndex(0, k);
             }
-
-            uExtIntTemp.setValueAtIndex(z & 0xFFFFFFFF, leftShiftValue);                   // Extract first 32-bits
-            if (leftShiftValue <= ARRAY_SIZE) {
-                uExtIntTemp.setValueAtIndex((z >> 32) & 0xFFFFFFFF, leftShiftValue + 1);   // Extract upper 32-bits if they can be stored w/out overflow
+            if (leftShiftValue < ARRAY_SIZE) {
+                uExtIntTemp.setValueAtIndex(lowerResultBits, leftShiftValue);                   // Extract first 32-bits
+            }
+            if (leftShiftValue < ARRAY_SIZE - 1) {
+                uExtIntTemp.setValueAtIndex(upperResultBits, leftShiftValue + 1);   // Extract upper 32-bits if they can be stored w/out overflow
             }
             *returnValue = *returnValue + uExtIntTemp;
         }
@@ -130,11 +136,12 @@ const UnsignedExtendedInt& UnsignedExtendedInt::operator/(const UnsignedExtended
     UnsignedExtendedInt* returnValue = new UnsignedExtendedInt();
     UnsignedExtendedInt* tempDividend = new UnsignedExtendedInt();
     UnsignedExtendedInt* maskBit = new UnsignedExtendedInt();
-    maskBit->setValueAtIndex(0x80000000, 3);        // set upper most bit to one
+    maskBit->setValueAtIndex(1, 0);
     if (*this < divisor) {
         return *returnValue;    // if dividend is smaller than divisor, return 0 (e.g. 10 / 20 = 0)
     }
-    int i = 128;
+    int i = 16;
+    *maskBit = *maskBit << (i - 1);
     while (--i >= 0) {
         if (divisor > *tempDividend) {
             // Extract bit i
@@ -156,7 +163,7 @@ const UnsignedExtendedInt& UnsignedExtendedInt::operator/(const UnsignedExtended
         *returnValue = *returnValue | *maskBit;
         *tempDividend = *tempDividend - divisor;
     }
-    return (*returnValue << 1);
+    return (*returnValue);
 }
 
 bool UnsignedExtendedInt::operator==(const UnsignedExtendedInt& obj) const {
