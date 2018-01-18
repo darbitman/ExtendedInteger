@@ -105,24 +105,17 @@ const UnsignedExtendedInt& UnsignedExtendedInt::operator*(const UnsignedExtended
             x = this->ext_int[i];
             y = obj.ext_int[j];
             z = x * y;
-            lowerResultBits = z & 0xFFFFFFFF;
-            upperResultBits = (z >> 32) & 0xFFFFFFFF;
 
-            /****** Clear Previous Temp Values ******/
-            //if (leftShiftValue >= 0) {
-            //    uExtIntTemp.setValueAtIndex(0, leftShiftValue);
-            //    if (leftShiftValue > 0) {
-            //        uExtIntTemp.setValueAtIndex(0, leftShiftValue - 2);
-            //    }
-            //}
-            for (int k = 0; k < ARRAY_SIZE; k++) {
-                uExtIntTemp.setValueAtIndex(0, k);
-            }
             if (leftShiftValue < ARRAY_SIZE) {
+                if (leftShiftValue > 0) {   // clear previous 32-bits because they will introduce an error in the summation
+                    uExtIntTemp.setValueAtIndex(0, leftShiftValue - 1);
+                }
+                lowerResultBits = z & 0xFFFFFFFF;
                 uExtIntTemp.setValueAtIndex(lowerResultBits, leftShiftValue);                   // Extract first 32-bits
             }
             if (leftShiftValue < ARRAY_SIZE - 1) {
-                uExtIntTemp.setValueAtIndex(upperResultBits, leftShiftValue + 1);   // Extract upper 32-bits if they can be stored w/out overflow
+                upperResultBits = (z >> 32) & 0xFFFFFFFF;
+                uExtIntTemp.setValueAtIndex(upperResultBits, leftShiftValue + 1);   // Extract upper 32-bits
             }
             *returnValue = *returnValue + uExtIntTemp;
         }
@@ -140,7 +133,7 @@ const UnsignedExtendedInt& UnsignedExtendedInt::operator/(const UnsignedExtended
     if (*this < divisor) {
         return *returnValue;    // if dividend is smaller than divisor, return 0 (e.g. 10 / 20 = 0)
     }
-    int i = 16;
+    int i = 128;
     *maskBit = *maskBit << (i - 1);
     while (--i >= 0) {
         if (divisor > *tempDividend) {
