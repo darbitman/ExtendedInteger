@@ -13,7 +13,9 @@ public:
     const UnsignedExtendedInt& operator+(const unsigned long long& obj);
     const UnsignedExtendedInt& operator-(const UnsignedExtendedInt& obj);
     const UnsignedExtendedInt& operator*(const UnsignedExtendedInt& obj);
-    const UnsignedExtendedInt& operator/(const UnsignedExtendedInt& obj);
+    const UnsignedExtendedInt& operator/(const UnsignedExtendedInt& divisor);
+    const UnsignedExtendedInt& operator%(const UnsignedExtendedInt& divisor);
+    const UnsignedExtendedInt& divideModOperator(const UnsignedExtendedInt& divisor, const DIVIDE_OPERATION op);
     bool operator==(const UnsignedExtendedInt& obj) const;
     bool operator>(const UnsignedExtendedInt& obj) const;
     bool operator>=(const UnsignedExtendedInt& obj) const;

@@ -1,18 +1,22 @@
 #include "stdafx.h"
 #include "UnsignedExtendedInt.h"
 
+
+// Create new 128bit integer. Initialize to 0.
 UnsignedExtendedInt::UnsignedExtendedInt() {
     for (int i = 0; i < ARRAY_SIZE; i++) {
         this->ext_int[i] = 0;
     }
 }
 
+// Copy constructor
 UnsignedExtendedInt::UnsignedExtendedInt(const UnsignedExtendedInt& obj) {
     for (int i = 0; i < ARRAY_SIZE; i++) {
         this->ext_int[i] = obj.ext_int[i];
     }
 }
 
+// convert input string to 128bit integer
 UnsignedExtendedInt::UnsignedExtendedInt(const char* s) {
     for (int i = 0; i < ARRAY_SIZE; i++) {
         this->ext_int[i] = 0;
@@ -55,7 +59,6 @@ const UnsignedExtendedInt& UnsignedExtendedInt::operator+(const UnsignedExtended
         z = x + y + carryBit;
         returnValue->ext_int[i] = z & 0xFFFFFFFF;
         carryBit = (z & 0x100000000) >> 32;
-        // TODO
     }
     return *returnValue;
 }
@@ -91,6 +94,7 @@ const UnsignedExtendedInt& UnsignedExtendedInt::operator-(const UnsignedExtended
 }
 
 const UnsignedExtendedInt& UnsignedExtendedInt::operator*(const UnsignedExtendedInt& obj) {
+    // This algorithm multiplies 32bit integers using native 64bit integers.
     unsigned long long x = 0;
     unsigned long long y = 0;
     unsigned long long z = 0;
@@ -124,6 +128,14 @@ const UnsignedExtendedInt& UnsignedExtendedInt::operator*(const UnsignedExtended
 }
 
 const UnsignedExtendedInt& UnsignedExtendedInt::operator/(const UnsignedExtendedInt& divisor) {
+    return divideModOperator(divisor, DIVIDE_OP);
+}
+
+const UnsignedExtendedInt& UnsignedExtendedInt::operator%(const UnsignedExtendedInt& divisor) {
+    return divideModOperator(divisor, MOD_OP);
+}
+
+const UnsignedExtendedInt& UnsignedExtendedInt::divideModOperator(const UnsignedExtendedInt& divisor, const DIVIDE_OPERATION op) {
     unsigned long long x = 0;
     unsigned long long y = 0;
     UnsignedExtendedInt* returnValue = new UnsignedExtendedInt();
@@ -147,16 +159,23 @@ const UnsignedExtendedInt& UnsignedExtendedInt::operator/(const UnsignedExtended
             i++;
         }
     }
-    if (divisor > *tempDividend) {
-        // Extract bit i
-        *tempDividend = ((*this & *maskBit) | (*tempDividend << 1));
-    }
-    else {
+
+    // Extract bit 0 of the quotient
+    if (divisor <= *tempDividend) {
         maskBit->setValueAtIndex(1, 0);
         *returnValue = *returnValue | *maskBit;
-        *tempDividend = *tempDividend - divisor;
+        *tempDividend = *tempDividend - divisor;        // remainder
     }
-    return (*returnValue);
+
+    delete maskBit;
+    if (op == DIVIDE_OP) {
+        delete tempDividend;
+        return *returnValue;
+    }
+    else {      // mod operation returns remainder
+        delete returnValue;
+        return *tempDividend;
+    }
 }
 
 bool UnsignedExtendedInt::operator==(const UnsignedExtendedInt& obj) const {

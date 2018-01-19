@@ -5,6 +5,7 @@ class UnsignedExtendedInt;
 
 class ExtendedInt {
 protected:
+    enum DIVIDE_OPERATION { DIVIDE_OP, MOD_OP };
 	static const unsigned int ARRAY_SIZE = 4;
 	unsigned int ext_int[ARRAY_SIZE];
 public:
@@ -14,7 +15,9 @@ public:
     virtual const UnsignedExtendedInt& operator+(const unsigned long long& obj) = 0;
     virtual const UnsignedExtendedInt& operator-(const UnsignedExtendedInt& obj) = 0;
     virtual const UnsignedExtendedInt& operator*(const UnsignedExtendedInt& obj) = 0;
-    virtual const UnsignedExtendedInt& operator/(const UnsignedExtendedInt& obj) = 0;
+    virtual const UnsignedExtendedInt& operator/(const UnsignedExtendedInt& divisor) = 0;
+    virtual const UnsignedExtendedInt& operator%(const UnsignedExtendedInt& divisor) = 0;
+    virtual const UnsignedExtendedInt& divideModOperator(const UnsignedExtendedInt& divisor, const DIVIDE_OPERATION op) = 0;
     virtual bool operator==(const UnsignedExtendedInt& obj) const = 0;
     virtual bool operator>(const UnsignedExtendedInt& obj) const = 0;
     virtual bool operator>=(const UnsignedExtendedInt& obj) const = 0;
