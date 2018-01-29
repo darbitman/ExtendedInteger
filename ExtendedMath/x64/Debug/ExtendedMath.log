@@ -1,1 +1,33 @@
-﻿
+﻿  UnsignedExtendedInt.cpp
+c:\users\dmitriy\documents\extendedmath\extendedmath\unsignedextendedint.h(19): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  c:\users\dmitriy\documents\extendedmath\extendedmath\unsignedextendedint.h(32): note: see reference to class template instantiation 'UnsignedExtendedInt<T>' being compiled
+c:\users\dmitriy\documents\extendedmath\extendedmath\unsignedextendedint.h(19): error C2146: syntax error: missing ')' before identifier 'op'
+c:\users\dmitriy\documents\extendedmath\extendedmath\unsignedextendedint.h(19): error C3646: 'op': unknown override specifier
+c:\users\dmitriy\documents\extendedmath\extendedmath\unsignedextendedint.h(19): error C2059: syntax error: ')'
+c:\users\dmitriy\documents\extendedmath\extendedmath\unsignedextendedint.cpp(57): error C2244: 'UnsignedExtendedInt<T>::operator +': unable to match function definition to an existing declaration
+  c:\users\dmitriy\documents\extendedmath\extendedmath\unsignedextendedint.cpp(57): note: see declaration of 'UnsignedExtendedInt<T>::operator +'
+  c:\users\dmitriy\documents\extendedmath\extendedmath\unsignedextendedint.cpp(57): note: definition
+  c:\users\dmitriy\documents\extendedmath\extendedmath\unsignedextendedint.cpp(57): note: 'const UnsignedExtendedInt &UnsignedExtendedInt<T>::operator +(const UnsignedExtendedInt<T> &)'
+  c:\users\dmitriy\documents\extendedmath\extendedmath\unsignedextendedint.cpp(57): note: existing declarations
+  c:\users\dmitriy\documents\extendedmath\extendedmath\unsignedextendedint.cpp(57): note: 'const UnsignedExtendedInt<T> &UnsignedExtendedInt<T>::operator +(const unsigned __int64 &)'
+  c:\users\dmitriy\documents\extendedmath\extendedmath\unsignedextendedint.cpp(57): note: 'const UnsignedExtendedInt<T> &UnsignedExtendedInt<T>::operator +(const UnsignedExtendedInt<T> &)'
+c:\users\dmitriy\documents\extendedmath\extendedmath\unsignedextendedint.cpp(74): error C2244: 'UnsignedExtendedInt<T>::operator +': unable to match function definition to an existing declaration
+  c:\users\dmitriy\documents\extendedmath\extendedmath\unsignedextendedint.cpp(74): note: see declaration of 'UnsignedExtendedInt<T>::operator +'
+  c:\users\dmitriy\documents\extendedmath\extendedmath\unsignedextendedint.cpp(74): note: definition
+  c:\users\dmitriy\documents\extendedmath\extendedmath\unsignedextendedint.cpp(74): note: 'const UnsignedExtendedInt &UnsignedExtendedInt<T>::operator +(const unsigned __int64 &)'
+  c:\users\dmitriy\documents\extendedmath\extendedmath\unsignedextendedint.cpp(74): note: existing declarations
+  c:\users\dmitriy\documents\extendedmath\extendedmath\unsignedextendedint.cpp(74): note: 'const UnsignedExtendedInt<T> &UnsignedExtendedInt<T>::operator +(const unsigned __int64 &)'
+  c:\users\dmitriy\documents\extendedmath\extendedmath\unsignedextendedint.cpp(74): note: 'const UnsignedExtendedInt<T> &UnsignedExtendedInt<T>::operator +(const UnsignedExtendedInt<T> &)'
+c:\users\dmitriy\documents\extendedmath\extendedmath\unsignedextendedint.cpp(151): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\dmitriy\documents\extendedmath\extendedmath\unsignedextendedint.cpp(151): error C2146: syntax error: missing ')' before identifier 'op'
+c:\users\dmitriy\documents\extendedmath\extendedmath\unsignedextendedint.cpp(151): error C3646: 'op': unknown override specifier
+c:\users\dmitriy\documents\extendedmath\extendedmath\unsignedextendedint.cpp(151): error C2059: syntax error: ')'
+  ExtendedMath.cpp
+c:\users\dmitriy\documents\extendedmath\extendedmath\unsignedextendedint.h(19): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  c:\users\dmitriy\documents\extendedmath\extendedmath\unsignedextendedint.h(32): note: see reference to class template instantiation 'UnsignedExtendedInt<T>' being compiled
+c:\users\dmitriy\documents\extendedmath\extendedmath\unsignedextendedint.h(19): error C2146: syntax error: missing ')' before identifier 'op'
+c:\users\dmitriy\documents\extendedmath\extendedmath\unsignedextendedint.h(19): error C3646: 'op': unknown override specifier
+c:\users\dmitriy\documents\extendedmath\extendedmath\unsignedextendedint.h(19): error C2059: syntax error: ')'
+c:\users\dmitriy\documents\extendedmath\extendedmath\extendedmath.cpp(8): error C2514: 'UnsignedExtendedInt': class has no constructors
+  c:\users\dmitriy\documents\extendedmath\extendedmath\unsignedextendedint.h(6): note: see declaration of 'UnsignedExtendedInt'
+  Generating Code...

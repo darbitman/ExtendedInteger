@@ -2,7 +2,8 @@
 #define _UNSIGNEDEXTENDEDINT_H_
 #include "ExtendedInt.h"
 
-class UnsignedExtendedInt : public ExtendedInt {
+template<typename T>
+class UnsignedExtendedInt : public ExtendedInt<T> {
 public:
 	UnsignedExtendedInt();
 	UnsignedExtendedInt(const UnsignedExtendedInt& obj);

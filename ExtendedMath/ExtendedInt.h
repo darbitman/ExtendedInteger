@@ -1,13 +1,17 @@
 #ifndef _EXTENDEDINT_H_
 #define _EXTENDEDINT_H_
 
+#include "ExtendedIntLengths.h"
+
+template<typename T>
 class UnsignedExtendedInt;
 
+template<class T>
 class ExtendedInt {
 protected:
     enum DIVIDE_OPERATION { DIVIDE_OP, MOD_OP };
-	static const unsigned int ARRAY_SIZE = 4;
-	unsigned int ext_int[ARRAY_SIZE];
+    static unsigned int ARRAY_SIZE;
+    unsigned int *ext_int;
 public:
     virtual ~ExtendedInt() {}
 	virtual const UnsignedExtendedInt& operator=(const UnsignedExtendedInt& obj) = 0;
