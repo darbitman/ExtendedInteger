@@ -24,9 +24,6 @@
     <ClInclude Include="UnsignedExtendedInt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ExtendedInt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ExtendedIntLengths.h">
       <Filter>Header Files</Filter>
     </ClInclude>
