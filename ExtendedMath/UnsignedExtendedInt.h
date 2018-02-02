@@ -165,8 +165,6 @@ const UnsignedExtendedInt<T>& UnsignedExtendedInt<T>::operator+(const unsigned l
 
 template<typename T>
 const UnsignedExtendedInt<T>& UnsignedExtendedInt<T>::operator-(const UnsignedExtendedInt& obj) {
-    long long x = 0;
-    long long y = 0;
     UnsignedExtendedInt* returnValue = new UnsignedExtendedInt();
     UnsignedExtendedInt* negativeValue = new UnsignedExtendedInt();
     for (int i = 0; i < ARRAY_SIZE; i++) {
