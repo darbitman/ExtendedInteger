@@ -27,6 +27,15 @@
     <ClInclude Include="ExtendedIntLengths.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ExtendedInt.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="typedefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ExtendedInteger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
