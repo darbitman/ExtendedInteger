@@ -3,7 +3,6 @@
 
 #include "ExtendedIntLengths.h"
 
-
 template<typename T>
 class ExtendedInt {
 protected:
@@ -12,6 +11,7 @@ protected:
     unsigned int* ext_int;
     virtual void initialize();
     virtual void stringToExtendedInt(const char* s) = 0;
+public:
     virtual void setValueAtIndex(const unsigned long long val, const unsigned int index);
     virtual unsigned long long getValueAtIndex(const unsigned int index) const;  
 };

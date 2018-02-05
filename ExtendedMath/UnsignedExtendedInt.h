@@ -1,13 +1,12 @@
 #ifndef _UNSIGNEDEXTENDEDINT_H_
 #define _UNSIGNEDEXTENDEDINT_H_
 
-#include "ExtendedIntLengths.h"
 #include "ExtendedInt.h"
 
 template<typename T>
 class UnsignedExtendedInt : public ExtendedInt<T> {
 protected:
-    void stringToExtendedInt(const char* s);
+    virtual void stringToExtendedInt(const char* s);
 public:
 	UnsignedExtendedInt();
     UnsignedExtendedInt(const UnsignedExtendedInt& obj);
@@ -34,7 +33,7 @@ public:
     UnsignedExtendedInt& operator|(const UnsignedExtendedInt& obj) const;
 };
 
-
+/*
 // Create new extended integer
 template<typename T>
 UnsignedExtendedInt<T>::UnsignedExtendedInt() {
@@ -46,22 +45,18 @@ UnsignedExtendedInt<T>::UnsignedExtendedInt() {
 template<typename T>
 UnsignedExtendedInt<T>::UnsignedExtendedInt(const UnsignedExtendedInt& obj) {
     this->initialize();
-    this->ext_int = new unsigned int[this->ARRAY_SIZE];
     for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
         this->ext_int[i] = obj.ext_int[i];
     }
 }
 
 
+// Construct new extended integer using string input 
 template<typename T>
 void UnsignedExtendedInt<T>::stringToExtendedInt(const char* s) {
-    for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
-        this->ext_int[i] = 0;
-    }
     unsigned int strLength = 0;
-    while (s[strLength++] != 0);             // compute string length
-    if (strLength > 0) {
-        strLength--;
+    while (s[strLength] != 0) {             // compute string length
+        strLength++;
     }
     UnsignedExtendedInt<T> TEN;
     UnsignedExtendedInt<T> powersOfTen;
@@ -80,7 +75,7 @@ void UnsignedExtendedInt<T>::stringToExtendedInt(const char* s) {
 template<class T>
 UnsignedExtendedInt<T>::UnsignedExtendedInt(const char* s) {
     this->initialize();
-    stringToExtendedInt(s);
+    this->stringToExtendedInt(s);
 }
 
 
@@ -103,9 +98,8 @@ const UnsignedExtendedInt<T>& UnsignedExtendedInt<T>::operator=(const UnsignedEx
 
 template<typename T>
 const UnsignedExtendedInt<T>& UnsignedExtendedInt<T>::operator=(const char* s) {
-    this->ARRAY_SIZE = T::_multipleOf32Bits;
-    this->ext_int = new unsigned int[this->ARRAY_SIZE];
-    stringToUnsignedExtendedInt(s);
+    this->initialize();
+    stringToExtendedInt(s);
     return *this;
 }
 
@@ -135,7 +129,7 @@ const UnsignedExtendedInt<T>& UnsignedExtendedInt<T>::operator+(const unsigned l
     unsigned long long z = 0;
     unsigned int carryBit = 0;
     UnsignedExtendedInt* returnValue = new UnsignedExtendedInt();
-    for (int i = 0; i < ARRAY_SIZE; i++) {
+    for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
         x = this->ext_int[i];
         y = ((obj >> i) & 0xFFFFFFFF);
         z = x + y + carryBit;
@@ -150,7 +144,7 @@ template<typename T>
 const UnsignedExtendedInt<T>& UnsignedExtendedInt<T>::operator-(const UnsignedExtendedInt& obj) {
     UnsignedExtendedInt<T>* returnValue = new UnsignedExtendedInt();
     UnsignedExtendedInt<T>* negativeValue = new UnsignedExtendedInt();
-    for (int i = 0; i < this->ARRAY_SIZE; i++) {
+    for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
         negativeValue->setValueAtIndex(~(obj.getValueAtIndex(i)), i);
     }
     *negativeValue = *negativeValue + 1;
@@ -198,13 +192,13 @@ const UnsignedExtendedInt<T>& UnsignedExtendedInt<T>::operator*(const UnsignedEx
 
 template<typename T>
 const UnsignedExtendedInt<T>& UnsignedExtendedInt<T>::operator/(const UnsignedExtendedInt& divisor) {
-    //return divideModOperator(divisor, DIVIDE_OP);
+    return divideModOperator(divisor, this->DIVIDE_OP);
 }
 
 
 template<typename T>
 const UnsignedExtendedInt<T>& UnsignedExtendedInt<T>::operator%(const UnsignedExtendedInt& divisor) {
-    //return divideModOperator(divisor, MOD_OP);
+    return divideModOperator(divisor, this->MOD_OP);
 }
 
 
@@ -242,7 +236,7 @@ const UnsignedExtendedInt<T>& UnsignedExtendedInt<T>::divideModOperator(const Un
     }
 
     delete maskBit;
-    if (op == DIVIDE_OP) {
+    if (op == this->DIVIDE_OP) {
         delete tempDividend;
         return *returnValue;
     }
@@ -255,7 +249,7 @@ const UnsignedExtendedInt<T>& UnsignedExtendedInt<T>::divideModOperator(const Un
 
 template<typename T>
 bool UnsignedExtendedInt<T>::operator==(const UnsignedExtendedInt& obj) const {
-    for (int i = ARRAY_SIZE - 1; i >= 0; i--) {
+    for (int i = this->ARRAY_SIZE - 1; i >= 0; i--) {
         if (this->getValueAtIndex(i) == obj.getValueAtIndex(i)) {
             continue;
         }
@@ -269,7 +263,7 @@ bool UnsignedExtendedInt<T>::operator==(const UnsignedExtendedInt& obj) const {
 
 template<typename T>
 bool UnsignedExtendedInt<T>::operator>(const UnsignedExtendedInt& obj) const {
-    for (int i = ARRAY_SIZE - 1; i >= 0; i--) {
+    for (int i = this->ARRAY_SIZE - 1; i >= 0; i--) {
         if (this->getValueAtIndex(i) > obj.getValueAtIndex(i)) {
             return true;
         }
@@ -289,7 +283,7 @@ bool UnsignedExtendedInt<T>::operator>=(const UnsignedExtendedInt & obj) const {
 
 template<typename T>
 bool UnsignedExtendedInt<T>::operator<(const UnsignedExtendedInt& obj) const {
-    for (int i = ARRAY_SIZE - 1; i >= 0; i--) {
+    for (int i = this->ARRAY_SIZE - 1; i >= 0; i--) {
         if (this->getValueAtIndex(i) > obj.getValueAtIndex(i)) {
             return false;
         }
@@ -317,7 +311,7 @@ UnsignedExtendedInt<T>& UnsignedExtendedInt<T>::operator>>(unsigned int shiftVal
     UnsignedExtendedInt* returnValue = new UnsignedExtendedInt(*this);
     shiftVal = (shiftVal > 128 ? 128 : shiftVal);           // maximum shift is 128 bits
     while (shiftVal > 0) {
-        for (int i = 0; i < ARRAY_SIZE; i++) {
+        for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
             x = returnValue->ext_int[i];
             x = x << 32;
             x = x >> (shiftVal > 32 ? 32 : shiftVal);       // perform shift
@@ -340,11 +334,11 @@ UnsignedExtendedInt<T>& UnsignedExtendedInt<T>::operator<<(unsigned int shiftVal
     UnsignedExtendedInt* returnValue = new UnsignedExtendedInt(*this);
     shiftVal = (shiftVal > 128 ? 128 : shiftVal);           // maximum shift is 128 bits
     while (shiftVal > 0) {
-        for (int i = ARRAY_SIZE - 1; i >= 0; i--) {
+        for (unsigned int i = this->ARRAY_SIZE - 1; i >= 0; i--) {
             x = returnValue->ext_int[i];
             x = x << (shiftVal > 32 ? 32 : shiftVal);       // perform shift
             returnValue->setValueAtIndex(x & 0xFFFFFFFF, i);        // lower 32 bits should be stored
-            if (i < ARRAY_SIZE - 1) {
+            if (i < this->ARRAY_SIZE - 1) {
                 y = returnValue->ext_int[i + 1];
                 returnValue->setValueAtIndex((x & 0xFFFFFFFF00000000) >> 32 | y, i + 1);                     // lower 32 bits ORd with previous entry since these bits were shifted into the the adjacent 32-bits
             }
@@ -358,7 +352,7 @@ UnsignedExtendedInt<T>& UnsignedExtendedInt<T>::operator<<(unsigned int shiftVal
 template<typename T>
 UnsignedExtendedInt<T>& UnsignedExtendedInt<T>::operator&(const UnsignedExtendedInt& obj) const {
     UnsignedExtendedInt* returnValue = new UnsignedExtendedInt();
-    for (int i = 0; i < ARRAY_SIZE; i++) {
+    for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
         returnValue->setValueAtIndex(this->getValueAtIndex(i) & obj.getValueAtIndex(i), i);
     }
     return *returnValue;
@@ -377,11 +371,12 @@ UnsignedExtendedInt<T>& UnsignedExtendedInt<T>::operator&(const unsigned long lo
 template<typename T>
 UnsignedExtendedInt<T>& UnsignedExtendedInt<T>::operator|(const UnsignedExtendedInt& obj) const {
     UnsignedExtendedInt* returnValue = new UnsignedExtendedInt();
-    for (int i = 0; i < ARRAY_SIZE; i++) {
+    for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
         returnValue->setValueAtIndex(this->getValueAtIndex(i) | obj.getValueAtIndex(i), i);
     }
     return *returnValue;
 }
+*/
 
 
 
