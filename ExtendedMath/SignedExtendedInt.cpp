@@ -14,7 +14,7 @@ SignedExtendedInt<T>::SignedExtendedInt() {
 
 
 template<typename T>
-SignedExtendedInt<T>::SignedExtendedInt(const SignedExtendedInt& obj) {
+SignedExtendedInt<T>::SignedExtendedInt(const SignedExtendedInt<T>& obj) {
     this->initialize();
     for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
         this->ext_int[i] = obj.ext_int[i];
@@ -60,7 +60,7 @@ SignedExtendedInt<T>::~SignedExtendedInt() {
 
 
 template<typename T>
-const SignedExtendedInt<T>& SignedExtendedInt<T>::operator=(const SignedExtendedInt& obj) {
+const SignedExtendedInt<T>& SignedExtendedInt<T>::operator=(const SignedExtendedInt<T>& obj) {
     this->ARRAY_SIZE = obj.ARRAY_SIZE;
     this->ext_int = new unsigned int[this->ARRAY_SIZE];
     for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
@@ -79,7 +79,7 @@ const SignedExtendedInt<T>& SignedExtendedInt<T>::operator=(const char* s) {
 
 
 template<typename T>
-const SignedExtendedInt<T>& SignedExtendedInt<T>::operator+(const SignedExtendedInt& obj) {
+const SignedExtendedInt<T>& SignedExtendedInt<T>::operator+(const SignedExtendedInt<T>& obj) {
     unsigned long long x = 0;
     unsigned long long y = 0;
     unsigned long long z = 0;
@@ -98,6 +98,31 @@ const SignedExtendedInt<T>& SignedExtendedInt<T>::operator+(const SignedExtended
 
 template<typename T>
 const SignedExtendedInt<T>& SignedExtendedInt<T>::operator+(const long long& obj) {
+    unsigned long long x = 0;
+    unsigned long long y = 0;
+    unsigned long long z = 0;
+    unsigned int carryBit = 0;
     SignedExtendedInt<T>* returnValue = new SignedExtendedInt<T>();
+    for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
+        x = this->ext_int[i];
+        y = ((obj >> (i * 32)) & 0xFFFFFFFF);
+        z = x + y + carryBit;
+        returnValue->ext_int[i] = z & 0xFFFFFFFF;
+        carryBit = (z & 0x100000000) >> 32;
+    }
+    return *returnValue;
+}
+
+
+template<typename T>
+const SignedExtendedInt<T>& SignedExtendedInt<T>::operator-(const SignedExtendedInt<T>& obj) {
+    SignedExtendedInt<T>* returnValue = new SignedExtendedInt<T>();
+    SignedExtendedInt<T>* negativeValue = new SignedExtendedInt<T>();
+    for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
+        negativeValue->setValueAtIndex(~(obj.getValueAtIndex(i)), i);
+    }
+    *negativeValue = *negativeValue + 1;
+    *returnValue = this->operator+(*negativeValue);
+    delete negativeValue;
     return *returnValue;
 }
