@@ -126,3 +126,39 @@ const SignedExtendedInt<T>& SignedExtendedInt<T>::operator-(const SignedExtended
     delete negativeValue;
     return *returnValue;
 }
+
+
+template<typename T>
+const SignedExtendedInt<T>& SignedExtendedInt<T>::operator*(const SignedExtendedInt<T>& obj) {
+    // This algorithm multiplies 32bit integers using native 64bit integers.
+    unsigned long long x = 0;
+    unsigned long long y = 0;
+    unsigned long long z = 0;
+    unsigned int upperResultBits = 0;
+    unsigned int lowerResultBits = 0;
+    unsigned int leftShiftValue = 0;
+    SignedExtendedInt<T>* returnValue = new SignedExtendedInt<T>();
+    SignedExtendedInt<T> uExtIntTemp;
+    for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
+        for (unsigned int j = 0; j < this->ARRAY_SIZE; j++) {
+            leftShiftValue = i + j;
+            x = this->ext_int[i];
+            y = obj.ext_int[j];
+            z = x * y;
+
+            if (leftShiftValue < this->ARRAY_SIZE) {
+                if (leftShiftValue > 0) {   // clear previous 32-bits because they will introduce an error in the summation
+                    uExtIntTemp.setValueAtIndex(0, leftShiftValue - 1);
+                }
+                lowerResultBits = z & 0xFFFFFFFF;
+                uExtIntTemp.setValueAtIndex(lowerResultBits, leftShiftValue);                   // Extract first 32-bits
+            }
+            if (leftShiftValue < this->ARRAY_SIZE - 1) {
+                upperResultBits = (z >> 32) & 0xFFFFFFFF;
+                uExtIntTemp.setValueAtIndex(upperResultBits, leftShiftValue + 1);   // Extract upper 32-bits
+            }
+            *returnValue = *returnValue + uExtIntTemp;
+        }
+    }
+    return *returnValue;
+}

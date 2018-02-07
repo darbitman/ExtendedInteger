@@ -19,6 +19,7 @@ public:
     const SignedExtendedInt& operator+(const SignedExtendedInt& obj);
     const SignedExtendedInt& operator+(const long long& obj);
     const SignedExtendedInt& operator-(const SignedExtendedInt& obj);
+    const SignedExtendedInt& operator*(const SignedExtendedInt& obj);
 };
 
 
