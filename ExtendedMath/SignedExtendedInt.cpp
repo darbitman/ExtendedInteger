@@ -129,6 +129,25 @@ const SignedExtendedInt<T>& SignedExtendedInt<T>::operator-(const SignedExtended
 
 
 template<typename T>
+const SignedExtendedInt<T>& SignedExtendedInt<T>::operator-(const long long& obj) {
+    unsigned long long negObj = ~obj + 1;
+    unsigned long long x = 0;
+    unsigned long long y = 0;
+    unsigned long long z = 0;
+    unsigned int carryBit = 0;
+    SignedExtendedInt<T>* returnValue = new SignedExtendedInt<T>();
+    for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
+        x = this->ext_int[i];
+        y = ((negObj >> (i * 32)) & 0xFFFFFFFF);
+        z = x + y + carryBit;
+        returnValue->ext_int[i] = z & 0xFFFFFFFF;
+        carryBit = (z & 0x100000000) >> 32;
+    }
+    return *returnValue;
+}
+
+
+template<typename T>
 const SignedExtendedInt<T>& SignedExtendedInt<T>::operator*(const SignedExtendedInt<T>& obj) {
     // This algorithm multiplies 32bit integers using native 64bit integers.
     unsigned long long x = 0;
@@ -160,5 +179,12 @@ const SignedExtendedInt<T>& SignedExtendedInt<T>::operator*(const SignedExtended
             *returnValue = *returnValue + uExtIntTemp;
         }
     }
+    return *returnValue;
+}
+
+
+template<typename T>
+const SignedExtendedInt<T>& SignedExtendedInt<T>::operator*(const long long& obj) {
+    SignedExtendedInt<T>* returnValue = new SignedExtendedInt<T>();
     return *returnValue;
 }
