@@ -185,6 +185,14 @@ const SignedExtendedInt<T>& SignedExtendedInt<T>::operator*(const SignedExtended
 
 template<typename T>
 const SignedExtendedInt<T>& SignedExtendedInt<T>::operator*(const long long& obj) {
+    int sign1 = this->getValueAtIndex(this->ARRAY_SIZE - 1) >> 31;       // extract sign bit
+
+    unsigned long long x = 0;
+    unsigned long long y = 0;
+    unsigned long long z = 0;
+    unsigned int upperResultBits = 0;
+    unsigned int lowerResultBits = 0;
+    unsigned int leftShiftValue = 0;
     SignedExtendedInt<T>* returnValue = new SignedExtendedInt<T>();
     return *returnValue;
 }
