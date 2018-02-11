@@ -9,6 +9,7 @@ template<typename T>
 class SignedExtendedInt : public ExtendedInt<T> {
 protected:
     virtual void stringToExtendedInt(const char* s);
+    const SignedExtendedInt& divideModOperator(const SignedExtendedInt& divisor, const ExtendedInt<T>::DIVIDE_OPERATION op);
 public:
     SignedExtendedInt();
     SignedExtendedInt(const SignedExtendedInt& obj);
@@ -22,6 +23,8 @@ public:
     const SignedExtendedInt& operator-(const long long& obj);
     const SignedExtendedInt& operator*(const SignedExtendedInt& obj);
     const SignedExtendedInt& operator*(const long long& obj);
+    const SignedExtendedInt& operator/(const SignedExtendedInt& obj);
+    SignedExtendedInt<T>& operator~() const;
 };
 
 
