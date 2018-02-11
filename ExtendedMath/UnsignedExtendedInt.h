@@ -27,8 +27,8 @@ public:
     bool operator>=(const UnsignedExtendedInt& obj) const;
     bool operator<(const UnsignedExtendedInt& obj) const;
     bool operator<=(const UnsignedExtendedInt& obj) const;
-    UnsignedExtendedInt operator>>(unsigned int shiftVal) const;
-    UnsignedExtendedInt operator<<(unsigned int shiftVal) const;
+    const UnsignedExtendedInt operator>>(unsigned int shiftVal) const;
+    const UnsignedExtendedInt operator<<(unsigned int shiftVal) const;
     inline UnsignedExtendedInt operator&(const UnsignedExtendedInt& obj) const;
     inline UnsignedExtendedInt operator&(const unsigned long long& obj) const;
     inline UnsignedExtendedInt operator|(const UnsignedExtendedInt& obj) const;

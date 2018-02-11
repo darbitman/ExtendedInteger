@@ -116,14 +116,7 @@ const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator+(const unsigned lo
 
 template<typename T>
 const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator-(const UnsignedExtendedInt& obj) {
-    UnsignedExtendedInt<T> returnValue;
-    UnsignedExtendedInt<T> negativeValue;
-    for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
-        negativeValue.ext_int[i] = ~(obj.ext_int[i]);
-    }
-    negativeValue = negativeValue + 1;
-    returnValue = this->operator+(negativeValue);
-    return returnValue;
+    return this->operator+((~obj) + 1);
 }
 
 
@@ -277,7 +270,7 @@ bool UnsignedExtendedInt<T>::operator<=(const UnsignedExtendedInt<T>& obj) const
 
 
 template<typename T>
-UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator>>(unsigned int shiftVal) const {
+const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator>>(unsigned int shiftVal) const {
     unsigned long long x = 0;
     unsigned long long y = 0;
     UnsignedExtendedInt<T> returnValue(*this);
@@ -300,7 +293,7 @@ UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator>>(unsigned int shiftVal)
 
 
 template<typename T>
-UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator<<(unsigned int shiftVal) const {
+const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator<<(unsigned int shiftVal) const {
     unsigned long long x = 0;
     unsigned long long y = 0;
     UnsignedExtendedInt<T> returnValue(*this);
@@ -322,7 +315,7 @@ UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator<<(unsigned int shiftVal)
 
 
 template<typename T>
-inline UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator&(const UnsignedExtendedInt& obj) const {
+inline UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator&(const UnsignedExtendedInt<T>& obj) const {
     UnsignedExtendedInt<T> returnValue;
     for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
         returnValue.ext_int[i] = this->ext_int[i] & obj.ext_int[i];
