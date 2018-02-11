@@ -7,7 +7,7 @@ template<typename T>
 class UnsignedExtendedInt : public ExtendedInt<T> {
 protected:
     virtual void stringToExtendedInt(const char* s);
-    const UnsignedExtendedInt& divideModOperator(const UnsignedExtendedInt& divisor, const ExtendedInt<T>::DIVIDE_OPERATION op);
+    const UnsignedExtendedInt divideModOperator(const UnsignedExtendedInt& divisor, const ExtendedInt<T>::DIVIDE_OPERATION op);
 public:
 	UnsignedExtendedInt();
     UnsignedExtendedInt(const UnsignedExtendedInt& obj);
@@ -15,22 +15,27 @@ public:
     ~UnsignedExtendedInt();
     const UnsignedExtendedInt& operator=(const UnsignedExtendedInt& obj);
     const UnsignedExtendedInt& operator=(const char* s);
-    const UnsignedExtendedInt& operator+(const UnsignedExtendedInt& obj);
-    const UnsignedExtendedInt& operator+(const unsigned long long& obj);
-    const UnsignedExtendedInt& operator-(const UnsignedExtendedInt& obj);
-    const UnsignedExtendedInt& operator*(const UnsignedExtendedInt& obj);    
-    const UnsignedExtendedInt& operator/(const UnsignedExtendedInt& divisor);
-    const UnsignedExtendedInt& operator%(const UnsignedExtendedInt& divisor);
+    const UnsignedExtendedInt operator+(const UnsignedExtendedInt& obj);
+    const UnsignedExtendedInt operator+(const unsigned long long& obj);
+    const UnsignedExtendedInt operator-(const UnsignedExtendedInt& obj);
+    const UnsignedExtendedInt operator-(const unsigned long long& obj);
+    const UnsignedExtendedInt operator*(const UnsignedExtendedInt& obj);    
+    const UnsignedExtendedInt operator/(const UnsignedExtendedInt& divisor);
+    const UnsignedExtendedInt operator%(const UnsignedExtendedInt& divisor);
     bool operator==(const UnsignedExtendedInt& obj) const;
     bool operator>(const UnsignedExtendedInt& obj) const;
     bool operator>=(const UnsignedExtendedInt& obj) const;
     bool operator<(const UnsignedExtendedInt& obj) const;
     bool operator<=(const UnsignedExtendedInt& obj) const;
-    UnsignedExtendedInt& operator>>(unsigned int shiftVal) const;
-    UnsignedExtendedInt& operator<<(unsigned int shiftVal) const;
-    UnsignedExtendedInt& operator&(const UnsignedExtendedInt& obj) const;
-    UnsignedExtendedInt& operator&(const unsigned long long& obj) const;
-    UnsignedExtendedInt& operator|(const UnsignedExtendedInt& obj) const;
+    UnsignedExtendedInt operator>>(unsigned int shiftVal) const;
+    UnsignedExtendedInt operator<<(unsigned int shiftVal) const;
+    inline UnsignedExtendedInt operator&(const UnsignedExtendedInt& obj) const;
+    inline UnsignedExtendedInt operator&(const unsigned long long& obj) const;
+    inline UnsignedExtendedInt operator|(const UnsignedExtendedInt& obj) const;
+    inline UnsignedExtendedInt operator|(const unsigned long long& obj) const;
+    inline UnsignedExtendedInt operator^(const UnsignedExtendedInt& obj) const;
+    inline UnsignedExtendedInt operator^(const unsigned long long& obj) const;
+    inline UnsignedExtendedInt operator~() const;
 };
 
 /*

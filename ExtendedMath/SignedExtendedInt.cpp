@@ -150,6 +150,7 @@ const SignedExtendedInt<T>& SignedExtendedInt<T>::operator-(const long long& obj
 template<typename T>
 const SignedExtendedInt<T>& SignedExtendedInt<T>::operator*(const SignedExtendedInt<T>& obj) {
     // This algorithm multiplies 32bit integers using native 64bit integers.
+    unsigned long long sign1 = (this->getValueAtIndex(this->ARRAY_SIZE - 1) >> 31) & 0x1;       // Extract sign bit
     unsigned long long x = 0;
     unsigned long long y = 0;
     unsigned long long z = 0;
@@ -187,7 +188,7 @@ template<typename T>
 const SignedExtendedInt<T>& SignedExtendedInt<T>::operator*(const long long& obj) {
     unsigned long long sign1 = (this->getValueAtIndex(this->ARRAY_SIZE - 1) >> 31) & 0x1;       // extract sign bit
     if (sign1) {
-        *this = (*this) + 1;
+        *this = ~(*this) + 1;
     }
     unsigned long long sign2 = (obj >> 63) & 0x1;
     unsigned long long unsignedObj = obj;
@@ -241,11 +242,6 @@ const SignedExtendedInt<T>& SignedExtendedInt<T>::divideModOperator(const Signed
     unsigned long long sign1 = (this->getValueAtIndex(this->ARRAY_SIZE - 1) >> 31) & 0x1;       // extract sign bit
     if (sign1) {
         *this = (*this) + 1;
-    }
-    unsigned long long sign2 = (obj >> 63) & 0x1;
-    unsigned long long unsignedObj = obj;
-    if (sign2) {
-        unsignedObj = ~unsignedObj + 1;
     }
     return *(new SignedExtendedInt<T>());
 }
