@@ -42,11 +42,11 @@ void UnsignedExtendedInt<T>::stringToExtendedInt(const char* s) {
     }
     UnsignedExtendedInt<T> TEN;
     UnsignedExtendedInt<T> powersOfTen;
-    powersOfTen.setValueAtIndex(1, 0);
-    TEN.setValueAtIndex(10, 0);
+    powersOfTen.ext_int[0] = 1;
+    TEN.ext_int[0] = 10;
     UnsignedExtendedInt<T> readInt;
     for (int i = strLength - 1; i >= 0; i--) {
-        readInt.setValueAtIndex(s[i] - '0', 0);
+        readInt.ext_int[0] = s[i] - '0';
         *this = *this + (powersOfTen * readInt);
         powersOfTen = powersOfTen * TEN;
     }
@@ -149,7 +149,7 @@ const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator*(const UnsignedExt
                     uExtIntTemp.setValueAtIndex(0, leftShiftValue - 1);
                 }
                 lowerResultBits = z & 0xFFFFFFFF;
-                uExtIntTemp.setValueAtIndex(lowerResultBits, leftShiftValue);       // Extract first 32-bits
+                uExtIntTemp.ext_int[leftShiftValue] = lowerResultBits;       // Extract first 32-bits
             }
             if (leftShiftValue < this->ARRAY_SIZE - 1) {
                 upperResultBits = (z >> 32) & 0xFFFFFFFF;
@@ -301,11 +301,11 @@ const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator>>(unsigned int shi
         for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
             x = returnValue.ext_int[i];
             x = x << 32;
-            x = x >> (shiftVal > 32 ? 32 : shiftVal);       // perform shift
-            returnValue.setValueAtIndex((x & 0xFFFFFFFF00000000) >> 32, i);     // upper 32 bits should be stored
+            x = x >> (shiftVal > 32 ? 32 : shiftVal);                   // perform shift
+            returnValue.ext_int[i] = (x & 0xFFFFFFFF00000000) >> 32;    // upper 32 bits should be stored
             if (i > 0) {
                 y = returnValue.ext_int[i - 1];
-                returnValue.setValueAtIndex((x & 0xFFFFFFFF) | y, i - 1);      // lower 32 bits ORd with previous entry since these bits were shifted into the the adjacent 32-bits
+                returnValue.ext_int[i - 1] = (unsigned int)((x & 0xFFFFFFFF) | y);      // lower 32 bits ORd with previous entry since these bits were shifted into the the adjacent 32-bits
             }
         }
         shiftVal = (shiftVal >= 32 ? shiftVal - 32 : 0);
@@ -324,10 +324,10 @@ const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator<<(unsigned int shi
         for (unsigned int i = this->ARRAY_SIZE - 1; i >= 0; i--) {
             x = returnValue.ext_int[i];
             x = x << (shiftVal > 32 ? 32 : shiftVal);           // perform shift
-            returnValue.setValueAtIndex(x & 0xFFFFFFFF, i);     // lower 32 bits should be stored
+            returnValue.ext_int[i] = x & 0xFFFFFFFF;     // lower 32 bits should be stored
             if (i < this->ARRAY_SIZE - 1) {
                 y = returnValue.ext_int[i + 1];
-                returnValue.setValueAtIndex((x & 0xFFFFFFFF00000000) >> 32 | y, i + 1);            // lower 32 bits ORd with previous entry since these bits were shifted into the the adjacent 32-bits
+                returnValue.ext_int[i + 1] = (unsigned int)((x & 0xFFFFFFFF00000000) >> 32 | y);                    // lower 32 bits ORd with previous entry since these bits were shifted into the the adjacent 32-bits
             }
         }
         shiftVal = (shiftVal >= 32 ? shiftVal - 32 : 0);

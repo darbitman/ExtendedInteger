@@ -32,7 +32,11 @@ public:
     const SignedExtendedInt operator>>(unsigned int shiftVal) const;
     const SignedExtendedInt operator<<(unsigned int shiftVal) const;
     inline SignedExtendedInt operator&(const SignedExtendedInt& obj) const;
+    inline SignedExtendedInt operator&(const unsigned long long& obj) const;
     inline SignedExtendedInt operator|(const SignedExtendedInt& obj) const;
+    inline SignedExtendedInt operator|(const unsigned long long& obj) const;
+    inline SignedExtendedInt operator^(const SignedExtendedInt& obj) const;
+    inline SignedExtendedInt operator^(const unsigned long long& obj) const;
     inline const SignedExtendedInt operator~() const;
 };
 

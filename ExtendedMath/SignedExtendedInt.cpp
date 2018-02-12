@@ -24,6 +24,7 @@ SignedExtendedInt<T>::SignedExtendedInt(const SignedExtendedInt<T>& obj) {
 
 template<typename T>
 void SignedExtendedInt<T>::stringToExtendedInt(const char* s) {
+    unsigned int signBit = 0;
     unsigned int strLength = 0;
     while (s[strLength] != 0) {
         strLength++;
@@ -34,15 +35,15 @@ void SignedExtendedInt<T>::stringToExtendedInt(const char* s) {
     TEN.setValueAtIndex(10, 0);
     SignedExtendedInt<T> readInt;
     for (int i = strLength - 1; i >= 0; i--) {
-        if (i == 0 && s[i] == '-') {
-            for (unsigned int j = 0; j < this->ARRAY_SIZE; j++) {
-                this->setValueAtIndex(~(this->getValueAtIndex(i)), i);
-            }
-            //*this = *this + 1;
+        if (i == strLength - 1 && s[i] == '-') {
+            signBit = 1;
             continue;
         }
-        readInt.setValueAtIndex(s[i] - '0', 0);
+        readInt.ext_int[0] = s[i] - '0';
+        *this = *this + (powersOfTen * readInt);
+        powersOfTen = powersOfTen * TEN;
     }
+
 }
 
 template<typename T>
@@ -376,19 +377,51 @@ bool SignedExtendedInt<T>::operator<=(const SignedExtendedInt<T>& obj) const {
             }
         }
         return true;
+    }
 }
 
 
 template<typename T>
 const SignedExtendedInt<T> SignedExtendedInt<T>::operator>>(unsigned int shiftVal) const {
-    SignedExtendedInt<T> returnValue;
+    unsigned long long x = 0;
+    unsigned long long y = 0;
+    SignedExtendedInt<T> returnValue(*this);
+    shiftVal = (shiftVal > T::_multipleOf32Bits * 32 ? T::_multipleOf32Bits * 32 : shiftVal);       // bound maximum shift
+    while (shiftVal > 0) {
+        for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
+            x = returnValue.ext_int[i];
+            x = x << 32;
+            x = x >> (shiftVal > 32 ? 32 : shiftVal);                   // perform shift
+            returnValue.ext_int[i] = (x & 0xFFFFFFFF00000000) >> 32;    // upper 32 bits should be stored
+            if (i > 0) {
+                y = returnValue.ext_int[i - 1];
+                returnValue.ext_int[i - 1] = (unsigned int)((x & 0xFFFFFFFF) | y);                  // lower 32 bits ORd with previous entry since these bits were shifted into the the adjacent 32-bits
+            }
+        }
+        shiftVal = (shiftVal >= 32 ? shiftVal - 32 : 0);
+    }
     return returnValue;
 }
 
 
 template<typename T>
 const SignedExtendedInt<T> SignedExtendedInt<T>::operator<<(unsigned int shiftVal) const {
-    SignedExtendedInt<T> returnValue;
+    unsigned long long x = 0;
+    unsigned long long y = 0;
+    SignedExtendedInt<T> returnValue(*this);
+    shiftVal = (shiftVal > T::_multipleOf32Bits * 32 ? T::_multipleOf32Bits * 32 : shiftVal);       // bound maximum shift
+    while (shiftVal > 0) {
+        for (unsigned int i = this->ARRAY_SIZE - 1; i >= 0; i--) {
+            x = returnValue.ext_int[i];
+            x = x << (shiftVal > 32 ? 32 : shiftVal);    // perform shift
+            returnValue.ext_int[i] = x & 0xFFFFFFFF;     // lower 32 bits should be stored
+            if (i < this->ARRAY_SIZE - 1) {
+                y = returnValue.ext_int[i + 1];
+                returnValue.ext_int[i + 1] = (unsigned int)((x & 0xFFFFFFFF00000000) >> 32 | y);    // lower 32 bits ORd with previous entry since these bits were shifted into the the adjacent 32-bits
+            }
+        }
+        shiftVal = (shiftVal >= 32 ? shiftVal - 32 : 0);
+    }
     return returnValue;
 }
 
@@ -396,6 +429,18 @@ const SignedExtendedInt<T> SignedExtendedInt<T>::operator<<(unsigned int shiftVa
 template<typename T>
 inline SignedExtendedInt<T> SignedExtendedInt<T>::operator&(const SignedExtendedInt<T>& obj) const {
     SignedExtendedInt<T> returnValue;
+    for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
+        returnValue.ext_int[i] = this->ext_int[i] & obj.ext_int[i];
+    }
+    return returnValue;
+}
+
+
+template<typename T>
+inline SignedExtendedInt<T> SignedExtendedInt<T>::operator&(const unsigned long long& obj) const {
+    SignedExtendedInt<T> returnValue;
+    returnValue.ext_int[0] = this->ext_int[0] & (obj & 0xFFFFFFFF);
+    returnValue.ext_int[1] = this->ext_int[1] & ((obj >> 32) & 0xFFFFFFFF);
     return returnValue;
 }
 
@@ -403,6 +448,37 @@ inline SignedExtendedInt<T> SignedExtendedInt<T>::operator&(const SignedExtended
 template<typename T>
 inline SignedExtendedInt<T> SignedExtendedInt<T>::operator|(const SignedExtendedInt<T>& obj) const {
     SignedExtendedInt<T> returnValue;
+    for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
+        returnValue.ext_int[i] = this->ext_int[i] | obj.ext_int[i];
+    }
+    return returnValue;
+}
+
+
+template<typename T>
+inline SignedExtendedInt<T> SignedExtendedInt<T>::operator|(const unsigned long long& obj) const {
+    SignedExtendedInt<T> returnValue;
+    returnValue.ext_int[0] = this->ext_int[0] | (obj & 0xFFFFFFFF);
+    returnValue.ext_int[1] = this->ext_int[1] | ((obj >> 32) & 0xFFFFFFFF);
+    return returnValue;
+}
+
+
+template<typename T>
+inline SignedExtendedInt<T> SignedExtendedInt<T>::operator^(const SignedExtendedInt<T>& obj) const {
+    SignedExtendedInt<T> returnValue;
+    for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
+        returnValue.ext_int[i] = this->ext_int[i] ^ obj.ext_int[i];
+    }
+    return returnValue;
+}
+
+
+template<typename T>
+inline SignedExtendedInt<T> SignedExtendedInt<T>::operator^(const unsigned long long& obj) const {
+    SignedExtendedInt<T> returnValue;
+    returnValue.ext_int[0] = this->ext_int[0] ^ (obj & 0xFFFFFFFF);
+    returnValue.ext_int[1] = this->ext_int[1] ^ ((obj >> 32) & 0xFFFFFFFF);
     return returnValue;
 }
 
