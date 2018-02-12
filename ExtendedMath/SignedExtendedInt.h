@@ -25,6 +25,7 @@ public:
     const SignedExtendedInt operator*(const long long& obj) const;
     const SignedExtendedInt operator/(const SignedExtendedInt& obj) const;
     const SignedExtendedInt operator%(const SignedExtendedInt& obj) const;
+    bool operator==(const SignedExtendedInt& obj) const;
     bool operator<(const SignedExtendedInt& obj) const;
     bool operator>(const SignedExtendedInt& obj) const;
     bool operator<=(const SignedExtendedInt& obj) const;

@@ -241,7 +241,7 @@ const SignedExtendedInt<T> SignedExtendedInt<T>::divideModOperator(const SignedE
     unsigned long long sign1 = (this->ext_int[this->ARRAY_SIZE - 1] >> 31) & 0x1;       // Extract sign bit of calling obj
     unsigned long long sign2 = (divisor.ext_int[divisor.ARRAY_SIZE - 1] >> 31) & 0x1;   // Extract sign bit of divisor
     SignedExtendedInt<T> unsignedThis(sign1 ? ((~(*this)) + 1) : (*this));              // if calling obj is negative, return positive value
-    SignedExtendedInt<T> unsignedDivisor(sign2 ? ((~divisor) + 1) : divisor);               // if multiplier is negative, return positive value
+    SignedExtendedInt<T> unsignedDivisor(sign2 ? ((~divisor) + 1) : divisor);           // if multiplier is negative, return positive value
     unsigned long long x = 0;
     unsigned long long y = 0;
     SignedExtendedInt<T> returnValue;
@@ -289,20 +289,93 @@ const SignedExtendedInt<T> SignedExtendedInt<T>::divideModOperator(const SignedE
 
 
 template<typename T>
-bool SignedExtendedInt<T>::operator<(const SignedExtendedInt<T>& obj) const {
+bool SignedExtendedInt<T>::operator==(const SignedExtendedInt<T>& obj) const {
+    for (int i = this->ARRAY_SIZE - 1; i >= 0; i--) {
+        if (this->ext_int[i] != obj.ext_int[i]) {
+            return false;
+        }
+    }
     return true;
+}
+
+
+template<typename T>
+bool SignedExtendedInt<T>::operator<(const SignedExtendedInt<T>& obj) const {
+    unsigned long long sign1 = (this->ext_int[this->ARRAY_SIZE - 1] >> 31) & 0x1;   // Extract sign bit of calling obj
+    unsigned long long sign2 = (obj.ext_int[obj.ARRAY_SIZE - 1] >> 31) & 0x1;       // Extract sign bit of rhs obj
+    if (sign1 && !sign2) {
+        return true;
+    }
+    else if (sign2 && !sign1) {
+        return false;
+    }
+    else {
+        for (int i = this->ARRAY_SIZE - 1; i >= 0; i--) {
+            if (this->ext_int[i] < obj.ext_int[i]) {
+                return true;
+            }
+            else if (this->ext_int[i] == obj.ext_int[i]) {
+                continue;
+            }
+            else {
+                return false;
+            }
+        }
+        return false;
+    }
 }
 
 
 template<typename T>
 bool SignedExtendedInt<T>::operator>(const SignedExtendedInt<T>& obj) const {
-    return true;
+    unsigned long long sign1 = (this->ext_int[this->ARRAY_SIZE - 1] >> 31) & 0x1;   // Extract sign bit of calling obj
+    unsigned long long sign2 = (obj.ext_int[obj.ARRAY_SIZE - 1] >> 31) & 0x1;       // Extract sign bit of rhs obj
+    if (sign1 && !sign2) {
+        return false;
+    }
+    else if (sign2 && !sign1) {
+        return true;
+    }
+    else {
+        for (int i = this->ARRAY_SIZE - 1; i >= 0; i--) {
+            if (this->ext_int[i] > obj.ext_int[i]) {
+                return true;
+            }
+            else if (this->ext_int[i] == obj.ext_int[i]) {
+                continue;
+            }
+            else {
+                return false;
+            }
+        }
+        return false;
+    }
 }
 
 
 template<typename T>
 bool SignedExtendedInt<T>::operator<=(const SignedExtendedInt<T>& obj) const {
-    return true;
+    unsigned long long sign1 = (this->ext_int[this->ARRAY_SIZE - 1] >> 31) & 0x1;   // Extract sign bit of calling obj
+    unsigned long long sign2 = (obj.ext_int[obj.ARRAY_SIZE - 1] >> 31) & 0x1;       // Extract sign bit of rhs obj
+    if (sign1 && !sign2) {
+        return true;
+    }
+    else if (sign2 && !sign1) {
+        return false;
+    }
+    else {
+        for (int i = this->ARRAY_SIZE - 1; i >= 0; i--) {
+            if (this->ext_int[i] < obj.ext_int[i]) {
+                return true;
+            }
+            else if (this->ext_int[i] == obj.ext_int[i]) {
+                continue;
+            }
+            else {
+                return false;
+            }
+        }
+        return true;
 }
 
 

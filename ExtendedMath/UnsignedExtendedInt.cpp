@@ -215,7 +215,38 @@ const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::divideModOperator(const Uns
 template<typename T>
 bool UnsignedExtendedInt<T>::operator==(const UnsignedExtendedInt<T>& obj) const {
     for (int i = this->ARRAY_SIZE - 1; i >= 0; i--) {
-        if (this->getValueAtIndex(i) == obj.getValueAtIndex(i)) {
+        if (this->ext_int[i] != obj.ext_int[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+
+template<typename T>
+bool UnsignedExtendedInt<T>::operator>(const UnsignedExtendedInt<T>& obj) const {
+    for (int i = this->ARRAY_SIZE - 1; i >= 0; i--) {
+        if (this->ext_int[i] > obj.ext_int[i]) {
+            return true;
+        }
+        else if (this->ext_int[i] == obj.ext_int[i]) {
+            continue;
+        }
+        else {
+            return false;
+        }
+    }
+    return false;
+}
+
+
+template<typename T> 
+bool UnsignedExtendedInt<T>::operator>=(const UnsignedExtendedInt<T>& obj) const {
+    for (int i = this->ARRAY_SIZE - 1; i >= 0; i--) {
+        if (this->ext_int[i] > obj.ext_int[i]) {
+            return true;
+        }
+        else if (this->ext_int[i] == obj.ext_int[i]) {
             continue;
         }
         else {
@@ -227,45 +258,36 @@ bool UnsignedExtendedInt<T>::operator==(const UnsignedExtendedInt<T>& obj) const
 
 
 template<typename T>
-bool UnsignedExtendedInt<T>::operator>(const UnsignedExtendedInt<T>& obj) const {
-    for (int i = this->ARRAY_SIZE - 1; i >= 0; i--) {
-        if (this->getValueAtIndex(i) > obj.getValueAtIndex(i)) {
-            return true;
-        }
-    }
-    return false;
-}
-
-
-template<typename T>
-bool UnsignedExtendedInt<T>::operator>=(const UnsignedExtendedInt<T>& obj) const {
-    if (*this > obj || *this == obj) {
-        return true;
-    }
-    return false;
-}
-
-
-template<typename T>
 bool UnsignedExtendedInt<T>::operator<(const UnsignedExtendedInt<T>& obj) const {
     for (int i = this->ARRAY_SIZE - 1; i >= 0; i--) {
-        if (this->getValueAtIndex(i) > obj.getValueAtIndex(i)) {
-            return false;
+        if (this->ext_int[i] < obj.ext_int[i]) {
+            return true;
         }
-        else if (this->getValueAtIndex(i) == obj.getValueAtIndex(i)) {
+        else if (this->ext_int[i] == obj.ext_int[i]) {
             continue;
         }
+        else {
+            return false;
+        }
     }
-    return true;
+    return false;
 }
 
 
 template<typename T>
 bool UnsignedExtendedInt<T>::operator<=(const UnsignedExtendedInt<T>& obj) const {
-    if (*this < obj || *this == obj) {
-        return true;
+    for (int i = this->ARRAY_SIZE - 1; i >= 0; i--) {
+        if (this->ext_int[i] < obj.ext_int[i]) {
+            return true;
+        }
+        else if (this->ext_int[i] == obj.ext_int[i]) {
+            continue;
+        }
+        else {
+            return false;
+        }
     }
-    return false;
+    return true;
 }
 
 
