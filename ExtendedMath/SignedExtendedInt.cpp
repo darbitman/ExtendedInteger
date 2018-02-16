@@ -47,6 +47,13 @@ void SignedExtendedInt<T>::stringToExtendedInt(const char* s) {
 }
 
 template<typename T>
+char* SignedExtendedInt<T>::extendedIntToString() const {
+    char* c = new char();
+    return c;
+}
+
+
+template<typename T>
 SignedExtendedInt<T>::SignedExtendedInt(const char* s) {
     if (this->ARRAY_SIZE == 0)
         this->initialize();

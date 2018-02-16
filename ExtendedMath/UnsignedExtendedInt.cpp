@@ -54,6 +54,15 @@ void UnsignedExtendedInt<T>::stringToExtendedInt(const char* s) {
 
 
 template<typename T>
+char* UnsignedExtendedInt<T>::extendedIntToString() const {
+
+
+    char* c = new char();
+    return c;
+}
+
+
+template<typename T>
 UnsignedExtendedInt<T>::~UnsignedExtendedInt() {
     delete[] this->ext_int;
 }
@@ -222,6 +231,11 @@ bool UnsignedExtendedInt<T>::operator==(const UnsignedExtendedInt<T>& obj) const
     return true;
 }
 
+template<typename T>
+bool UnsignedExtendedInt<T>::operator==(const unsigned long long & obj) const {
+    return false;
+}
+
 
 template<typename T>
 bool UnsignedExtendedInt<T>::operator>(const UnsignedExtendedInt<T>& obj) const {
@@ -321,7 +335,7 @@ const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator<<(unsigned int shi
     UnsignedExtendedInt<T> returnValue(*this);
     shiftVal = (shiftVal > T::_multipleOf32Bits * 32 ? T::_multipleOf32Bits * 32 : shiftVal);       // bound maximum shift
     while (shiftVal > 0) {
-        for (unsigned int i = this->ARRAY_SIZE - 1; i >= 0; i--) {
+        for (int i = this->ARRAY_SIZE - 1; i >= 0; i--) {
             x = returnValue.ext_int[i];
             x = x << (shiftVal > 32 ? 32 : shiftVal);           // perform shift
             returnValue.ext_int[i] = x & 0xFFFFFFFF;     // lower 32 bits should be stored
@@ -399,3 +413,4 @@ inline UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator~() const {
     }
     return returnValue;
 }
+
