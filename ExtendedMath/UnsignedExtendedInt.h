@@ -12,6 +12,7 @@ protected:
     virtual void stringToExtendedInt(const char* s);
     virtual char* extendedIntToString() const;
     const UnsignedExtendedInt divideModOperator(const UnsignedExtendedInt& divisor, const ExtendedInt<T>::DIVIDE_OPERATION op);
+    UnsignedExtendedInt(const unsigned long long& obj, const unsigned long long& multipleOf32Bits);
 public:
 	UnsignedExtendedInt();
     UnsignedExtendedInt(const UnsignedExtendedInt& obj);

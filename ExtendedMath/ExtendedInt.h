@@ -8,7 +8,7 @@ class ExtendedInt {
 protected:
     enum DIVIDE_OPERATION { DIVIDE_OP, MOD_OP };
     unsigned int ARRAY_SIZE;
-    unsigned int* ext_int;
+    unsigned int ext_int[T::_multipleOf32Bits];
     virtual void initialize();
     virtual void stringToExtendedInt(const char* s) = 0;
     virtual char* extendedIntToString() const = 0;
@@ -20,7 +20,6 @@ public:
 template<typename T>
 void ExtendedInt<T>::initialize() {
     this->ARRAY_SIZE = T::_multipleOf32Bits;
-    this->ext_int = new unsigned int[this->ARRAY_SIZE];
     for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
         this->ext_int[i] = 0;
     }

@@ -13,12 +13,18 @@ UnsignedExtendedInt<T>::UnsignedExtendedInt() {
     this->initialize();
 }
 
+template<typename T>
+UnsignedExtendedInt<T>::UnsignedExtendedInt(const unsigned long long& obj, const unsigned long long& multipleOf32Bits) {
+    this->initialize();
+    this->ext_int[0] = obj & 0xFFFFFFFF;
+    this->ext_int[1] = (obj >> 32) & 0xFFFFFFFF;
+}
+
 
 // Copy constructor
 template<typename T>
 UnsignedExtendedInt<T>::UnsignedExtendedInt(const UnsignedExtendedInt& obj) {
     this->ARRAY_SIZE = obj.ARRAY_SIZE;
-    this->ext_int = new unsigned int[this->ARRAY_SIZE];
     for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
         this->ext_int[i] = obj.ext_int[i];
     }
@@ -64,15 +70,12 @@ char* UnsignedExtendedInt<T>::extendedIntToString() const {
 
 template<typename T>
 UnsignedExtendedInt<T>::~UnsignedExtendedInt() {
-    delete[] this->ext_int;
 }
 
 
 template<typename T>
 const UnsignedExtendedInt<T>& UnsignedExtendedInt<T>::operator=(const UnsignedExtendedInt<T>& obj) {
     this->ARRAY_SIZE = obj.ARRAY_SIZE;
-    delete[] this->ext_int;
-    this->ext_int = new unsigned int[this->ARRAY_SIZE];
     for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
         this->ext_int[i] = obj.ext_int[i];
     }
@@ -112,9 +115,10 @@ const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator+(const unsigned lo
     unsigned long long z = 0;
     unsigned int carryBit = 0;
     UnsignedExtendedInt<T> returnValue;
+    UnsignedExtendedInt<T> uExtObj(obj, this->ARRAY_SIZE);
     for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
         x = this->ext_int[i];
-        y = ((obj >> (i * 32)) & 0xFFFFFFFF);
+        y = uExtObj.ext_int[i];
         z = x + y + carryBit;
         returnValue.ext_int[i] = z & 0xFFFFFFFF;
         carryBit = (z & 0x100000000) >> 32;
@@ -194,7 +198,7 @@ const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::divideModOperator(const Uns
     if (*this < divisor) {
         return returnValue;    // if dividend is smaller than divisor, return 0 (e.g. 10 / 20 = 0)
     }
-    int i = 128;
+    int i = 32 * this->ARRAY_SIZE;
     maskBit = maskBit << (i - 1);
     while (--i >= 0) {
         if (divisor > tempDividend) {
@@ -231,9 +235,19 @@ bool UnsignedExtendedInt<T>::operator==(const UnsignedExtendedInt<T>& obj) const
     return true;
 }
 
+
 template<typename T>
 bool UnsignedExtendedInt<T>::operator==(const unsigned long long & obj) const {
-    return false;
+    for (int i = this->ARRAY_SIZE - 1; i >= 2; i--) {
+        if (this->ext_int[i] != 0) {
+            return false;
+        }
+    }
+    if (this->ext_int[1] != ((obj >> 32) & 0xFFFFFFFF) ||
+        this->ext_int[0] != (obj & 0xFFFFFFFF)) {
+        return false;
+    }
+    return true;
 }
 
 
@@ -338,10 +352,10 @@ const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator<<(unsigned int shi
         for (int i = this->ARRAY_SIZE - 1; i >= 0; i--) {
             x = returnValue.ext_int[i];
             x = x << (shiftVal > 32 ? 32 : shiftVal);           // perform shift
-            returnValue.ext_int[i] = x & 0xFFFFFFFF;     // lower 32 bits should be stored
-            if (i < this->ARRAY_SIZE - 1) {
+            returnValue.ext_int[i] = x & 0xFFFFFFFF;            // lower 32 bits should be stored
+            if (i < (int)this->ARRAY_SIZE - 1) {
                 y = returnValue.ext_int[i + 1];
-                returnValue.ext_int[i + 1] = (unsigned int)((x & 0xFFFFFFFF00000000) >> 32 | y);                    // lower 32 bits ORd with previous entry since these bits were shifted into the the adjacent 32-bits
+                returnValue.ext_int[i + 1] = (unsigned int)((x & 0xFFFFFFFF00000000) >> 32 | y);    // lower 32 bits ORd with previous entry since these bits were shifted into the the adjacent 32-bits
             }
         }
         shiftVal = (shiftVal >= 32 ? shiftVal - 32 : 0);

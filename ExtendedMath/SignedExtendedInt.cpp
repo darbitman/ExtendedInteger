@@ -63,14 +63,12 @@ SignedExtendedInt<T>::SignedExtendedInt(const char* s) {
 
 template<typename T>
 SignedExtendedInt<T>::~SignedExtendedInt() {
-    delete[] this->ext_int;
 }
 
 
 template<typename T>
 const SignedExtendedInt<T>& SignedExtendedInt<T>::operator=(const SignedExtendedInt<T>& obj) {
     this->ARRAY_SIZE = obj.ARRAY_SIZE;
-    this->ext_int = new unsigned int[this->ARRAY_SIZE];
     for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
         this->ext_int[i] = obj.ext_int[i];
     }
