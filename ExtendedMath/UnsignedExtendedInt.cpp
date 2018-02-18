@@ -91,7 +91,7 @@ const UnsignedExtendedInt<T>& UnsignedExtendedInt<T>::operator=(const char* s) {
 
 
 template<class T>
-const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator+(const UnsignedExtendedInt<T>& obj) {
+const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator+(const UnsignedExtendedInt<T>& obj) const {
     unsigned long long x = 0;
     unsigned long long y = 0;
     unsigned long long z = 0;
@@ -109,7 +109,7 @@ const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator+(const UnsignedExt
 
 
 template<typename T>
-const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator+(const unsigned long long& obj) {
+const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator+(const unsigned long long& obj) const {
     unsigned long long x = 0;
     unsigned long long y = 0;
     unsigned long long z = 0;
@@ -128,19 +128,19 @@ const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator+(const unsigned lo
 
 
 template<typename T>
-const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator-(const UnsignedExtendedInt& obj) {
-    return this->operator+((~obj) + 1);
+const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator-(const UnsignedExtendedInt& obj) const {
+    return this->operator+(~obj + 1);
 }
 
 
 template<typename T>
-const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator-(const unsigned long long& obj) {
-    return this->operator+((~obj) + 1);
+const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator-(const unsigned long long& obj) const {
+    return this->operator+(~obj + 1);
 }
 
 
 template<typename T>
-const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator*(const UnsignedExtendedInt& obj) {
+const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator*(const UnsignedExtendedInt& obj) const {
     // This algorithm multiplies 32bit integers using native 64bit integers.
     unsigned long long x = 0;
     unsigned long long y = 0;
@@ -176,27 +176,32 @@ const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator*(const UnsignedExt
 
 
 template<typename T>
-const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator/(const UnsignedExtendedInt& divisor) {
-    return divideModOperator(divisor, this->DIVIDE_OP);
+const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator/(const UnsignedExtendedInt& divisor) const {
+    return divideModOperator(divisor, UnsignedExtendedInt<T>::DIVIDE_OP);
 }
 
 
 template<typename T>
-const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator%(const UnsignedExtendedInt& divisor) {
-    return divideModOperator(divisor, this->MOD_OP);
+const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator%(const UnsignedExtendedInt& divisor) const {
+    return divideModOperator(divisor, UnsignedExtendedInt<T>::MOD_OP);
 }
 
 
 template<typename T>
-const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::divideModOperator(const UnsignedExtendedInt& divisor, const ExtendedInt<T>::DIVIDE_OPERATION op) {
+const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::divideModOperator(const UnsignedExtendedInt& divisor, const ExtendedInt<T>::DIVIDE_OPERATION op) const {
     unsigned long long x = 0;
     unsigned long long y = 0;
     UnsignedExtendedInt<T> returnValue;
     UnsignedExtendedInt<T> tempDividend;
     UnsignedExtendedInt<T> maskBit;
     maskBit.setValueAtIndex(1, 0);
-    if (*this < divisor) {
-        return returnValue;    // if dividend is smaller than divisor, return 0 (e.g. 10 / 20 = 0)
+    if (*this < divisor) {              // if dividend is smaller than divisor (e.g. 10 / 20 = 0)
+        if (op == UnsignedExtendedInt<T>::DIVIDE_OP) {
+            return returnValue;
+        }
+        else if (op == UnsignedExtendedInt<T>::MOD_OP) {
+            return *this;
+        }
     }
     int i = 32 * this->ARRAY_SIZE;
     maskBit = maskBit << (i - 1);
@@ -220,7 +225,7 @@ const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::divideModOperator(const Uns
         tempDividend = tempDividend - divisor;          // remainder
     }
 
-    if (op == this->DIVIDE_OP) return returnValue;      // quotient
+    if (op == (UnsignedExtendedInt<T>::DIVIDE_OP)) return returnValue;      // quotient
     else return tempDividend;                           // mod operation returns remainder
 }
 
@@ -427,4 +432,3 @@ inline UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator~() const {
     }
     return returnValue;
 }
-

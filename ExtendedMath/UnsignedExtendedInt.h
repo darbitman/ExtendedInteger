@@ -11,7 +11,7 @@ class UnsignedExtendedInt : public ExtendedInt<T> {
 protected:
     virtual void stringToExtendedInt(const char* s);
     virtual char* extendedIntToString() const;
-    const UnsignedExtendedInt divideModOperator(const UnsignedExtendedInt& divisor, const ExtendedInt<T>::DIVIDE_OPERATION op);
+    const UnsignedExtendedInt divideModOperator(const UnsignedExtendedInt& divisor, const ExtendedInt<T>::DIVIDE_OPERATION op) const;
     UnsignedExtendedInt(const unsigned long long& obj, const unsigned long long& multipleOf32Bits);
 public:
 	UnsignedExtendedInt();
@@ -20,13 +20,13 @@ public:
     ~UnsignedExtendedInt();
     const UnsignedExtendedInt& operator=(const UnsignedExtendedInt& obj);
     const UnsignedExtendedInt& operator=(const char* s);
-    const UnsignedExtendedInt operator+(const UnsignedExtendedInt& obj);
-    const UnsignedExtendedInt operator+(const unsigned long long& obj);
-    const UnsignedExtendedInt operator-(const UnsignedExtendedInt& obj);
-    const UnsignedExtendedInt operator-(const unsigned long long& obj);
-    const UnsignedExtendedInt operator*(const UnsignedExtendedInt& obj);    
-    const UnsignedExtendedInt operator/(const UnsignedExtendedInt& divisor);
-    const UnsignedExtendedInt operator%(const UnsignedExtendedInt& divisor);
+    const UnsignedExtendedInt operator+(const UnsignedExtendedInt& obj) const;
+    const UnsignedExtendedInt operator+(const unsigned long long& obj) const;
+    const UnsignedExtendedInt operator-(const UnsignedExtendedInt& obj) const;
+    const UnsignedExtendedInt operator-(const unsigned long long& obj) const;
+    const UnsignedExtendedInt operator*(const UnsignedExtendedInt& obj) const;
+    const UnsignedExtendedInt operator/(const UnsignedExtendedInt& divisor) const;
+    const UnsignedExtendedInt operator%(const UnsignedExtendedInt& divisor) const;
     bool operator==(const UnsignedExtendedInt& obj) const;
     bool operator==(const unsigned long long& obj) const;
     bool operator>(const UnsignedExtendedInt& obj) const;
