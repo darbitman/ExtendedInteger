@@ -232,13 +232,13 @@ const SignedExtendedInt<T> SignedExtendedInt<T>::operator*(const long long& obj)
 
 template<typename T>
 const SignedExtendedInt<T> SignedExtendedInt<T>::operator/(const SignedExtendedInt<T>& divisor) const {
-    return divideModOperator(divisor, this->DIVIDE_OP);
+    return divideModOperator(divisor, ExtendedInt<T>::DIVIDE_OP);
 }
 
 
 template<typename T>
 const SignedExtendedInt<T> SignedExtendedInt<T>::operator%(const SignedExtendedInt<T>& divisor) const {
-    return divideModOperator(divisor, this->MOD_OP);
+    return divideModOperator(divisor, ExtendedInt<T>::MOD_OP);
 }
 
 
@@ -255,8 +255,17 @@ const SignedExtendedInt<T> SignedExtendedInt<T>::divideModOperator(const SignedE
     SignedExtendedInt<T> maskBit;
     maskBit.ext_int[0] = 1;
     if (unsignedThis < unsignedDivisor) {
-        return returnValue;    // if dividend is smaller than divisor, return 0 (e.g. 10 / 20 = 0)
+        if (op == unsignedThis.DIVIDE_OP) {         // if division
+            return returnValue;
+        }
+        else {                                      // otherwise mod
+            if (sign1) {                            // result is negative if dividend is negative
+                return *this;                       // dividend is remainder in this case
+            }
+            return unsignedThis;
+        }
     }
+
     int i = unsignedThis.ARRAY_SIZE;
     maskBit = maskBit << (i - 1);
     while (--i >= 0) {

@@ -14,7 +14,7 @@ protected:
     virtual char* extendedIntToString() const = 0;
 public:
     virtual void setValueAtIndex(const unsigned long long val, const unsigned int index);
-    virtual unsigned long long getValueAtIndex(const unsigned int index) const;  
+    virtual unsigned long long getValueAtIndex(const unsigned int index) const;
 };
 
 template<typename T>
@@ -41,7 +41,6 @@ unsigned long long ExtendedInt<T>::getValueAtIndex(const unsigned int index) con
     }
     return 0;
 }
-
 
 
 #endif

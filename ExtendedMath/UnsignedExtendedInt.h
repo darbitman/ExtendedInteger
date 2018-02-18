@@ -25,6 +25,7 @@ public:
     const UnsignedExtendedInt operator-(const UnsignedExtendedInt& obj) const;
     const UnsignedExtendedInt operator-(const unsigned long long& obj) const;
     const UnsignedExtendedInt operator*(const UnsignedExtendedInt& obj) const;
+    const UnsignedExtendedInt operator*(const unsigned long long& obj) const;
     const UnsignedExtendedInt operator/(const UnsignedExtendedInt& divisor) const;
     const UnsignedExtendedInt operator%(const UnsignedExtendedInt& divisor) const;
     bool operator==(const UnsignedExtendedInt& obj) const;

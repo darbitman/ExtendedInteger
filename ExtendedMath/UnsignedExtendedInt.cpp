@@ -176,14 +176,49 @@ const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator*(const UnsignedExt
 
 
 template<typename T>
+const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator*(const unsigned long long& obj) const {
+    unsigned long long x = 0;
+    unsigned long long y = 0;
+    unsigned long long z = 0;
+    unsigned int upperResultBits = 0;
+    unsigned int lowerResultBits = 0;
+    unsigned int leftShiftValue = 0;
+    UnsignedExtendedInt<T> returnValue;
+    UnsignedExtendedInt<T> extIntTemp;
+    for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
+        for (unsigned int j = 0; j < 2; j++) {
+            leftShiftValue = i + j;
+            x = this->ext_int[i];
+            y = (obj >> (j * 32)) & 0xFFFFFFFF;
+            z = x * y;
+
+            if (leftShiftValue < this->ARRAY_SIZE) {
+                if (leftShiftValue > 0) {   // clear previous 32-bits because they will introduce an error in the summation
+                    extIntTemp.ext_int[leftShiftValue - 1] = 0;
+                }
+                lowerResultBits = z & 0xFFFFFFFF;
+                extIntTemp.ext_int[leftShiftValue] = lowerResultBits;   // Extract first 32-bits
+            }
+            if (leftShiftValue < this->ARRAY_SIZE - 1) {
+                upperResultBits = (z >> 32) & 0xFFFFFFFF;
+                extIntTemp.ext_int[leftShiftValue + 1];                 // Extract upper 32-bits
+            }
+            returnValue = returnValue + extIntTemp;
+        }
+    }
+    return returnValue;
+}
+
+
+template<typename T>
 const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator/(const UnsignedExtendedInt& divisor) const {
-    return divideModOperator(divisor, UnsignedExtendedInt<T>::DIVIDE_OP);
+    return divideModOperator(divisor, ExtendedInt<T>::DIVIDE_OP);
 }
 
 
 template<typename T>
 const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator%(const UnsignedExtendedInt& divisor) const {
-    return divideModOperator(divisor, UnsignedExtendedInt<T>::MOD_OP);
+    return divideModOperator(divisor, ExtendedInt<T>::MOD_OP);
 }
 
 
@@ -196,10 +231,10 @@ const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::divideModOperator(const Uns
     UnsignedExtendedInt<T> maskBit;
     maskBit.setValueAtIndex(1, 0);
     if (*this < divisor) {              // if dividend is smaller than divisor (e.g. 10 / 20 = 0)
-        if (op == UnsignedExtendedInt<T>::DIVIDE_OP) {
+        if (op == ExtendedInt<T>::DIVIDE_OP) {
             return returnValue;
         }
-        else if (op == UnsignedExtendedInt<T>::MOD_OP) {
+        else if (op == ExtendedInt<T>::MOD_OP) {
             return *this;
         }
     }
@@ -225,7 +260,7 @@ const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::divideModOperator(const Uns
         tempDividend = tempDividend - divisor;          // remainder
     }
 
-    if (op == (UnsignedExtendedInt<T>::DIVIDE_OP)) return returnValue;      // quotient
+    if (op == ExtendedInt<T>::DIVIDE_OP) return returnValue;      // quotient
     else return tempDividend;                           // mod operation returns remainder
 }
 
@@ -414,6 +449,7 @@ inline UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator^(const UnsignedEx
     }
     return returnValue;
 }
+
 
 template<typename T>
 inline UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator^(const unsigned long long& obj) const {
