@@ -2,6 +2,7 @@
 #define _EXTENDEDINT_H_
 
 #include "ExtendedIntLengths.h"
+#include <iostream>
 
 template<typename T>
 class ExtendedInt {
@@ -11,10 +12,11 @@ protected:
     unsigned int ext_int[T::_multipleOf32Bits];
     virtual void initialize();
     virtual void stringToExtendedInt(const char* s) = 0;
-    virtual char* extendedIntToString() const = 0;
+    virtual std::string extendedIntToString() const = 0;
 public:
     virtual void setValueAtIndex(const unsigned long long val, const unsigned int index);
-    virtual unsigned long long getValueAtIndex(const unsigned int index) const;
+    virtual unsigned int getValueAtIndex(const unsigned int index) const;
+    virtual unsigned int getArraySize() const;
 };
 
 template<typename T>
@@ -35,12 +37,17 @@ void ExtendedInt<T>::setValueAtIndex(const unsigned long long val, const unsigne
 
 
 template<typename T>
-unsigned long long ExtendedInt<T>::getValueAtIndex(const unsigned int index) const {
+unsigned int ExtendedInt<T>::getValueAtIndex(const unsigned int index) const {
     if ((this->ARRAY_SIZE > 0) && (index < this->ARRAY_SIZE) && (index >= 0)) {
         return this->ext_int[index];
     }
     return 0;
 }
 
+
+template<typename T>
+unsigned int ExtendedInt<T>::getArraySize() const {
+    return this->ARRAY_SIZE;
+}
 
 #endif

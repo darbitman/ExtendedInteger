@@ -2,9 +2,9 @@
 #include "SignedExtendedInt.h"
 
 
-template class SignedExtendedInt<_extint128_t>;
-template class SignedExtendedInt<_extint256_t>;
-template class SignedExtendedInt<_extint512_t>;
+template<> class SignedExtendedInt<_extint128_t>;
+template<> class SignedExtendedInt<_extint256_t>;
+template<> class SignedExtendedInt<_extint512_t>;
 
 
 template<typename T>
