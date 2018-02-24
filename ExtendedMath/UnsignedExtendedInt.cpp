@@ -27,7 +27,8 @@ UnsignedExtendedInt<T>::UnsignedExtendedInt(const UnsignedExtendedInt& obj) {
 // convert input string to extended integer
 template<typename T>
 UnsignedExtendedInt<T>::UnsignedExtendedInt(const char* s) {
-    this->initialize();
+    if (this->ARRAY_SIZE == 0)
+        this->initialize();
     this->stringToExtendedInt(s);
 }
 
@@ -72,19 +73,6 @@ std::string UnsignedExtendedInt<T>::extendedIntToString() const {
         extIntString = (char)((remainder.ext_int[0] & 0xFF) + 48) + extIntString;
     }
     return extIntString;
-}
-
-
-template<typename T>
-void UnsignedExtendedInt<T>::printDecimalString() const {
-    UnsignedExtendedInt<T> dividend(*this);
-    UnsignedExtendedInt<T> remainder;
-    const UnsignedExtendedInt<T> TEN(10);
-    while (dividend > 0ULL) {
-        remainder = dividend % TEN;
-        dividend = dividend / TEN;
-        std::cout << remainder.ext_int[0] << std::endl;
-    }
 }
 
 

@@ -2,9 +2,9 @@
 #include "SignedExtendedInt.h"
 
 
-template<> class SignedExtendedInt<_extint128_t>;
-template<> class SignedExtendedInt<_extint256_t>;
-template<> class SignedExtendedInt<_extint512_t>;
+template class SignedExtendedInt<_extint128_t>;
+template class SignedExtendedInt<_extint256_t>;
+template class SignedExtendedInt<_extint512_t>;
 
 
 template<typename T>
@@ -46,10 +46,31 @@ void SignedExtendedInt<T>::stringToExtendedInt(const char* s) {
 
 }
 
+
 template<typename T>
-char* SignedExtendedInt<T>::extendedIntToString() const {
-    char* c = new char();
-    return c;
+std::string SignedExtendedInt<T>::extendedIntToString() const {
+    bool isNegative = false;
+    std::string extIntString;
+    SignedExtendedInt<T> unsignedObj;
+    if (*this < 0ULL) {
+        isNegative = true;
+        unsignedObj = ~(*this) + 1;
+    }
+    else {
+        unsignedObj = *this;
+    }
+    SignedExtendedInt<T> dividend(*this);
+    SignedExtendedInt<T> remainder;
+    const SignedExtendedInt<T> TEN(10);
+    while (dividend > 0ULL) {
+        remainder = dividend % TEN;
+        dividend = dividend / TEN;
+        extIntString = (char)((remainder.ext_int[0] & 0xFF) + 48) + extIntString;
+    }
+    if (isNegative) {
+        extIntString = '-' + extIntString;
+    }
+    return extIntString;
 }
 
 
@@ -58,6 +79,19 @@ SignedExtendedInt<T>::SignedExtendedInt(const char* s) {
     if (this->ARRAY_SIZE == 0)
         this->initialize();
     this->stringToExtendedInt(s);
+}
+
+
+template<typename T>
+SignedExtendedInt<T>::SignedExtendedInt(const unsigned long long& obj) {
+    this->initialize();
+    this->ext_int[0] = obj & 0xFFFFFFFF;
+    this->ext_int[1] = (obj >> 32) & 0xFFFFFFFF;
+    if (obj < 0) {
+        for (unsigned int i = 2; i < this->ARRAY_SIZE; i++) {
+            this->ext_int[i] = 0xFFFFFFFF;
+        }
+    }
 }
 
 

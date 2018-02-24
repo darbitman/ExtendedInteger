@@ -3,6 +3,7 @@
 
 #include "ExtendedIntLengths.h"
 #include <iostream>
+#include <string>
 
 template<typename T>
 class ExtendedInt {

@@ -3,8 +3,6 @@
 
 
 #include "ExtendedInt.h"
-#include <iostream>
-#include <string>
 
 
 template<typename T>
@@ -40,14 +38,12 @@ public:
     inline UnsignedExtendedInt operator^(const UnsignedExtendedInt& obj) const;
     inline UnsignedExtendedInt operator~() const;
 
-    void printDecimalString() const;
-
-
     friend std::ostream& operator<<(std::ostream& os, const UnsignedExtendedInt& obj) {
         os << obj.extendedIntToString();
         return os;
     }
 };
+
 
 template<typename T> template<typename U> UnsignedExtendedInt<T>::UnsignedExtendedInt(const UnsignedExtendedInt<U>& obj) {
     this->ARRAY_SIZE = T::_multipleOf32Bits;
