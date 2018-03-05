@@ -5,40 +5,41 @@
 #include <iostream>
 #include <string>
 
-template<typename T>
+template<unsigned int t = 4>
 class ExtendedInt {
 protected:
     enum DIVIDE_OPERATION { DIVIDE_OP, MOD_OP };
     unsigned int ARRAY_SIZE;
-    unsigned int ext_int[T::_multipleOf32Bits];
+    unsigned int ext_int[t];
     virtual void initialize();
-    virtual void stringToExtendedInt(const char* s) = 0;
-    virtual std::string extendedIntToString() const = 0;
+    //virtual void stringToExtendedInt(const char* s) = 0;
+    //virtual std::string extendedIntToString() const = 0;
 public:
     virtual void setValueAtIndex(const unsigned long long val, const unsigned int index);
     virtual unsigned int getValueAtIndex(const unsigned int index) const;
     virtual unsigned int getArraySize() const;
 };
 
-template<typename T>
-void ExtendedInt<T>::initialize() {
-    this->ARRAY_SIZE = T::_multipleOf32Bits;
+
+template<unsigned int t>
+void ExtendedInt<t>::initialize() {
+    this->ARRAY_SIZE = t;
     for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
         this->ext_int[i] = 0;
     }
 }
 
 
-template<typename T>
-void ExtendedInt<T>::setValueAtIndex(const unsigned long long val, const unsigned int index) {
+template<unsigned int t>
+void ExtendedInt<t>::setValueAtIndex(const unsigned long long val, const unsigned int index) {
     if ((index < this->ARRAY_SIZE) && (index >= 0)) {
         this->ext_int[index] = val & 0xFFFFFFFF;
     }
 }
 
 
-template<typename T>
-unsigned int ExtendedInt<T>::getValueAtIndex(const unsigned int index) const {
+template<unsigned int t>
+unsigned int ExtendedInt<t>::getValueAtIndex(const unsigned int index) const {
     if ((this->ARRAY_SIZE > 0) && (index < this->ARRAY_SIZE) && (index >= 0)) {
         return this->ext_int[index];
     }
@@ -46,8 +47,8 @@ unsigned int ExtendedInt<T>::getValueAtIndex(const unsigned int index) const {
 }
 
 
-template<typename T>
-unsigned int ExtendedInt<T>::getArraySize() const {
+template<unsigned int t>
+unsigned int ExtendedInt<t>::getArraySize() const {
     return this->ARRAY_SIZE;
 }
 

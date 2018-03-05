@@ -1,221 +1,247 @@
-#include "stdafx.h"
 #include "UnsignedExtendedInt.h"
-
-
-template class UnsignedExtendedInt<_extint128_t>;
-template class UnsignedExtendedInt<_extint256_t>;
-template class UnsignedExtendedInt<_extint512_t>;
-
-
 // Create new extended integer
-template<typename T>
-UnsignedExtendedInt<T>::UnsignedExtendedInt() {
+template<unsigned int t>
+UnsignedExtendedInt<t>::UnsignedExtendedInt() {
     this->initialize();
 }
 
 
 // Copy constructor
-template<typename T>
-UnsignedExtendedInt<T>::UnsignedExtendedInt(const UnsignedExtendedInt& obj) {
-    this->ARRAY_SIZE = obj.ARRAY_SIZE;
-    for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
-        this->ext_int[i] = obj.ext_int[i];
+template<unsigned int t>
+template<unsigned int u>
+UnsignedExtendedInt<t>::UnsignedExtendedInt(const UnsignedExtendedInt<u>& obj) {
+    this->initialize();
+    unsigned int minArraySize = extIntReturnSize<t, u>::multipleOf32BitsMin_;
+    for (unsigned int i = 0; i < minArraySize; i++) {
+        this->ext_int[i] = obj.getValueAtIndex(i);
     }
 }
 
 
-// convert input string to extended integer
-template<typename T>
-UnsignedExtendedInt<T>::UnsignedExtendedInt(const char* s) {
-    if (this->ARRAY_SIZE == 0)
-        this->initialize();
-    this->stringToExtendedInt(s);
-}
-
-
-template<typename T>
-UnsignedExtendedInt<T>::UnsignedExtendedInt(const unsigned long long& obj) {
+template<unsigned int t>
+UnsignedExtendedInt<t>::UnsignedExtendedInt(unsigned long long obj) {
     this->initialize();
     this->ext_int[0] = obj & 0xFFFFFFFF;
     this->ext_int[1] = (obj >> 32) & 0xFFFFFFFF;
 }
 
 
-// Construct new extended integer using string input 
-template<typename T>
-void UnsignedExtendedInt<T>::stringToExtendedInt(const char* s) {
-    unsigned int strLength = 0;
-    while (s[strLength] != 0) {             // compute string length
-        strLength++;
-    }
-    UnsignedExtendedInt<T> TEN;
-    UnsignedExtendedInt<T> powersOfTen;
-    powersOfTen.ext_int[0] = 1;
-    TEN.ext_int[0] = 10;
-    UnsignedExtendedInt<T> readInt;
-    for (int i = strLength - 1; i >= 0; i--) {
-        readInt.ext_int[0] = s[i] - '0';
-        *this = *this + (powersOfTen * readInt);
-        powersOfTen = powersOfTen * TEN;
-    }
-}
+//template<unsigned int t>
+//template<unsigned int u>
+//const UnsignedExtendedInt<t>& UnsignedExtendedInt<t>::operator=(const UnsignedExtendedInt<u>& obj) {
+//    this->initialize();
+//    unsigned int minArraySize = extIntReturnSize<t, u>::multipleOf32BitsMin_;
+//    for (unsigned int i = 0; i < minArraySize; i++) {
+//        this->ext_int[i] = obj.getValueAtIndex(i);
+//    }
+//    return *this;
+//}
 
 
-template<typename T>
-std::string UnsignedExtendedInt<T>::extendedIntToString() const {
-    std::string extIntString;
-    UnsignedExtendedInt<T> dividend(*this);
-    UnsignedExtendedInt<T> remainder;
-    const UnsignedExtendedInt<T> TEN(10);
-    while (dividend > 0ULL) {
-        remainder = dividend % TEN;
-        dividend = dividend / TEN;
-        extIntString = (char)((remainder.ext_int[0] & 0xFF) + 48) + extIntString;
-    }
-    return extIntString;
-}
+//// convert input string to extended integer
+//template<typename T>
+//UnsignedExtendedInt<T>::UnsignedExtendedInt(const char* s) {
+//    if (this->ARRAY_SIZE == 0)
+//        this->initialize();
+//    this->stringToExtendedInt(s);
+//}
 
 
-template<typename T>
-UnsignedExtendedInt<T>::~UnsignedExtendedInt() {
-}
+//// Construct new extended integer using string input 
+//template<unsigned int t>
+//void UnsignedExtendedInt<t>::stringToExtendedInt(const char* s) {
+//    unsigned int strLength = 0;
+//    while (s[strLength] != 0) {             // compute string length
+//        strLength++;
+//    }
+//    UnsignedExtendedInt<t> TEN;
+//    UnsignedExtendedInt<t> powersOfTen;
+//    powersOfTen.ext_int[0] = 1;
+//    TEN.ext_int[0] = 10;
+//    UnsignedExtendedInt<T> readInt;
+//    for (int i = strLength - 1; i >= 0; i--) {
+//        readInt.ext_int[0] = s[i] - '0';
+//        *this = *this + (powersOfTen * readInt);
+//        powersOfTen = powersOfTen * TEN;
+//    }
+//}
 
 
-template<typename T>
-const UnsignedExtendedInt<T>& UnsignedExtendedInt<T>::operator=(const UnsignedExtendedInt<T>& obj) {
-    this->ARRAY_SIZE = obj.ARRAY_SIZE;
-    for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
-        this->ext_int[i] = obj.ext_int[i];
-    }
-    return *this;
-}
+//template<typename T>
+//std::string UnsignedExtendedInt<T>::extendedIntToString() const {
+//    std::string extIntString;
+//    UnsignedExtendedInt<T> dividend(*this);
+//    UnsignedExtendedInt<T> remainder;
+//    const UnsignedExtendedInt<T> TEN(10);
+//    while (dividend > 0ULL) {
+//        remainder = dividend % TEN;
+//        dividend = dividend / TEN;
+//        extIntString = (char)((remainder.ext_int[0] & 0xFF) + 48) + extIntString;
+//    }
+//    return extIntString;
+//}
 
 
-template<typename T>
-const UnsignedExtendedInt<T>& UnsignedExtendedInt<T>::operator=(const char* s) {
-    this->stringToExtendedInt(s);
-    return *this;
-}
+//template<typename T>
+//UnsignedExtendedInt<T>::~UnsignedExtendedInt() {
+//}
 
 
-template<class T>
-const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator+(const UnsignedExtendedInt<T>& obj) const {
-    unsigned long long x = 0;
-    unsigned long long y = 0;
-    unsigned long long z = 0;
-    unsigned int carryBit = 0;
-    UnsignedExtendedInt<T> returnValue;
-    for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
-        x = this->ext_int[i];
-        y = obj.ext_int[i];
-        z = x + y + carryBit;
-        returnValue.ext_int[i] = z & 0xFFFFFFFF;
-        carryBit = (z & 0x100000000) >> 32;
-    }
-    return returnValue;
-}
+//template<typename T>
+//const UnsignedExtendedInt<T>& UnsignedExtendedInt<T>::operator=(const char* s) {
+//    this->stringToExtendedInt(s);
+//    return *this;
+//}
 
 
-template<typename T>
-const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator-(const UnsignedExtendedInt& obj) const {
-    return this->operator+(~obj + 1);
-}
+//template<unsigned int t>
+//template<unsigned int u>
+//typename extIntReturnSize<t, u>::returnTypeMax_ UnsignedExtendedInt<t>::operator+(const UnsignedExtendedInt<u>& obj) const {
+//    unsigned long long x = 0;
+//    unsigned long long y = 0;
+//    unsigned long long z = 0;
+//    unsigned int carryBit = 0;
+//    unsigned int minArraySize = 0;
+//    unsigned int maxArraySize = 0;
+//    extIntReturnSize<t, u>::returnTypeMax_ returnValue;
+//    if (this->ARRAY_SIZE > obj.ARRAY_SIZE) {
+//        maxArraySize = this->ARRAY_SIZE;
+//        minArraySize = obj.ARRAY_SIZE;
+//        for (unsigned int i = minArraySize; i < maxArraySize; i++) {
+//            returnValue.ext_int[i] = this->ext_int[i];
+//        }
+//    }
+//    else {
+//        maxArraySize = obj.ARRAY_SIZE;
+//        minArraySize = this->ARRAY_SIZE;
+//        for (unsigned int i = minArraySize; i < maxArraySize; i++) {
+//            returnValue.ext_int[i] = obj.ext_int[i];
+//        }
+//    }
+//    
+//    for (unsigned int i = 0; i < minArraySize; i++) {
+//        x = this->ext_int[i];
+//        y = obj.ext_int[i];
+//        z = x + y + carryBit;
+//        returnValue.ext_int[i] = z & 0xFFFFFFFF;
+//        carryBit = (z & 0x100000000) >> 32;
+//    }
+//    return returnValue;
+//}
 
 
-template<typename T>
-const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator*(const UnsignedExtendedInt& obj) const {
-    // This algorithm multiplies 32bit integers using native 64bit integers.
-    unsigned long long x = 0;
-    unsigned long long y = 0;
-    unsigned long long z = 0;
-    unsigned int upperResultBits = 0;
-    unsigned int lowerResultBits = 0;
-    unsigned int leftShiftValue = 0;
-    UnsignedExtendedInt<T> returnValue;
-    UnsignedExtendedInt<T> uExtIntTemp;
-    for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
-        for (unsigned int j = 0; j < this->ARRAY_SIZE; j++) {
-            leftShiftValue = i + j;
-            x = this->ext_int[i];
-            y = obj.ext_int[j];
-            z = x * y;
+//template<typename T>
+//const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator-(const UnsignedExtendedInt& obj) const {
+//    return this->operator+(~obj + 1);
+//}
 
-            if (leftShiftValue < this->ARRAY_SIZE) {
-                if (leftShiftValue > 0) {   // clear previous 32-bits because they will introduce an error in the summation
-                    uExtIntTemp.setValueAtIndex(0, leftShiftValue - 1);
-                }
-                lowerResultBits = z & 0xFFFFFFFF;
-                uExtIntTemp.ext_int[leftShiftValue] = lowerResultBits;       // Extract first 32-bits
+
+//template<unsigned int t>
+//template<unsigned int u>
+//typename extIntReturnSize<t, u>::returnTypeTot_ UnsignedExtendedInt<t>::operator*(const UnsignedExtendedInt<u>& obj) const {
+//    // This algorithm multiplies 32bit integers using native 64bit integers.
+//    unsigned long long x = 0;
+//    unsigned long long y = 0;
+//    unsigned long long z = 0;
+//    unsigned int upperResultBits = 0;
+//    unsigned int lowerResultBits = 0;
+//    unsigned int leftShiftValue = 0;
+//    extIntReturnSize<t, u>::returnTypeTot_ returnValue;
+//    extIntReturnSize<t, u>::returnTypeTot_ uExtIntTemp;
+//    for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
+//        for (unsigned int j = 0; j < obj.ARRAY_SIZE; j++) {
+//            leftShiftValue = i + j;
+//            x = this->ext_int[i];
+//            y = obj.ext_int[j];
+//            z = x * y;
+//            if (leftShiftValue > 0) {           // clear previously set lower 32-bits because they will introduce an error in the summation
+//                uExtIntTemp.ext_int[leftShiftValue - 1] = 0;
+//            }
+//            uExtIntTemp.ext_int[leftShiftValue] = z & 0xFFFFFFFF;                   // Extract lower 32-bits
+//            if (leftShiftValue < uExtIntTemp.ARRAY_SIZE - 1) {                      // Make sure we won't be writing past the last array entry
+//                uExtIntTemp.ext_int[leftShiftValue + 1] = (z >> 32) & 0xFFFFFFFF;   // Extract upper 32-bits
+//            }
+//            returnValue = returnValue + uExtIntTemp;
+//        }
+//    }
+//    return returnValue;
+//}
+
+
+//template<typename T>
+//const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator/(const UnsignedExtendedInt& divisor) const {
+//    return divideModOperator(divisor, ExtendedInt<T>::DIVIDE_OP);
+//}
+//
+//
+//template<typename T>
+//const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator%(const UnsignedExtendedInt& divisor) const {
+//    return divideModOperator(divisor, ExtendedInt<T>::MOD_OP);
+//}
+
+
+//template<typename T>
+//const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::divideModOperator(const UnsignedExtendedInt& divisor, const ExtendedInt<T>::DIVIDE_OPERATION op) const {
+//    unsigned long long x = 0;
+//    unsigned long long y = 0;
+//    UnsignedExtendedInt<T> returnValue;
+//    UnsignedExtendedInt<T> tempDividend;
+//    UnsignedExtendedInt<T> maskBit;
+//    maskBit.setValueAtIndex(1, 0);
+//    if (*this < divisor) {              // if dividend is smaller than divisor (e.g. 10 / 20 = 0)
+//        if (op == ExtendedInt<T>::DIVIDE_OP) {
+//            return returnValue;
+//        }
+//        else if (op == ExtendedInt<T>::MOD_OP) {
+//            return *this;
+//        }
+//    }
+//    int i = 32 * this->ARRAY_SIZE;
+//    maskBit = maskBit << (i - 1);
+//    while (--i >= 0) {
+//        if (divisor > tempDividend) {
+//            // Extract bit i
+//            tempDividend = (((*this & maskBit) >> i) | (tempDividend << 1));
+//            maskBit = maskBit >> 1;
+//        }
+//        else {
+//            returnValue = returnValue | (maskBit << 1);
+//            tempDividend = tempDividend - divisor;
+//            i++;
+//        }
+//    }
+//
+//    // Extract bit 0 of the quotient
+//    if (divisor <= tempDividend) {
+//        maskBit.setValueAtIndex(1, 0);
+//        returnValue = returnValue | maskBit;
+//        tempDividend = tempDividend - divisor;                    // remainder
+//    }
+//
+//    if (op == ExtendedInt<T>::DIVIDE_OP) return returnValue;      // quotient
+//    else return tempDividend;                                     // mod operation returns remainder
+//}
+
+
+template<unsigned int t>
+template<unsigned int u>
+bool UnsignedExtendedInt<t>::isEqualOperator(const UnsignedExtendedInt<u>& obj) const {
+    if (this->ARRAY_SIZE > obj.ARRAY_SIZE) {        // if calling object has upper bits not 0, then can't be equal
+        for (unsigned int i = obj.ARRAY_SIZE; i < this->ARRAY_SIZE; i++) {
+            if (this->ext_int[i] != 0) {
+                return false;
             }
-            if (leftShiftValue < this->ARRAY_SIZE - 1) {
-                upperResultBits = (z >> 32) & 0xFFFFFFFF;
-                uExtIntTemp.setValueAtIndex(upperResultBits, leftShiftValue + 1);   // Extract upper 32-bits
+        }
+    }
+    if (obj.ARRAY_SIZE > this->ARRAY_SIZE) {        // if object being compared to has its upper bits not 0, then can't be qual
+        for (unsigned int i = this->ARRAY_SIZE; i < obj.ARRAY_SIZE; i++) {
+            if (obj.ext_int[i] != 0) {
+                return false;
             }
-            returnValue = returnValue + uExtIntTemp;
         }
     }
-    return returnValue;
-}
-
-
-template<typename T>
-const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator/(const UnsignedExtendedInt& divisor) const {
-    return divideModOperator(divisor, ExtendedInt<T>::DIVIDE_OP);
-}
-
-
-template<typename T>
-const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator%(const UnsignedExtendedInt& divisor) const {
-    return divideModOperator(divisor, ExtendedInt<T>::MOD_OP);
-}
-
-
-template<typename T>
-const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::divideModOperator(const UnsignedExtendedInt& divisor, const ExtendedInt<T>::DIVIDE_OPERATION op) const {
-    unsigned long long x = 0;
-    unsigned long long y = 0;
-    UnsignedExtendedInt<T> returnValue;
-    UnsignedExtendedInt<T> tempDividend;
-    UnsignedExtendedInt<T> maskBit;
-    maskBit.setValueAtIndex(1, 0);
-    if (*this < divisor) {              // if dividend is smaller than divisor (e.g. 10 / 20 = 0)
-        if (op == ExtendedInt<T>::DIVIDE_OP) {
-            return returnValue;
-        }
-        else if (op == ExtendedInt<T>::MOD_OP) {
-            return *this;
-        }
-    }
-    int i = 32 * this->ARRAY_SIZE;
-    maskBit = maskBit << (i - 1);
-    while (--i >= 0) {
-        if (divisor > tempDividend) {
-            // Extract bit i
-            tempDividend = (((*this & maskBit) >> i) | (tempDividend << 1));
-            maskBit = maskBit >> 1;
-        }
-        else {
-            returnValue = returnValue | (maskBit << 1);
-            tempDividend = tempDividend - divisor;
-            i++;
-        }
-    }
-
-    // Extract bit 0 of the quotient
-    if (divisor <= tempDividend) {
-        maskBit.setValueAtIndex(1, 0);
-        returnValue = returnValue | maskBit;
-        tempDividend = tempDividend - divisor;          // remainder
-    }
-
-    if (op == ExtendedInt<T>::DIVIDE_OP) return returnValue;      // quotient
-    else return tempDividend;                           // mod operation returns remainder
-}
-
-
-template<typename T>
-bool UnsignedExtendedInt<T>::operator==(const UnsignedExtendedInt<T>& obj) const {
-    for (int i = this->ARRAY_SIZE - 1; i >= 0; i--) {
+    unsigned int minSize = this->ARRAY_SIZE > obj.ARRAY_SIZE ? obj.ARRAY_SIZE : this->ARRAY_SIZE;
+    for (int i = minSize - 1; i >= 0; i--) {
         if (this->ext_int[i] != obj.ext_int[i]) {
             return false;
         }
@@ -224,24 +250,25 @@ bool UnsignedExtendedInt<T>::operator==(const UnsignedExtendedInt<T>& obj) const
 }
 
 
-template<typename T>
-bool UnsignedExtendedInt<T>::operator==(const unsigned long long & obj) const {
-    for (int i = this->ARRAY_SIZE - 1; i >= 2; i--) {
-        if (this->ext_int[i] != 0) {
-            return false;
+template<unsigned int t>
+template<unsigned int u>
+bool UnsignedExtendedInt<t>::greaterThanOperator(const UnsignedExtendedInt<u>& obj) const {
+    if (obj.ARRAY_SIZE > this->ARRAY_SIZE) {        // if object being compared to has its upper bits not 0, then it's bigger
+        for (unsigned int i = this->ARRAY_SIZE; i < obj.ARRAY_SIZE; i++) {
+            if (obj.ext_int[i] != 0) {
+                return false;
+            }
         }
     }
-    if (this->ext_int[1] != ((obj >> 32) & 0xFFFFFFFF) ||
-        this->ext_int[0] != (obj & 0xFFFFFFFF)) {
-        return false;
+    else if (this->ARRAY_SIZE > obj.ARRAY_SIZE) {   // if calling object's upper bits are not 0, then it's greater than
+        for (unsigned int i = obj.ARRAY_SIZE; i < this->ARRAY_SIZE; i++) {
+            if (this->ext_int[i] != 0) {
+                return true;
+            }
+        }
     }
-    return true;
-}
-
-
-template<typename T>
-bool UnsignedExtendedInt<T>::operator>(const UnsignedExtendedInt<T>& obj) const {
-    for (int i = this->ARRAY_SIZE - 1; i >= 0; i--) {
+    unsigned int minSize = this->ARRAY_SIZE > obj.ARRAY_SIZE ? obj.ARRAY_SIZE : this->ARRAY_SIZE;
+    for (int i = minSize - 1; i >= 0; i--) {
         if (this->ext_int[i] > obj.ext_int[i]) {
             return true;
         }
@@ -256,9 +283,25 @@ bool UnsignedExtendedInt<T>::operator>(const UnsignedExtendedInt<T>& obj) const 
 }
 
 
-template<typename T> 
-bool UnsignedExtendedInt<T>::operator>=(const UnsignedExtendedInt<T>& obj) const {
-    for (int i = this->ARRAY_SIZE - 1; i >= 0; i--) {
+template<unsigned int t>
+template<unsigned int u>
+bool UnsignedExtendedInt<t>::greaterThanOrEqualOperator(const UnsignedExtendedInt<u>& obj) const {
+    if (this->ARRAY_SIZE > obj.ARRAY_SIZE) {    // if calling object's upper bits are not 0, then it's greater than
+        for (unsigned int i = obj.ARRAY_SIZE; i < this->ARRAY_SIZE; i++) {
+            if (this->ext_int[i] != 0) {
+                return true;
+            }
+        }
+    }
+    if (obj.ARRAY_SIZE > this->ARRAY_SIZE) {    // if object being compared to has its upper bits not 0, then it's bigger
+        for (unsigned int i = this->ARRAY_SIZE; i < obj.ARRAY_SIZE; i++) {
+            if (this->ext_int[i] != 0) {
+                return false;
+            }
+        }
+    }
+    unsigned int minSize = this->ARRAY_SIZE > obj.ARRAY_SIZE ? obj.ARRAY_SIZE : this->ARRAY_SIZE;
+    for (int i = minSize - 1; i >= 0; i--) {
         if (this->ext_int[i] > obj.ext_int[i]) {
             return true;
         }
@@ -273,9 +316,23 @@ bool UnsignedExtendedInt<T>::operator>=(const UnsignedExtendedInt<T>& obj) const
 }
 
 
-template<typename T>
-bool UnsignedExtendedInt<T>::operator<(const UnsignedExtendedInt<T>& obj) const {
-    for (int i = this->ARRAY_SIZE - 1; i >= 0; i--) {
+template<unsigned int t>
+template<unsigned int u>
+bool UnsignedExtendedInt<t>::lessThanOperator(const UnsignedExtendedInt<u>& obj) const {
+    if (this->ARRAY_SIZE > obj.ARRAY_SIZE) {        // if calling object's upper bits are not 0, then it's greater
+        for (unsigned int i = obj.ARRAY_SIZE; i < this->ARRAY_SIZE; i++) {
+            if (this->ext_int[i] != 0)
+                return false;
+        }
+    }
+    else if (obj.ARRAY_SIZE > this->ARRAY_SIZE) {   // if object being compared to has its upper bits not 0, then it's less than
+        for (unsigned int i = this->ARRAY_SIZE; i < obj.ARRAY_SIZE; i++) {
+            if (obj.ext_int[i] != 0)
+                return true;
+        }
+    }
+    unsigned int minSize = this->ARRAY_SIZE > obj.ARRAY_SIZE ? obj.ARRAY_SIZE : this->ARRAY_SIZE;
+    for (int i = minSize - 1; i >= 0; i--) {
         if (this->ext_int[i] < obj.ext_int[i]) {
             return true;
         }
@@ -290,9 +347,23 @@ bool UnsignedExtendedInt<T>::operator<(const UnsignedExtendedInt<T>& obj) const 
 }
 
 
-template<typename T>
-bool UnsignedExtendedInt<T>::operator<=(const UnsignedExtendedInt<T>& obj) const {
-    for (int i = this->ARRAY_SIZE - 1; i >= 0; i--) {
+template<unsigned int t>
+template<unsigned int u>
+bool UnsignedExtendedInt<t>::lessThanOrEqualOperator(const UnsignedExtendedInt<u>& obj) const {
+    if (this->ARRAY_SIZE > obj.ARRAY_SIZE) {        // if calling object's upper bits are not 0, then it's greater
+        for (unsigned int i = obj.ARRAY_SIZE; i < this->ARRAY_SIZE; i++) {
+            if (this->ext_int[i] != 0)
+                return false;
+        }
+    }
+    else if (obj.ARRAY_SIZE > this->ARRAY_SIZE) {   // if object being compared to has its upper bits not 0, then it's less than
+        for (unsigned int i = this->ARRAY_SIZE; i < obj.ARRAY_SIZE; i++) {
+            if (obj.ext_int[i] != 0)
+                return true;
+        }
+    }
+    unsigned int minSize = this->ARRAY_SIZE > obj.ARRAY_SIZE ? obj.ARRAY_SIZE : this->ARRAY_SIZE;
+    for (int i = minSize - 1; i >= 0; i--) {
         if (this->ext_int[i] < obj.ext_int[i]) {
             return true;
         }
@@ -307,12 +378,14 @@ bool UnsignedExtendedInt<T>::operator<=(const UnsignedExtendedInt<T>& obj) const
 }
 
 
-template<typename T>
-const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator>>(unsigned int shiftVal) const {
+template<unsigned int t>
+template<unsigned int u>
+UnsignedExtendedInt<t> UnsignedExtendedInt<t>::rightShiftOperator(const UnsignedExtendedInt<u>& obj) const {
+    unsigned long long shiftVal = obj.ext_int[0];               // Only need 9 bits since can't shift more than 512 bits for uextint512_t, so extract bottom 64
     unsigned long long x = 0;
     unsigned long long y = 0;
-    UnsignedExtendedInt<T> returnValue(*this);
-    shiftVal = (shiftVal > T::_multipleOf32Bits * 32 ? T::_multipleOf32Bits * 32 : shiftVal);       // bound maximum shift
+    UnsignedExtendedInt<t> returnValue(*this);
+    shiftVal = (shiftVal > t * 32 ? t * 32 : shiftVal);         // bound maximum shift
     while (shiftVal > 0) {
         for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
             x = returnValue.ext_int[i];
@@ -330,8 +403,9 @@ const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator>>(unsigned int shi
 }
 
 
-template<typename T>
-const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator<<(unsigned int shiftVal) const {
+template<unsigned int t>
+template<unsigned int u>
+const UnsignedExtendedInt<t> UnsignedExtendedInt<t>::operator<<(const UnsignedExtendedInt<u>& obj) const {
     unsigned long long x = 0;
     unsigned long long y = 0;
     UnsignedExtendedInt<T> returnValue(*this);
@@ -352,41 +426,41 @@ const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator<<(unsigned int shi
 }
 
 
-template<typename T>
-inline UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator&(const UnsignedExtendedInt<T>& obj) const {
-    UnsignedExtendedInt<T> returnValue;
-    for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
-        returnValue.ext_int[i] = this->ext_int[i] & obj.ext_int[i];
-    }
-    return returnValue;
-}
+//template<typename T>
+//inline UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator&(const UnsignedExtendedInt<T>& obj) const {
+//    UnsignedExtendedInt<T> returnValue;
+//    for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
+//        returnValue.ext_int[i] = this->ext_int[i] & obj.ext_int[i];
+//    }
+//    return returnValue;
+//}
 
 
-template<typename T>
-inline UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator|(const UnsignedExtendedInt<T>& obj) const {
-    UnsignedExtendedInt<T> returnValue;
-    for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
-        returnValue.ext_int[i] = this->ext_int[i] | obj.ext_int[i];
-    }
-    return returnValue;
-}
+//template<typename T>
+//inline UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator|(const UnsignedExtendedInt<T>& obj) const {
+//    UnsignedExtendedInt<T> returnValue;
+//    for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
+//        returnValue.ext_int[i] = this->ext_int[i] | obj.ext_int[i];
+//    }
+//    return returnValue;
+//}
 
 
-template<typename T>
-inline UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator^(const UnsignedExtendedInt<T>& obj) const {
-    UnsignedExtendedInt<T> returnValue;
-    for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
-        returnValue.ext_int[i] = this->ext_int[i] ^ obj.ext_int[i];
-    }
-    return returnValue;
-}
+//template<typename T>
+//inline UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator^(const UnsignedExtendedInt<T>& obj) const {
+//    UnsignedExtendedInt<T> returnValue;
+//    for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
+//        returnValue.ext_int[i] = this->ext_int[i] ^ obj.ext_int[i];
+//    }
+//    return returnValue;
+//}
 
 
-template<typename T>
-inline UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator~() const {
-    UnsignedExtendedInt<T> returnValue;
-    for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
-        returnValue.ext_int[i] = ~(this->ext_int[i]);
-    }
-    return returnValue;
-}
+//template<typename T>
+//inline UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator~() const {
+//    UnsignedExtendedInt<T> returnValue;
+//    for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
+//        returnValue.ext_int[i] = ~(this->ext_int[i]);
+//    }
+//    return returnValue;
+//}

@@ -2,11 +2,11 @@
 #define _SIGNEDEXTENDEDINT_H_
 
 
-#include "ExtendedInt.h"
 
 
-template<typename T>
-class SignedExtendedInt : public ExtendedInt<T> {
+
+template<unsigned int t>
+class SignedExtendedInt : public ExtendedInt<t> {
 protected:
     virtual void stringToExtendedInt(const char* s);
     virtual std::string extendedIntToString() const;
