@@ -18,6 +18,7 @@ protected:
     template<unsigned int u> bool lessThanOrEqualOperator(const UnsignedExtendedInt<u>& obj) const;
     template<unsigned int u> UnsignedExtendedInt<t> rightShiftOperator(const UnsignedExtendedInt<u>& obj) const;
     template<unsigned int u> UnsignedExtendedInt<t> leftShiftOperator(const UnsignedExtendedInt<u>& obj) const;
+    template<unsigned int u> typename extIntReturnSize<t, u>::returnTypeMax_ andOperator(const UnsignedExtendedInt<u>& obj) const;
 public:
 
 	UnsignedExtendedInt();
@@ -44,9 +45,10 @@ public:
     inline friend bool operator<=(const UnsignedExtendedInt<t>& lhs, const UnsignedExtendedInt<t>& rhs) { return lhs.lessThanOrEqualOperator(rhs); }
     template<unsigned int u> inline UnsignedExtendedInt<t> operator>>(const UnsignedExtendedInt<u>& obj) const { return rightShiftOperator(obj); }
     inline friend UnsignedExtendedInt<t> operator>>(const UnsignedExtendedInt<t>& lhs, const UnsignedExtendedInt<t>& rhs) { return lhs.rightShiftOperator(rhs); }
-    template<unsigned int u> inline UnsignedExtendedInt operator<<(const UnsignedExtendedInt<u>& obj) const { return leftShiftOperator(obj); }
-    inline friend UnsignedExtendedInt<t> operator>>(const UnsignedExtendedInt<t>& lhs, const UnsignedExtendedInt<t>& rhs) { return lhs.leftShiftOperator(rhs); }
-    //inline UnsignedExtendedInt operator&(const UnsignedExtendedInt& obj) const;
+    template<unsigned int u> inline UnsignedExtendedInt<t> operator<<(const UnsignedExtendedInt<u>& obj) const { return leftShiftOperator(obj); }
+    inline friend UnsignedExtendedInt<t> operator<<(const UnsignedExtendedInt<t>& lhs, const UnsignedExtendedInt<t>& rhs) { return lhs.leftShiftOperator(rhs); }
+    template<unsigned int u> inline UnsignedExtendedInt<t> operator&(const UnsignedExtendedInt<u>& obj) const { return andOperator(obj); }
+    inline friend UnsignedExtendedInt<t> operator&(const UnsignedExtendedInt<t>& lhs, const UnsignedExtendedInt<t>& rhs) { return lhs.andOperator(rhs); }
     //inline UnsignedExtendedInt operator|(const UnsignedExtendedInt& obj) const;
     //inline UnsignedExtendedInt operator^(const UnsignedExtendedInt& obj) const;
     //inline UnsignedExtendedInt operator~() const;

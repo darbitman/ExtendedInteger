@@ -405,7 +405,7 @@ UnsignedExtendedInt<t> UnsignedExtendedInt<t>::rightShiftOperator(const Unsigned
 
 template<unsigned int t>
 template<unsigned int u>
-const UnsignedExtendedInt<t> UnsignedExtendedInt<t>::operator<<(const UnsignedExtendedInt<u>& obj) const {
+UnsignedExtendedInt<t> UnsignedExtendedInt<t>::leftShiftOperator(const UnsignedExtendedInt<u>& obj) const {
     unsigned long long x = 0;
     unsigned long long y = 0;
     UnsignedExtendedInt<T> returnValue(*this);
@@ -426,14 +426,16 @@ const UnsignedExtendedInt<t> UnsignedExtendedInt<t>::operator<<(const UnsignedEx
 }
 
 
-//template<typename T>
-//inline UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator&(const UnsignedExtendedInt<T>& obj) const {
-//    UnsignedExtendedInt<T> returnValue;
-//    for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
-//        returnValue.ext_int[i] = this->ext_int[i] & obj.ext_int[i];
-//    }
-//    return returnValue;
-//}
+template<unsigned int t>
+template<unsigned int u>
+inline typename extIntReturnSize<t, u>::returnTypeMax_ UnsignedExtendedInt<t>::andOperator(const UnsignedExtendedInt<u>& obj) const {
+    typename extIntReturnSize<t, u>::returnTypeMax_ returnValue;
+    unsigned int minArraySize = extIntReturnSize<t, u>::multipleOf32BitsMin_;
+    for (unsigned int i = 0; i < minArraySize; i++) {
+        returnValue.ext_int[i] = this->ext_int[i] & obj.ext_int[i];
+    }
+    return returnValue;
+}
 
 
 //template<typename T>
