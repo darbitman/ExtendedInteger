@@ -26,16 +26,16 @@ UnsignedExtendedInt<t>::UnsignedExtendedInt(unsigned long long obj) {
 }
 
 
-//template<unsigned int t>
-//template<unsigned int u>
-//const UnsignedExtendedInt<t>& UnsignedExtendedInt<t>::operator=(const UnsignedExtendedInt<u>& obj) {
-//    this->initialize();
-//    unsigned int minArraySize = extIntReturnSize<t, u>::multipleOf32BitsMin_;
-//    for (unsigned int i = 0; i < minArraySize; i++) {
-//        this->ext_int[i] = obj.getValueAtIndex(i);
-//    }
-//    return *this;
-//}
+template<unsigned int t>
+template<unsigned int u>
+UnsignedExtendedInt<t> UnsignedExtendedInt<t>::equalOperator(const UnsignedExtendedInt<u>& obj) {
+    this->initialize();
+    unsigned int minArraySize = extIntReturnSize<t, u>::multipleOf32BitsMin_;
+    for (unsigned int i = 0; i < minArraySize; i++) {
+        this->ext_int[i] = obj.getValueAtIndex(i);
+    }
+    return *this;
+}
 
 
 //// convert input string to extended integer
@@ -428,7 +428,7 @@ UnsignedExtendedInt<t> UnsignedExtendedInt<t>::leftShiftOperator(const UnsignedE
 
 template<unsigned int t>
 template<unsigned int u>
-inline typename extIntReturnSize<t, u>::returnTypeMax_ UnsignedExtendedInt<t>::andOperator(const UnsignedExtendedInt<u>& obj) const {
+typename extIntReturnSize<t, u>::returnTypeMax_ UnsignedExtendedInt<t>::andOperator(const UnsignedExtendedInt<u>& obj) const {
     typename extIntReturnSize<t, u>::returnTypeMax_ returnValue;
     unsigned int minArraySize = extIntReturnSize<t, u>::multipleOf32BitsMin_;
     for (unsigned int i = 0; i < minArraySize; i++) {
@@ -438,14 +438,16 @@ inline typename extIntReturnSize<t, u>::returnTypeMax_ UnsignedExtendedInt<t>::a
 }
 
 
-//template<typename T>
-//inline UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator|(const UnsignedExtendedInt<T>& obj) const {
-//    UnsignedExtendedInt<T> returnValue;
-//    for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
-//        returnValue.ext_int[i] = this->ext_int[i] | obj.ext_int[i];
-//    }
-//    return returnValue;
-//}
+template<unsigned int t>
+template<unsigned int u>
+typename extIntReturnSize<t, u>::returnTypeMax_ UnsignedExtendedInt<t>::orOperator(const UnsignedExtendedInt<u>& obj) const {
+    typename extIntReturnSize<t, u>::returnTypeMax_ returnValue;
+    unsigned int minArraySize = extIntReturnSize<t, u>::multipleOf32BitsMin_;
+    for (unsigned int i = 0; i < minArraySize; i++) {
+        returnValue.ext_int[i] = this->ext_int[i] | obj.ext_int[i];
+    }
+    return returnValue;
+}
 
 
 //template<typename T>

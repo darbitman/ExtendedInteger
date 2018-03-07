@@ -1,12 +1,24 @@
 #ifndef _EXTENDEDINTLENGTHS_H_
 #define _EXTENDEDINTLENGTHS_H_
 
-template<unsigned int t, unsigned int u>
-struct extIntReturnSize {};
 
 template<unsigned int t>
 class UnsignedExtendedInt;
 
+
+template<unsigned int t, unsigned int u>
+struct extIntReturnSize {
+public:
+    static const unsigned int multipleOf32BitsMax_ = t > u ? t : u;
+    static const unsigned int multipleOf32BitsMin_ = t > u ? u : t;
+    static const unsigned int multipleOf32BitsTot_ = t + u;
+    using returnTypeMax_ = UnsignedExtendedInt<multipleOf32BitsMax_>;
+    using returnTypeMin_ = UnsignedExtendedInt<multipleOf32BitsMin_>;
+    using returnTypeTot_ = UnsignedExtendedInt<multipleOf32BitsTot_>;
+};
+
+
+/*
 template<>
 struct extIntReturnSize<4, 4> {
 public:
@@ -105,6 +117,6 @@ public:
     using returnTypeMin_ = UnsignedExtendedInt<multipleOf32BitsMin_>;
     using returnTypeTot_ = UnsignedExtendedInt<multipleOf32BitsTot_>;
 };
-
+*/
 
 #endif
