@@ -11,6 +11,7 @@ protected:
     //virtual void stringToExtendedInt(const char* s);
     //virtual std::string extendedIntToString() const;
     //const UnsignedExtendedInt divideModOperator(const UnsignedExtendedInt& divisor, const ExtendedInt<T>::DIVIDE_OPERATION op) const;
+    template<unsigned int u> typename extIntReturnSize<t, u>::returnTypeMax_ addOperator(const UnsignedExtendedInt<u>& obj) const;
     template<unsigned int u> UnsignedExtendedInt<t> equalOperator(const UnsignedExtendedInt<u>& obj);
     template<unsigned int u> bool isEqualOperator(const UnsignedExtendedInt<u>& obj) const;
     template<unsigned int u> bool greaterThanOperator(const UnsignedExtendedInt<u>& obj) const;
@@ -30,7 +31,8 @@ public:
     //~UnsignedExtendedInt();
     template<unsigned int u> UnsignedExtendedInt<t> operator=(const UnsignedExtendedInt<u>& obj) { return equalOperator(obj); }
     //const UnsignedExtendedInt& operator=(const char* s);
-    //template<unsigned int u> typename extIntReturnSize<t, u>::returnTypeMax_ operator+(const UnsignedExtendedInt<u>& obj) const;
+    template<unsigned int u> inline typename extIntReturnSize<t, u>::returnTypeMax_ operator+(const UnsignedExtendedInt<u>& obj) const { return addOperator(obj); }
+    inline friend UnsignedExtendedInt<t> operator+(const UnsignedExtendedInt<t>& lhs, const UnsignedExtendedInt<t>& rhs) { return lhs.addOperator(rhs); }
     //const UnsignedExtendedInt operator-(const UnsignedExtendedInt& obj) const;
     //template<unsigned int u> typename extIntReturnSize<t, u>::returnTypeTot_ operator*(const UnsignedExtendedInt<u>& obj) const;
     //const UnsignedExtendedInt operator/(const UnsignedExtendedInt& divisor) const;
@@ -54,7 +56,7 @@ public:
     template<unsigned int u> inline UnsignedExtendedInt<t> operator|(const UnsignedExtendedInt<u>& obj) const { return orOperator(obj); }
     inline friend UnsignedExtendedInt<t> operator|(const UnsignedExtendedInt<t>& lhs, const UnsignedExtendedInt<t>& rhs) { return lhs.orOperator(rhs); }
     //inline UnsignedExtendedInt operator^(const UnsignedExtendedInt& obj) const;
-    //inline UnsignedExtendedInt operator~() const;
+    inline UnsignedExtendedInt operator~() const;
 
     //template<unsigned int u>
     //friend std::ostream& operator<<(std::ostream& os, const UnsignedExtendedInt& obj) {

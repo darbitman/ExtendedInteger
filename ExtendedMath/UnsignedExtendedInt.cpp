@@ -94,40 +94,24 @@ UnsignedExtendedInt<t> UnsignedExtendedInt<t>::equalOperator(const UnsignedExten
 //}
 
 
-//template<unsigned int t>
-//template<unsigned int u>
-//typename extIntReturnSize<t, u>::returnTypeMax_ UnsignedExtendedInt<t>::operator+(const UnsignedExtendedInt<u>& obj) const {
-//    unsigned long long x = 0;
-//    unsigned long long y = 0;
-//    unsigned long long z = 0;
-//    unsigned int carryBit = 0;
-//    unsigned int minArraySize = 0;
-//    unsigned int maxArraySize = 0;
-//    extIntReturnSize<t, u>::returnTypeMax_ returnValue;
-//    if (this->ARRAY_SIZE > obj.ARRAY_SIZE) {
-//        maxArraySize = this->ARRAY_SIZE;
-//        minArraySize = obj.ARRAY_SIZE;
-//        for (unsigned int i = minArraySize; i < maxArraySize; i++) {
-//            returnValue.ext_int[i] = this->ext_int[i];
-//        }
-//    }
-//    else {
-//        maxArraySize = obj.ARRAY_SIZE;
-//        minArraySize = this->ARRAY_SIZE;
-//        for (unsigned int i = minArraySize; i < maxArraySize; i++) {
-//            returnValue.ext_int[i] = obj.ext_int[i];
-//        }
-//    }
-//    
-//    for (unsigned int i = 0; i < minArraySize; i++) {
-//        x = this->ext_int[i];
-//        y = obj.ext_int[i];
-//        z = x + y + carryBit;
-//        returnValue.ext_int[i] = z & 0xFFFFFFFF;
-//        carryBit = (z & 0x100000000) >> 32;
-//    }
-//    return returnValue;
-//}
+template<unsigned int t>
+template<unsigned int u>
+typename extIntReturnSize<t, u>::returnTypeMax_ UnsignedExtendedInt<t>::addOperator(const UnsignedExtendedInt<u>& obj) const {
+    unsigned long long x = 0;
+    unsigned long long y = 0;
+    unsigned long long z = 0;
+    unsigned int carryBit = 0;
+    extIntReturnSize<t, u>::returnTypeMax_ returnValue;
+    unsigned int minArraySize = extIntReturnSize<t, u>::multipleOf32BitsMin_;
+    for (unsigned int i = 0; i < minArraySize; i++) {
+        x = this->ext_int[i];
+        y = obj.ext_int[i];
+        z = x + y + carryBit;
+        returnValue.ext_int[i] = z & 0xFFFFFFFF;
+        carryBit = (z & 0x100000000) >> 32;
+    }
+    return returnValue;
+}
 
 
 //template<typename T>
@@ -460,11 +444,11 @@ typename extIntReturnSize<t, u>::returnTypeMax_ UnsignedExtendedInt<t>::orOperat
 //}
 
 
-//template<typename T>
-//inline UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator~() const {
-//    UnsignedExtendedInt<T> returnValue;
-//    for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
-//        returnValue.ext_int[i] = ~(this->ext_int[i]);
-//    }
-//    return returnValue;
-//}
+template<unsigned int t>
+inline UnsignedExtendedInt<t> UnsignedExtendedInt<t>::operator~() const {
+    UnsignedExtendedInt<t> returnValue;
+    for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
+        returnValue.ext_int[i] = ~(this->ext_int[i]);
+    }
+    return returnValue;
+}
