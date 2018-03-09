@@ -12,6 +12,8 @@ protected:
     //virtual std::string extendedIntToString() const;
     //const UnsignedExtendedInt divideModOperator(const UnsignedExtendedInt& divisor, const ExtendedInt<T>::DIVIDE_OPERATION op) const;
     template<unsigned int u> typename extIntReturnSize<t, u>::returnTypeMax_ addOperator(const UnsignedExtendedInt<u>& obj) const;
+    template<unsigned int u> typename extIntReturnSize<t, u>::returnTypeMax_ subtractOperator(const UnsignedExtendedInt<u>& obj) const;
+    template<unsigned int u> typename extIntReturnSize<t, u>::returnTypeTot_ multiplyOperator(const UnsignedExtendedInt<u>& obj) const;
     template<unsigned int u> UnsignedExtendedInt<t> equalOperator(const UnsignedExtendedInt<u>& obj);
     template<unsigned int u> bool isEqualOperator(const UnsignedExtendedInt<u>& obj) const;
     template<unsigned int u> bool greaterThanOperator(const UnsignedExtendedInt<u>& obj) const;
@@ -23,7 +25,6 @@ protected:
     template<unsigned int u> typename extIntReturnSize<t, u>::returnTypeMax_ andOperator(const UnsignedExtendedInt<u>& obj) const;
     template<unsigned int u> typename extIntReturnSize<t, u>::returnTypeMax_ orOperator(const UnsignedExtendedInt<u>& obj) const;
 public:
-
 	UnsignedExtendedInt();
     template<unsigned int u> UnsignedExtendedInt(const UnsignedExtendedInt<u>& obj);
     UnsignedExtendedInt(unsigned long long obj);
@@ -33,8 +34,10 @@ public:
     //const UnsignedExtendedInt& operator=(const char* s);
     template<unsigned int u> inline typename extIntReturnSize<t, u>::returnTypeMax_ operator+(const UnsignedExtendedInt<u>& obj) const { return addOperator(obj); }
     inline friend UnsignedExtendedInt<t> operator+(const UnsignedExtendedInt<t>& lhs, const UnsignedExtendedInt<t>& rhs) { return lhs.addOperator(rhs); }
-    //const UnsignedExtendedInt operator-(const UnsignedExtendedInt& obj) const;
-    //template<unsigned int u> typename extIntReturnSize<t, u>::returnTypeTot_ operator*(const UnsignedExtendedInt<u>& obj) const;
+    template<unsigned int u> inline typename extIntReturnSize<t, u>::returnTypeMax_ operator-(const UnsignedExtendedInt<u>& obj) const { return subtractOperator(obj); }
+    inline friend UnsignedExtendedInt<t> operator-(const UnsignedExtendedInt<t>& lhs, const UnsignedExtendedInt<t>& rhs) { return lhs.subtractOperator(rhs); }
+    template<unsigned int u> typename extIntReturnSize<t, u>::returnTypeTot_ operator*(const UnsignedExtendedInt<u>& obj) const { return multiplyOperator(obj); }
+    inline friend typename extIntReturnSize<t, t>::returnTypeMax_ operator*(const UnsignedExtendedInt<t>& lhs, const UnsignedExtendedInt<t>& rhs) { return lhs.multiplyOperator(rhs); }
     //const UnsignedExtendedInt operator/(const UnsignedExtendedInt& divisor) const;
     //const UnsignedExtendedInt operator%(const UnsignedExtendedInt& divisor) const;
     template<unsigned int u> inline bool operator==(const UnsignedExtendedInt<u>& obj) const { return isEqualOperator(obj); }

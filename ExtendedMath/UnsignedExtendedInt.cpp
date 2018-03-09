@@ -114,42 +114,43 @@ typename extIntReturnSize<t, u>::returnTypeMax_ UnsignedExtendedInt<t>::addOpera
 }
 
 
-//template<typename T>
-//const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator-(const UnsignedExtendedInt& obj) const {
-//    return this->operator+(~obj + 1);
-//}
+template<unsigned int t>
+template<unsigned int u>
+typename extIntReturnSize<t, u>::returnTypeMax_  UnsignedExtendedInt<t>::subtractOperator(const UnsignedExtendedInt<u>& obj) const {
+    return this->operator+(~obj + 1);
+}
 
 
-//template<unsigned int t>
-//template<unsigned int u>
-//typename extIntReturnSize<t, u>::returnTypeTot_ UnsignedExtendedInt<t>::operator*(const UnsignedExtendedInt<u>& obj) const {
-//    // This algorithm multiplies 32bit integers using native 64bit integers.
-//    unsigned long long x = 0;
-//    unsigned long long y = 0;
-//    unsigned long long z = 0;
-//    unsigned int upperResultBits = 0;
-//    unsigned int lowerResultBits = 0;
-//    unsigned int leftShiftValue = 0;
-//    extIntReturnSize<t, u>::returnTypeTot_ returnValue;
-//    extIntReturnSize<t, u>::returnTypeTot_ uExtIntTemp;
-//    for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
-//        for (unsigned int j = 0; j < obj.ARRAY_SIZE; j++) {
-//            leftShiftValue = i + j;
-//            x = this->ext_int[i];
-//            y = obj.ext_int[j];
-//            z = x * y;
-//            if (leftShiftValue > 0) {           // clear previously set lower 32-bits because they will introduce an error in the summation
-//                uExtIntTemp.ext_int[leftShiftValue - 1] = 0;
-//            }
-//            uExtIntTemp.ext_int[leftShiftValue] = z & 0xFFFFFFFF;                   // Extract lower 32-bits
-//            if (leftShiftValue < uExtIntTemp.ARRAY_SIZE - 1) {                      // Make sure we won't be writing past the last array entry
-//                uExtIntTemp.ext_int[leftShiftValue + 1] = (z >> 32) & 0xFFFFFFFF;   // Extract upper 32-bits
-//            }
-//            returnValue = returnValue + uExtIntTemp;
-//        }
-//    }
-//    return returnValue;
-//}
+template<unsigned int t>
+template<unsigned int u>
+typename extIntReturnSize<t, u>::returnTypeTot_ UnsignedExtendedInt<t>::multiplyOperator(const UnsignedExtendedInt<u>& obj) const {
+    // This algorithm multiplies 32bit integers using native 64bit integers.
+    unsigned long long x = 0;
+    unsigned long long y = 0;
+    unsigned long long z = 0;
+    unsigned int upperResultBits = 0;
+    unsigned int lowerResultBits = 0;
+    unsigned int leftShiftValue = 0;
+    extIntReturnSize<t, u>::returnTypeTot_ returnValue;
+    extIntReturnSize<t, u>::returnTypeTot_ uExtIntTemp;
+    for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
+        for (unsigned int j = 0; j < obj.ARRAY_SIZE; j++) {
+            leftShiftValue = i + j;
+            x = this->ext_int[i];
+            y = obj.ext_int[j];
+            z = x * y;
+            if (leftShiftValue > 0) {           // clear previously set lower 32-bits because they will introduce an error in the summation
+                uExtIntTemp.ext_int[leftShiftValue - 1] = 0;
+            }
+            uExtIntTemp.ext_int[leftShiftValue] = z & 0xFFFFFFFF;                   // Extract lower 32-bits
+            if (leftShiftValue < uExtIntTemp.ARRAY_SIZE - 1) {                      // Make sure we won't be writing past the last array entry
+                uExtIntTemp.ext_int[leftShiftValue + 1] = (z >> 32) & 0xFFFFFFFF;   // Extract upper 32-bits
+            }
+            returnValue = returnValue + uExtIntTemp;
+        }
+    }
+    return returnValue;
+}
 
 
 //template<typename T>
