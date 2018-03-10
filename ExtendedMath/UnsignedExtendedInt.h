@@ -10,7 +10,7 @@ class UnsignedExtendedInt : public ExtendedInt<t> {
 protected:
     //virtual void stringToExtendedInt(const char* s);
     //virtual std::string extendedIntToString() const;
-    //const UnsignedExtendedInt divideModOperator(const UnsignedExtendedInt& divisor, const ExtendedInt<T>::DIVIDE_OPERATION op) const;
+    template<unsigned int u> typename extIntReturnSize<t, u>::returnTypeMax_ divideModOperator(const UnsignedExtendedInt<u>& divisor, const ExtendedInt<t>::DIVIDE_OPERATION op) const;
     template<unsigned int u> typename extIntReturnSize<t, u>::returnTypeMax_ addOperator(const UnsignedExtendedInt<u>& obj) const;
     template<unsigned int u> typename extIntReturnSize<t, u>::returnTypeMax_ subtractOperator(const UnsignedExtendedInt<u>& obj) const;
     template<unsigned int u> typename extIntReturnSize<t, u>::returnTypeTot_ multiplyOperator(const UnsignedExtendedInt<u>& obj) const;
@@ -38,7 +38,8 @@ public:
     inline friend UnsignedExtendedInt<t> operator-(const UnsignedExtendedInt<t>& lhs, const UnsignedExtendedInt<t>& rhs) { return lhs.subtractOperator(rhs); }
     template<unsigned int u> typename extIntReturnSize<t, u>::returnTypeTot_ operator*(const UnsignedExtendedInt<u>& obj) const { return multiplyOperator(obj); }
     inline friend typename extIntReturnSize<t, t>::returnTypeMax_ operator*(const UnsignedExtendedInt<t>& lhs, const UnsignedExtendedInt<t>& rhs) { return lhs.multiplyOperator(rhs); }
-    //const UnsignedExtendedInt operator/(const UnsignedExtendedInt& divisor) const;
+    template<unsigned int u> typename extIntReturnSize<t, u>::returnTypeMax_ operator/(const UnsignedExtendedInt<u>& divisor) const { return divideModOperator(divisor, ExtendedInt<t>::DIVIDE_OP); }
+    inline friend typename extIntReturnSize<t, t>::returnTypeMax_ operator/(const UnsignedExtendedInt<t>& dividend, const UnsignedExtendedInt<t>& divisor) { return dividend.divideModOperator(divisor, ExtendedInt<t>::DIVIDE_OP); }
     //const UnsignedExtendedInt operator%(const UnsignedExtendedInt& divisor) const;
     template<unsigned int u> inline bool operator==(const UnsignedExtendedInt<u>& obj) const { return isEqualOperator(obj); }
     inline friend bool operator==(const UnsignedExtendedInt<t>& lhs, const UnsignedExtendedInt<t>& rhs) { return lhs.isEqualOperator(rhs); }

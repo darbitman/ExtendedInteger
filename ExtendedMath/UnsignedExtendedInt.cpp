@@ -154,58 +154,53 @@ typename extIntReturnSize<t, u>::returnTypeTot_ UnsignedExtendedInt<t>::multiply
 
 
 //template<typename T>
-//const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator/(const UnsignedExtendedInt& divisor) const {
-//    return divideModOperator(divisor, ExtendedInt<T>::DIVIDE_OP);
-//}
-//
-//
-//template<typename T>
 //const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::operator%(const UnsignedExtendedInt& divisor) const {
 //    return divideModOperator(divisor, ExtendedInt<T>::MOD_OP);
 //}
 
 
-//template<typename T>
-//const UnsignedExtendedInt<T> UnsignedExtendedInt<T>::divideModOperator(const UnsignedExtendedInt& divisor, const ExtendedInt<T>::DIVIDE_OPERATION op) const {
-//    unsigned long long x = 0;
-//    unsigned long long y = 0;
-//    UnsignedExtendedInt<T> returnValue;
-//    UnsignedExtendedInt<T> tempDividend;
-//    UnsignedExtendedInt<T> maskBit;
-//    maskBit.setValueAtIndex(1, 0);
-//    if (*this < divisor) {              // if dividend is smaller than divisor (e.g. 10 / 20 = 0)
-//        if (op == ExtendedInt<T>::DIVIDE_OP) {
-//            return returnValue;
-//        }
-//        else if (op == ExtendedInt<T>::MOD_OP) {
-//            return *this;
-//        }
-//    }
-//    int i = 32 * this->ARRAY_SIZE;
-//    maskBit = maskBit << (i - 1);
-//    while (--i >= 0) {
-//        if (divisor > tempDividend) {
-//            // Extract bit i
-//            tempDividend = (((*this & maskBit) >> i) | (tempDividend << 1));
-//            maskBit = maskBit >> 1;
-//        }
-//        else {
-//            returnValue = returnValue | (maskBit << 1);
-//            tempDividend = tempDividend - divisor;
-//            i++;
-//        }
-//    }
-//
-//    // Extract bit 0 of the quotient
-//    if (divisor <= tempDividend) {
-//        maskBit.setValueAtIndex(1, 0);
-//        returnValue = returnValue | maskBit;
-//        tempDividend = tempDividend - divisor;                    // remainder
-//    }
-//
-//    if (op == ExtendedInt<T>::DIVIDE_OP) return returnValue;      // quotient
-//    else return tempDividend;                                     // mod operation returns remainder
-//}
+template<unsigned int t>
+template<unsigned int u>
+typename extIntReturnSize<t, u>::returnTypeMax_ UnsignedExtendedInt<t>::divideModOperator(const UnsignedExtendedInt<u>& divisor, const ExtendedInt<t>::DIVIDE_OPERATION op) const {
+    unsigned long long x = 0;
+    unsigned long long y = 0;
+    extIntReturnSize<t, u>::returnTypeMax_ returnValue;
+    extIntReturnSize<t, u>::returnTypeMax_ tempDividend;
+    extIntReturnSize<t, u>::returnTypeMax_ maskBit;
+    maskBit.setValueAtIndex(1, 0);
+    if (*this < divisor) {              // if dividend is smaller than divisor (e.g. 10 / 20 = 0)
+        if (op == ExtendedInt<t>::DIVIDE_OP) {
+            return returnValue;
+        }
+        else if (op == ExtendedInt<t>::MOD_OP) {
+            return *this;
+        }
+    }
+    int i = 32 * this->ARRAY_SIZE;
+    maskBit = maskBit << (i - 1);
+    while (--i >= 0) {
+        if (divisor > tempDividend) {
+            // Extract bit i
+            tempDividend = (((*this & maskBit) >> i) | (tempDividend << 1));
+            maskBit = maskBit >> 1;
+        }
+        else {
+            returnValue = returnValue | (maskBit << 1);
+            tempDividend = tempDividend - divisor;
+            i++;
+        }
+    }
+
+    // Extract bit 0 of the quotient
+    if (divisor <= tempDividend) {
+        maskBit.setValueAtIndex(1, 0);
+        returnValue = returnValue | maskBit;
+        tempDividend = tempDividend - divisor;                    // remainder
+    }
+
+    if (op == ExtendedInt<t>::DIVIDE_OP) return returnValue;      // quotient
+    else return tempDividend;                                     // mod operation returns remainder
+}
 
 
 template<unsigned int t>
@@ -393,8 +388,8 @@ template<unsigned int u>
 UnsignedExtendedInt<t> UnsignedExtendedInt<t>::leftShiftOperator(const UnsignedExtendedInt<u>& obj) const {
     unsigned long long x = 0;
     unsigned long long y = 0;
-    UnsignedExtendedInt<T> returnValue(*this);
-    shiftVal = (shiftVal > T::_multipleOf32Bits * 32 ? T::_multipleOf32Bits * 32 : shiftVal);       // bound maximum shift
+    UnsignedExtendedInt<t> returnValue(*this);
+    unsigned int shiftVal = obj > this->ARRAY_SIZE * 32 ? this->ARRAY_SIZE * 32 : obj.getValueAtIndex(0);       // bound maximum shift
     while (shiftVal > 0) {
         for (int i = this->ARRAY_SIZE - 1; i >= 0; i--) {
             x = returnValue.ext_int[i];
