@@ -12,8 +12,6 @@ protected:
     unsigned int ARRAY_SIZE;
     unsigned int ext_int[t];
     virtual void initialize();
-    //virtual void stringToExtendedInt(const char* s) = 0;
-    //virtual std::string extendedIntToString() const = 0;
 public:
     virtual void setValueAtIndex(const unsigned long long val, const unsigned int index);
     virtual unsigned int getValueAtIndex(const unsigned int index) const;
