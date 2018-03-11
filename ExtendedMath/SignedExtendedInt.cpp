@@ -1,6 +1,30 @@
 template<unsigned int t>
 template<unsigned int u>
-inline typename extIntReturnSize<t, u>::intReturnTypeMax_ SignedExtendedInt<t>::andOperator(const SignedExtendedInt<u>& obj) const {
+SignedExtendedInt<t> SignedExtendedInt<t>::rightShiftOperator(const SignedExtendedInt<u>& obj) const {
+    unsigned long long x = 0;
+    unsigned long long y = 0;
+    SignedExtendedInt<t> returnValue(*this);
+
+
+    return returnValue;
+}
+
+
+template<unsigned int t>
+template<unsigned int u>
+SignedExtendedInt<t> SignedExtendedInt<t>::leftShiftOperator(const SignedExtendedInt<u>& obj) const {
+    unsigned long long x = 0;
+    unsigned long long y = 0;
+    SignedExtendedInt<t> returnValue(*this);
+
+
+    return returnValue;
+}
+
+
+template<unsigned int t>
+template<unsigned int u>
+typename extIntReturnSize<t, u>::intReturnTypeMax_ SignedExtendedInt<t>::andOperator(const SignedExtendedInt<u>& obj) const {
     typename extIntReturnSize<t, u>::intReturnTypeMax_ returnValue;
     unsigned int minArraySize = extIntReturnSize<t, u>::multipleOf32BitsMin_;
     for (unsigned int i = 0; i < minArraySize; i++) {
@@ -8,6 +32,31 @@ inline typename extIntReturnSize<t, u>::intReturnTypeMax_ SignedExtendedInt<t>::
     }
     return returnValue;
 }
+
+
+template<unsigned int t>
+template<unsigned int u>
+typename extIntReturnSize<t, u>::intReturnTypeMax_ SignedExtendedInt<t>::orOperator(const SignedExtendedInt<u>& obj) const {
+    typename extIntReturnSize<t, u>::intReturnTypeMax_ returnValue;
+    unsigned int minArraySize = extIntReturnSize<t, u>::multipleOf32BitsMin_;
+    for (unsigned int i = 0; i < minArraySize; i++) {
+        returnValue.ext_int[i] = this->ext_int[i] | obj.ext_int[i];
+    }
+    return returnValue;
+}
+
+
+template<unsigned int t>
+template<unsigned int u>
+typename extIntReturnSize<t, u>::intReturnTypeMax_ SignedExtendedInt<t>::xorOperator(const SignedExtendedInt<u>& obj) const {
+    typename extIntReturnSize<t, u>::intReturnTypeMax_ returnValue;
+    unsigned int minArraySize = extIntReturnSize<t, u>::multipleOf32BitsMin_;
+    for (unsigned int i = 0; i < minArraySize; i++) {
+        returnValue.ext_int[i] = this->ext_int[i] ^ obj.ext_int[i];
+    }
+    return returnValue;
+}
+
 
 //template<typename T>
 //SignedExtendedInt<T>::SignedExtendedInt() {

@@ -37,37 +37,38 @@ UnsignedExtendedInt<t> UnsignedExtendedInt<t>::equalOperator(const UnsignedExten
 }
 
 
-// Construct new extended integer using string input 
-//template<unsigned int t>
-//void UnsignedExtendedInt<t>::stringToExtendedInt(const char* s) {
-//    unsigned int strLength = 0;
-//    while (s[strLength] != 0) {             // compute string length
-//        strLength++;
-//    }
-//    UnsignedExtendedInt<t> TEN(10);
-//    UnsignedExtendedInt<t> powersOfTen(1);
-//    UnsignedExtendedInt<t> readInt;
-//    for (int i = strLength - 1; i >= 0; i--) {
-//        readInt.ext_int[0] = s[i] - '0';
-//        *this = *this + (powersOfTen * readInt);
-//        powersOfTen = powersOfTen * TEN;
-//    }
-//}
+// Construct new extended integer using string input
+template<unsigned int t>
+void UnsignedExtendedInt<t>::stringToExtendedInt(const char* s) {
+    this->initialize();                     // set values to 0
+    unsigned int strLength = 0;
+    while (s[strLength] != 0) {             // compute string length
+        strLength++;
+    }
+    UnsignedExtendedInt<t> TEN(10);
+    UnsignedExtendedInt<t> powersOfTen(1);
+    UnsignedExtendedInt<t> readInt;
+    for (int i = strLength - 1; i >= 0; i--) {
+        readInt.ext_int[0] = s[i] - '0';
+        *this = *this + (powersOfTen * readInt);
+        powersOfTen = powersOfTen * TEN;
+    }
+}
 
 
-//template<typename T>
-//std::string UnsignedExtendedInt<T>::extendedIntToString() const {
-//    std::string extIntString;
-//    UnsignedExtendedInt<T> dividend(*this);
-//    UnsignedExtendedInt<T> remainder;
-//    const UnsignedExtendedInt<T> TEN(10);
-//    while (dividend > 0ULL) {
-//        remainder = dividend % TEN;
-//        dividend = dividend / TEN;
-//        extIntString = (char)((remainder.ext_int[0] & 0xFF) + 48) + extIntString;
-//    }
-//    return extIntString;
-//}
+template<unsigned int t>
+std::string UnsignedExtendedInt<t>::extendedIntToString() const {
+    std::string extIntString;
+    UnsignedExtendedInt<t> dividend(*this);
+    UnsignedExtendedInt<t> remainder;
+    const UnsignedExtendedInt<t> TEN(10);
+    while (dividend > 0ULL) {
+        remainder = dividend % TEN;
+        dividend = dividend / TEN;
+        extIntString = (char)((remainder.ext_int[0] & 0xFF) + 48) + extIntString;
+    }
+    return extIntString;
+}
 
 
 template<unsigned int t>
@@ -82,7 +83,6 @@ typename extIntReturnSize<t, u>::uIntReturnTypeMax_ UnsignedExtendedInt<t>::addO
     unsigned long long z = 0;
     unsigned int carryBit = 0;
     extIntReturnSize<t, u>::uIntReturnTypeMax_ returnValue;
-    returnValue * returnValue;
     unsigned int minArraySize = extIntReturnSize<t, u>::multipleOf32BitsMin_;
     for (unsigned int i = 0; i < minArraySize; i++) {
         x = this->ext_int[i];
@@ -418,7 +418,7 @@ typename extIntReturnSize<t, u>::uIntReturnTypeMax_ UnsignedExtendedInt<t>::xorO
 
 
 template<unsigned int t>
-inline UnsignedExtendedInt<t> UnsignedExtendedInt<t>::operator~() const {
+UnsignedExtendedInt<t> UnsignedExtendedInt<t>::operator~() const {
     UnsignedExtendedInt<t> returnValue;
     for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
         returnValue.ext_int[i] = ~(this->ext_int[i]);
