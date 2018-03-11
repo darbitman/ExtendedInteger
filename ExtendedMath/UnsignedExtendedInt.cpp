@@ -1,4 +1,3 @@
-#include "UnsignedExtendedInt.h"
 // Create new extended integer
 template<unsigned int t>
 UnsignedExtendedInt<t>::UnsignedExtendedInt() {
@@ -77,12 +76,12 @@ UnsignedExtendedInt<t>::~UnsignedExtendedInt() {}
 
 template<unsigned int t>
 template<unsigned int u>
-typename extIntReturnSize<t, u>::returnTypeMax_ UnsignedExtendedInt<t>::addOperator(const UnsignedExtendedInt<u>& obj) const {
+typename extIntReturnSize<t, u>::uIntReturnTypeMax_ UnsignedExtendedInt<t>::addOperator(const UnsignedExtendedInt<u>& obj) const {
     unsigned long long x = 0;
     unsigned long long y = 0;
     unsigned long long z = 0;
     unsigned int carryBit = 0;
-    extIntReturnSize<t, u>::returnTypeMax_ returnValue;
+    extIntReturnSize<t, u>::uIntReturnTypeMax_ returnValue;
     returnValue * returnValue;
     unsigned int minArraySize = extIntReturnSize<t, u>::multipleOf32BitsMin_;
     for (unsigned int i = 0; i < minArraySize; i++) {
@@ -98,14 +97,14 @@ typename extIntReturnSize<t, u>::returnTypeMax_ UnsignedExtendedInt<t>::addOpera
 
 template<unsigned int t>
 template<unsigned int u>
-typename extIntReturnSize<t, u>::returnTypeMax_  UnsignedExtendedInt<t>::subtractOperator(const UnsignedExtendedInt<u>& obj) const {
+typename extIntReturnSize<t, u>::uIntReturnTypeMax_  UnsignedExtendedInt<t>::subtractOperator(const UnsignedExtendedInt<u>& obj) const {
     return this->operator+(~obj + 1);
 }
 
 
 template<unsigned int t>
 template<unsigned int u>
-typename extIntReturnSize<t, u>::returnTypeTot_ UnsignedExtendedInt<t>::multiplyOperator(const UnsignedExtendedInt<u>& obj) const {
+typename extIntReturnSize<t, u>::uIntReturnTypeTot_ UnsignedExtendedInt<t>::multiplyOperator(const UnsignedExtendedInt<u>& obj) const {
     // This algorithm multiplies 32bit integers using native 64bit integers.
     unsigned long long x = 0;
     unsigned long long y = 0;
@@ -113,8 +112,8 @@ typename extIntReturnSize<t, u>::returnTypeTot_ UnsignedExtendedInt<t>::multiply
     unsigned int upperResultBits = 0;
     unsigned int lowerResultBits = 0;
     unsigned int leftShiftValue = 0;
-    extIntReturnSize<t, u>::returnTypeTot_ returnValue;
-    extIntReturnSize<t, u>::returnTypeTot_ uExtIntTemp;
+    extIntReturnSize<t, u>::uIntReturnTypeTot_ returnValue;
+    extIntReturnSize<t, u>::uIntReturnTypeTot_ uExtIntTemp;
     for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
         for (unsigned int j = 0; j < obj.ARRAY_SIZE; j++) {
             leftShiftValue = i + j;
@@ -137,12 +136,12 @@ typename extIntReturnSize<t, u>::returnTypeTot_ UnsignedExtendedInt<t>::multiply
 
 template<unsigned int t>
 template<unsigned int u>
-typename extIntReturnSize<t, u>::returnTypeMax_ UnsignedExtendedInt<t>::divideModOperator(const UnsignedExtendedInt<u>& divisor, const ExtendedInt<t>::DIVIDE_OPERATION op) const {
+typename extIntReturnSize<t, u>::uIntReturnTypeMax_ UnsignedExtendedInt<t>::divideModOperator(const UnsignedExtendedInt<u>& divisor, const ExtendedInt<t>::DIVIDE_OPERATION op) const {
     unsigned long long x = 0;
     unsigned long long y = 0;
-    extIntReturnSize<t, u>::returnTypeMax_ returnValue;
-    extIntReturnSize<t, u>::returnTypeMax_ tempDividend;
-    extIntReturnSize<t, u>::returnTypeMax_ maskBit;
+    extIntReturnSize<t, u>::uIntReturnTypeMax_ returnValue;
+    extIntReturnSize<t, u>::uIntReturnTypeMax_ tempDividend;
+    extIntReturnSize<t, u>::uIntReturnTypeMax_ maskBit;
     maskBit.setValueAtIndex(1, 0);
     if (*this < divisor) {              // if dividend is smaller than divisor (e.g. 10 / 20 = 0)
         if (op == ExtendedInt<t>::DIVIDE_OP) {
@@ -384,8 +383,8 @@ UnsignedExtendedInt<t> UnsignedExtendedInt<t>::leftShiftOperator(const UnsignedE
 
 template<unsigned int t>
 template<unsigned int u>
-typename extIntReturnSize<t, u>::returnTypeMax_ UnsignedExtendedInt<t>::andOperator(const UnsignedExtendedInt<u>& obj) const {
-    typename extIntReturnSize<t, u>::returnTypeMax_ returnValue;
+typename extIntReturnSize<t, u>::uIntReturnTypeMax_ UnsignedExtendedInt<t>::andOperator(const UnsignedExtendedInt<u>& obj) const {
+    typename extIntReturnSize<t, u>::uIntReturnTypeMax_ returnValue;
     unsigned int minArraySize = extIntReturnSize<t, u>::multipleOf32BitsMin_;
     for (unsigned int i = 0; i < minArraySize; i++) {
         returnValue.ext_int[i] = this->ext_int[i] & obj.ext_int[i];
@@ -396,8 +395,8 @@ typename extIntReturnSize<t, u>::returnTypeMax_ UnsignedExtendedInt<t>::andOpera
 
 template<unsigned int t>
 template<unsigned int u>
-typename extIntReturnSize<t, u>::returnTypeMax_ UnsignedExtendedInt<t>::orOperator(const UnsignedExtendedInt<u>& obj) const {
-    typename extIntReturnSize<t, u>::returnTypeMax_ returnValue;
+typename extIntReturnSize<t, u>::uIntReturnTypeMax_ UnsignedExtendedInt<t>::orOperator(const UnsignedExtendedInt<u>& obj) const {
+    typename extIntReturnSize<t, u>::uIntReturnTypeMax_ returnValue;
     unsigned int minArraySize = extIntReturnSize<t, u>::multipleOf32BitsMin_;
     for (unsigned int i = 0; i < minArraySize; i++) {
         returnValue.ext_int[i] = this->ext_int[i] | obj.ext_int[i];
@@ -408,8 +407,8 @@ typename extIntReturnSize<t, u>::returnTypeMax_ UnsignedExtendedInt<t>::orOperat
 
 template<unsigned int t>
 template<unsigned int u>
-typename extIntReturnSize<t, u>::returnTypeMax_ UnsignedExtendedInt<t>::xorOperator(const UnsignedExtendedInt<u>& obj) const {
-    typename extIntReturnSize<t, u>::returnTypeMax_ returnValue;
+typename extIntReturnSize<t, u>::uIntReturnTypeMax_ UnsignedExtendedInt<t>::xorOperator(const UnsignedExtendedInt<u>& obj) const {
+    typename extIntReturnSize<t, u>::uIntReturnTypeMax_ returnValue;
     unsigned int minArraySize = extIntReturnSize<t, u>::multipleOf32BitsMin_;
     for (unsigned int i = 0; i < minArraySize; i++) {
         returnValue.ext_int[i] = this->ext_int[i] ^ obj.ext_int[i];
