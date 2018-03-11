@@ -30,9 +30,9 @@ public:
     template<unsigned int u> UnsignedExtendedInt(const UnsignedExtendedInt<u>& obj);
     UnsignedExtendedInt(unsigned long long obj);
     UnsignedExtendedInt(const char* s) { stringToExtendedInt(s); }
-    ~UnsignedExtendedInt();
+    ~UnsignedExtendedInt() {}
     template<unsigned int u> UnsignedExtendedInt<t> operator=(const UnsignedExtendedInt<u>& obj) { return equalOperator(obj); }
-    const UnsignedExtendedInt& operator=(const char* s) { stringToExtendedInt(s); return *this;  }
+    const UnsignedExtendedInt& operator=(const char* s) { stringToExtendedInt(s); return *this; }
     template<unsigned int u> inline typename extIntReturnSize<t, u>::uIntReturnTypeMax_ operator+(const UnsignedExtendedInt<u>& obj) const { return addOperator(obj); }
     inline friend UnsignedExtendedInt<t> operator+(const UnsignedExtendedInt<t>& lhs, const UnsignedExtendedInt<t>& rhs) { return lhs.addOperator(rhs); }
     template<unsigned int u> inline typename extIntReturnSize<t, u>::uIntReturnTypeMax_ operator-(const UnsignedExtendedInt<u>& obj) const { return subtractOperator(obj); }
@@ -63,7 +63,7 @@ public:
     inline friend UnsignedExtendedInt<t> operator|(const UnsignedExtendedInt<t>& lhs, const UnsignedExtendedInt<t>& rhs) { return lhs.orOperator(rhs); }
     template<unsigned int u> inline typename extIntReturnSize<t, u>::uIntReturnTypeMax_ operator^(const UnsignedExtendedInt<u>& obj) const { return xorOperator(obj); }
     inline friend UnsignedExtendedInt<t> operator^(const UnsignedExtendedInt<t>& lhs, const UnsignedExtendedInt<t>& rhs) { return lhs.xorOperator(rhs); }
-    UnsignedExtendedInt operator~() const;
+    UnsignedExtendedInt<t> operator~() const;
     friend std::ostream& operator<<(std::ostream& os, const UnsignedExtendedInt<t>& obj) {
         os << obj.extendedIntToString();
         return os;

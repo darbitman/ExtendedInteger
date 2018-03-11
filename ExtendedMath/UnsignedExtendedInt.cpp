@@ -72,21 +72,19 @@ std::string UnsignedExtendedInt<t>::extendedIntToString() const {
 
 
 template<unsigned int t>
-UnsignedExtendedInt<t>::~UnsignedExtendedInt() {}
-
-
-template<unsigned int t>
 template<unsigned int u>
 typename extIntReturnSize<t, u>::uIntReturnTypeMax_ UnsignedExtendedInt<t>::addOperator(const UnsignedExtendedInt<u>& obj) const {
+    extIntReturnSize<t, u>::uIntReturnTypeMax_ thisOfMaxSize(*this);
+    extIntReturnSize<t, u>::uIntReturnTypeMax_ objOfMaxSize(obj);
+    extIntReturnSize<t, u>::uIntReturnTypeMax_ returnValue;
     unsigned long long x = 0;
     unsigned long long y = 0;
     unsigned long long z = 0;
     unsigned int carryBit = 0;
-    extIntReturnSize<t, u>::uIntReturnTypeMax_ returnValue;
-    unsigned int minArraySize = extIntReturnSize<t, u>::multipleOf32BitsMin_;
-    for (unsigned int i = 0; i < minArraySize; i++) {
-        x = this->ext_int[i];
-        y = obj.ext_int[i];
+    unsigned int arraySize = extIntReturnSize<t, u>::multipleOf32BitsMax_;
+    for (unsigned int i = 0; i < arraySize; i++) {
+        x = thisOfMaxSize.ext_int[i];
+        y = objOfMaxSize.ext_int[i];
         z = x + y + carryBit;
         returnValue.ext_int[i] = z & 0xFFFFFFFF;
         carryBit = (z & 0x100000000) >> 32;
@@ -336,7 +334,7 @@ bool UnsignedExtendedInt<t>::lessThanOrEqualOperator(const UnsignedExtendedInt<u
 template<unsigned int t>
 template<unsigned int u>
 UnsignedExtendedInt<t> UnsignedExtendedInt<t>::rightShiftOperator(const UnsignedExtendedInt<u>& obj) const {
-    unsigned long long shiftVal = obj.ext_int[0];               // Only need 9 bits since can't shift more than 512 bits for uextint512_t, so extract bottom 64
+    unsigned long long shiftVal = obj.ext_int[0];               // extract 64 bits since that limits shift to 2^64
     unsigned long long x = 0;
     unsigned long long y = 0;
     UnsignedExtendedInt<t> returnValue(*this);
@@ -361,10 +359,11 @@ UnsignedExtendedInt<t> UnsignedExtendedInt<t>::rightShiftOperator(const Unsigned
 template<unsigned int t>
 template<unsigned int u>
 UnsignedExtendedInt<t> UnsignedExtendedInt<t>::leftShiftOperator(const UnsignedExtendedInt<u>& obj) const {
+    unsigned long long shiftVal = obj.ext_int[0];               // extract 64 bits since that limits shift to 2^32
     unsigned long long x = 0;
     unsigned long long y = 0;
     UnsignedExtendedInt<t> returnValue(*this);
-    unsigned int shiftVal = obj > this->ARRAY_SIZE * 32 ? this->ARRAY_SIZE * 32 : obj.getValueAtIndex(0);       // bound maximum shift
+    shiftVal = (shiftVal > t * 32 ? t * 32 : shiftVal);         // bound maximum shift
     while (shiftVal > 0) {
         for (int i = this->ARRAY_SIZE - 1; i >= 0; i--) {
             x = returnValue.ext_int[i];
