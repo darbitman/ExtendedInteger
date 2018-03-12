@@ -9,7 +9,7 @@ template<unsigned int t = 4>
 class ExtendedInt {
 protected:
     enum DIVIDE_OPERATION { DIVIDE_OP, MOD_OP };
-    unsigned int ARRAY_SIZE;
+    unsigned int ARRAY_SIZE = 0;
     unsigned int ext_int[t];
     virtual void initialize();
 public:
