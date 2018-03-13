@@ -361,31 +361,31 @@ SignedExtendedInt<t> SignedExtendedInt<t>::operator~() const {
 }
 
 
-//template<typename T>
-//std::string SignedExtendedInt<T>::extendedIntToString() const {
-//    bool isNegative = false;
-//    std::string extIntString;
-//    SignedExtendedInt<T> unsignedObj;
-//    if (*this < 0ULL) {
-//        isNegative = true;
-//        unsignedObj = ~(*this) + 1;
-//    }
-//    else {
-//        unsignedObj = *this;
-//    }
-//    SignedExtendedInt<T> dividend(*this);
-//    SignedExtendedInt<T> remainder;
-//    const SignedExtendedInt<T> TEN(10);
-//    while (dividend > 0ULL) {
-//        remainder = dividend % TEN;
-//        dividend = dividend / TEN;
-//        extIntString = (char)((remainder.ext_int[0] & 0xFF) + 48) + extIntString;
-//    }
-//    if (isNegative) {
-//        extIntString = '-' + extIntString;
-//    }
-//    return extIntString;
-//}
+template<unsigned int t>
+std::string SignedExtendedInt<t>::extendedIntToString() const {
+    bool isNegative = false;
+    std::string extIntString;
+    SignedExtendedInt<t> unsignedObj;
+    if (*this < 0ULL) {
+        isNegative = true;
+        unsignedObj = ~(*this) + 1;
+    }
+    else {
+        unsignedObj = *this;
+    }
+    SignedExtendedInt<t> dividend(*this);
+    SignedExtendedInt<t> remainder;
+    const SignedExtendedInt<T> TEN(10);
+    while (dividend > 0ULL) {
+        remainder = dividend % TEN;
+        dividend = dividend / TEN;
+        extIntString = (char)((remainder.ext_int[0] & 0xFF) + 48) + extIntString;
+    }
+    if (isNegative) {
+        extIntString = '-' + extIntString;
+    }
+    return extIntString;
+}
 
 
 template<unsigned int t>

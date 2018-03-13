@@ -9,7 +9,7 @@ template<unsigned int t = 4>
 class SignedExtendedInt : public ExtendedInt<t> {
 protected:
     void stringToExtendedInt(const char* s);
-    //std::string extendedIntToString() const;
+    std::string extendedIntToString() const;
     template<unsigned int u> typename extIntReturnSize<t, u>::intReturnTypeMax_ addOperator(const SignedExtendedInt<u>& obj) const;
     template<unsigned int u> typename extIntReturnSize<t, u>::intReturnTypeMax_ subtractOperator(const SignedExtendedInt<u>& obj) const;
     template<unsigned int u> typename extIntReturnSize<t, u>::intReturnTypeTot_ multiplyOperator(const SignedExtendedInt<u>& obj) const;
@@ -41,8 +41,6 @@ public:
     inline friend typename extIntReturnSize<t, t>::intReturnTypeTot_ operator*(const SignedExtendedInt<t>& lhs, const SignedExtendedInt<t>& rhs) { return lhs.multiplyOperator(rhs); }
     template<unsigned int u> inline typename extIntReturnSize<t, u>::intReturnTypeMax_ operator/(const SignedExtendedInt<u>& obj) const { return divideModOperator(obj, this->DIVIDE_OP); }
     inline friend typename extIntReturnSize<t, t>::intReturnTypeMax_ operator/(const SignedExtendedInt<t>& lhs, const SignedExtendedInt<t>& rhs) { return lhs.divideModOperator(rhs, SignedExtendedInt<t>::DIVIDE_OP); }
-
-
     template<unsigned int u> inline bool operator==(const SignedExtendedInt<u>& obj) const { return isEqualOperator(obj); }
     inline friend bool operator==(const SignedExtendedInt<t>& lhs, const SignedExtendedInt<t>& rhs) { return lhs.isEqualOperator(rhs); }
     template<unsigned int u> inline bool operator>(const SignedExtendedInt<u>& obj) const { return greaterThanOperator(obj); }
