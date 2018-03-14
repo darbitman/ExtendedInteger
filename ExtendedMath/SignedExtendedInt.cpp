@@ -470,7 +470,7 @@ typename extIntReturnSize<t, u>::intReturnTypeMax_ SignedExtendedInt<t>::divideM
         }
     }
 
-    int i = unsignedThis.ARRAY_SIZE;
+    int i = 32 * unsignedThis.ARRAY_SIZE;
     maskBit = maskBit << (i - 1);
     while (--i >= 0) {
         if (unsignedDivisor > tempDividend) {
