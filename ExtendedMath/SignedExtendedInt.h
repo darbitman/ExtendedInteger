@@ -4,6 +4,8 @@
 
 #include "ExtendedInt.h"
 
+template<unsigned int t>
+class UnsignedExtendedInt;
 
 template<unsigned int t = 4>
 class SignedExtendedInt : public ExtendedInt<t> {
@@ -28,6 +30,7 @@ protected:
 public:
     SignedExtendedInt();
     template<unsigned int u> SignedExtendedInt(const SignedExtendedInt<u>& obj);
+    template<unsigned int u> SignedExtendedInt(const UnsignedExtendedInt<u>& obj);
     SignedExtendedInt(long long obj);
     SignedExtendedInt(const char* s);
     ~SignedExtendedInt() {}
@@ -64,8 +67,12 @@ public:
     template<unsigned int u> inline typename extIntReturnSize<t, u>::intReturnTypeMax_ operator^(const SignedExtendedInt<u>& obj) const { return xorOperator(obj); }
     inline friend SignedExtendedInt<t> operator^(const SignedExtendedInt<t>& lhs, const SignedExtendedInt<t>& rhs) { return lhs.xorOperator(rhs); }
     SignedExtendedInt<t> operator~() const;
-
+    friend std::ostream& operator<<(std::ostream& os, const SignedExtendedInt<t>& obj) {
+        os << obj.extendedIntToString();
+        return os;
+    }
     friend class SignedExtendedInt;         // allows access between private members between UnsignedExtendedInt<n> and UnsignedExtendedInt<m> for some n,m
+    template<unsigned int u> friend class UnsignedExtendedInt;
 };
 
 

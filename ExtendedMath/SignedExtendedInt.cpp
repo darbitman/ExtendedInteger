@@ -24,6 +24,17 @@ SignedExtendedInt<t>::SignedExtendedInt(const SignedExtendedInt<u>& obj) {
 
 
 template<unsigned int t>
+template<unsigned int u>
+SignedExtendedInt<t>::SignedExtendedInt(const UnsignedExtendedInt<u>& obj) {
+    unsigned int minArraySize = extIntReturnSize<t, u>::multipleOf32BitsMin_;
+    this->initialize();
+    for (unsigned int i = 0; i < minArraySize; i++) {
+        this->ext_int[i] = obj.ext_int[i];
+    }
+}
+
+
+template<unsigned int t>
 SignedExtendedInt<t>::SignedExtendedInt(long long obj) {
     this->initialize();
     this->ext_int[0] = obj & 0xFFFFFFFF;
@@ -366,7 +377,7 @@ std::string SignedExtendedInt<t>::extendedIntToString() const {
     bool isNegative = false;
     std::string extIntString;
     SignedExtendedInt<t> unsignedObj;
-    if (*this < 0ULL) {
+    if (*this < 0LL) {
         isNegative = true;
         unsignedObj = ~(*this) + 1;
     }
@@ -375,8 +386,8 @@ std::string SignedExtendedInt<t>::extendedIntToString() const {
     }
     SignedExtendedInt<t> dividend(*this);
     SignedExtendedInt<t> remainder;
-    const SignedExtendedInt<T> TEN(10);
-    while (dividend > 0ULL) {
+    const SignedExtendedInt<t> TEN(10);
+    while (dividend > 0LL) {
         remainder = dividend % TEN;
         dividend = dividend / TEN;
         extIntString = (char)((remainder.ext_int[0] & 0xFF) + 48) + extIntString;

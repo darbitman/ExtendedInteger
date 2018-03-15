@@ -70,6 +70,7 @@ public:
     }
 
     friend class UnsignedExtendedInt;       // allows access between private members between UnsignedExtendedInt<n> and UnsignedExtendedInt<m> for some n,m
+    template<unsigned int u> friend class SignedExtendedInt;
 };
 
 
