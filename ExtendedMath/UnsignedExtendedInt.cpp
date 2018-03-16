@@ -18,6 +18,17 @@ UnsignedExtendedInt<t>::UnsignedExtendedInt(const UnsignedExtendedInt<u>& obj) {
 
 
 template<unsigned int t>
+template<unsigned int u>
+UnsignedExtendedInt<t>::UnsignedExtendedInt(const SignedExtendedInt<u>& obj) {
+    unsigned int minArraySize = extIntReturnSize<t, u>::multipleOf32BitsMin_;
+    this->initialize();
+    for (unsigned int i = 0; i < minArraySize; i++) {
+        this->ext_int[i] = obj.ext_int[i];
+    }
+}
+
+
+template<unsigned int t>
 UnsignedExtendedInt<t>::UnsignedExtendedInt(unsigned long long obj) {
     this->initialize();
     this->ext_int[0] = obj & 0xFFFFFFFF;

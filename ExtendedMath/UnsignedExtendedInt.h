@@ -28,6 +28,7 @@ protected:
 public:
 	UnsignedExtendedInt();
     template<unsigned int u> UnsignedExtendedInt(const UnsignedExtendedInt<u>& obj);
+    template<unsigned int u> UnsignedExtendedInt(const SignedExtendedInt<u>& obj);
     UnsignedExtendedInt(unsigned long long obj);
     UnsignedExtendedInt(const char* s) { stringToExtendedInt(s); }
     ~UnsignedExtendedInt() {}
