@@ -1,0 +1,4 @@
+file(GLOB all_headers "../include/*.h")
+set(SOURCES ExtendedMath.cpp ${all_headers})
+add_executable(${PROJECT_NAME} ${SOURCES})
+include_directories("../include")
