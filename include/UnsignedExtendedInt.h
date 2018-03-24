@@ -77,16 +77,13 @@ public:
 
 // Create new extended integer
 template<unsigned int t>
-UnsignedExtendedInt<t>::UnsignedExtendedInt() {
-    this->initialize();
-}
+UnsignedExtendedInt<t>::UnsignedExtendedInt() : ExtendedInt<t>() {}
 
 
 // Copy constructor
 template<unsigned int t>
 template<unsigned int u>
-UnsignedExtendedInt<t>::UnsignedExtendedInt(const UnsignedExtendedInt<u>& obj) {
-    this->initialize();
+UnsignedExtendedInt<t>::UnsignedExtendedInt(const UnsignedExtendedInt<u>& obj) : ExtendedInt<t>() {
     unsigned int minArraySize = extIntReturnSize<t, u>::multipleOf32BitsMin_;
     for (unsigned int i = 0; i < minArraySize; i++) {
         this->ext_int[i] = obj.getValueAtIndex(i);
@@ -96,9 +93,8 @@ UnsignedExtendedInt<t>::UnsignedExtendedInt(const UnsignedExtendedInt<u>& obj) {
 
 template<unsigned int t>
 template<unsigned int u>
-UnsignedExtendedInt<t>::UnsignedExtendedInt(const SignedExtendedInt<u>& obj) {
+UnsignedExtendedInt<t>::UnsignedExtendedInt(const SignedExtendedInt<u>& obj) : ExtendedInt<t>() {
     unsigned int minArraySize = extIntReturnSize<t, u>::multipleOf32BitsMin_;
-    this->initialize();
     for (unsigned int i = 0; i < minArraySize; i++) {
         this->ext_int[i] = obj.ext_int[i];
     }
@@ -106,8 +102,7 @@ UnsignedExtendedInt<t>::UnsignedExtendedInt(const SignedExtendedInt<u>& obj) {
 
 
 template<unsigned int t>
-UnsignedExtendedInt<t>::UnsignedExtendedInt(unsigned long long obj) {
-    this->initialize();
+UnsignedExtendedInt<t>::UnsignedExtendedInt(unsigned long long obj) : ExtendedInt<t>() {
     this->ext_int[0] = obj & 0xFFFFFFFF;
     this->ext_int[1] = (obj >> 32) & 0xFFFFFFFF;
 }
@@ -116,7 +111,6 @@ UnsignedExtendedInt<t>::UnsignedExtendedInt(unsigned long long obj) {
 template<unsigned int t>
 template<unsigned int u>
 UnsignedExtendedInt<t> UnsignedExtendedInt<t>::equalOperator(const UnsignedExtendedInt<u>& obj) {
-    this->initialize();
     unsigned int minArraySize = extIntReturnSize<t, u>::multipleOf32BitsMin_;
     for (unsigned int i = 0; i < minArraySize; i++) {
         this->ext_int[i] = obj.getValueAtIndex(i);
@@ -128,7 +122,7 @@ UnsignedExtendedInt<t> UnsignedExtendedInt<t>::equalOperator(const UnsignedExten
 // Construct new extended integer using string input
 template<unsigned int t>
 void UnsignedExtendedInt<t>::stringToExtendedInt(const char* s) {
-    this->initialize();                     // set values to 0
+    this->clearValue();
     unsigned int strLength = 0;
     while (s[strLength] != 0) {             // compute string length
         strLength++;

@@ -9,19 +9,25 @@ template<unsigned int t = 4>
 class ExtendedInt {
 protected:
     enum DIVIDE_OPERATION { DIVIDE_OP, MOD_OP };
-    unsigned int ARRAY_SIZE = 0;
+    unsigned int ARRAY_SIZE;
     unsigned int ext_int[t];
-    virtual void initialize();
+    virtual void clearValue();
+    ExtendedInt();
 public:
     virtual void setValueAtIndex(const unsigned long long val, const unsigned int index);
     virtual unsigned int getValueAtIndex(const unsigned int index) const;
-    virtual unsigned int getArraySize() const;
+    virtual unsigned int getArraySize();
 };
 
 
 template<unsigned int t>
-void ExtendedInt<t>::initialize() {
-    this->ARRAY_SIZE = t;
+ExtendedInt<t>::ExtendedInt() : ARRAY_SIZE(t) {
+    this->clearValue();
+}
+
+
+template<unsigned int t>
+void ExtendedInt<t>::clearValue() {
     for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
         this->ext_int[i] = 0;
     }
@@ -46,7 +52,7 @@ unsigned int ExtendedInt<t>::getValueAtIndex(const unsigned int index) const {
 
 
 template<unsigned int t>
-unsigned int ExtendedInt<t>::getArraySize() const {
+unsigned int ExtendedInt<t>::getArraySize() {
     return this->ARRAY_SIZE;
 }
 

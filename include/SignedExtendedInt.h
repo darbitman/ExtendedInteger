@@ -75,15 +75,12 @@ public:
 
 
 template<unsigned int t>
-SignedExtendedInt<t>::SignedExtendedInt() {
-    this->initialize();
-}
+SignedExtendedInt<t>::SignedExtendedInt() : ExtendedInt<t>() {}
 
 
 template<unsigned int t>
 template<unsigned int u>
-SignedExtendedInt<t>::SignedExtendedInt(const SignedExtendedInt<u>& obj) {
-    this->initialize();
+SignedExtendedInt<t>::SignedExtendedInt(const SignedExtendedInt<u>& obj) : ExtendedInt<t>() {
     unsigned int sign = (obj.ext_int[obj.ARRAY_SIZE - 1] >> 31) & 0x1;      // extract sign bit
     unsigned int minArraySize = extIntReturnSize<t, u>::multipleOf32BitsMin_;
     for (unsigned int i = 0; i < minArraySize; i++) {
@@ -99,9 +96,8 @@ SignedExtendedInt<t>::SignedExtendedInt(const SignedExtendedInt<u>& obj) {
 
 template<unsigned int t>
 template<unsigned int u>
-SignedExtendedInt<t>::SignedExtendedInt(const UnsignedExtendedInt<u>& obj) {
+SignedExtendedInt<t>::SignedExtendedInt(const UnsignedExtendedInt<u>& obj) : ExtendedInt<t>() {
     unsigned int minArraySize = extIntReturnSize<t, u>::multipleOf32BitsMin_;
-    this->initialize();
     for (unsigned int i = 0; i < minArraySize; i++) {
         this->ext_int[i] = obj.ext_int[i];
     }
@@ -109,8 +105,7 @@ SignedExtendedInt<t>::SignedExtendedInt(const UnsignedExtendedInt<u>& obj) {
 
 
 template<unsigned int t>
-SignedExtendedInt<t>::SignedExtendedInt(long long obj) {
-    this->initialize();
+SignedExtendedInt<t>::SignedExtendedInt(long long obj) : ExtendedInt<t>() {
     this->ext_int[0] = obj & 0xFFFFFFFF;
     this->ext_int[1] = (obj >> 32) & 0xFFFFFFFF;
     if (obj < 0) {
@@ -124,7 +119,7 @@ SignedExtendedInt<t>::SignedExtendedInt(long long obj) {
 template<unsigned int t>
 template<unsigned int u>
 SignedExtendedInt<t>& SignedExtendedInt<t>::equalOperator(const SignedExtendedInt<u>& obj) {
-    this->initialize();
+    this->clearValue();
     unsigned int minArraySize = typename extIntReturnSize<t, u>::multipleOf32BitsMin_;
     for (unsigned int i = 0; i < minArraySize; i++) {
         this->ext_int[i] = obj.getValueAtIndex(i);
