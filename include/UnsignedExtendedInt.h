@@ -25,6 +25,8 @@ protected:
     template<unsigned int u> typename extIntReturnSize<t, u>::uIntReturnTypeMax_ andOperator(const UnsignedExtendedInt<u>& obj) const;
     template<unsigned int u> typename extIntReturnSize<t, u>::uIntReturnTypeMax_ orOperator(const UnsignedExtendedInt<u>& obj) const;
     template<unsigned int u> typename extIntReturnSize<t, u>::uIntReturnTypeMax_ xorOperator(const UnsignedExtendedInt<u>& obj) const;
+    UnsignedExtendedInt<t>& prefixIncrement();
+    UnsignedExtendedInt<t> postfixIncrement();
 public:
 	UnsignedExtendedInt();
     template<unsigned int u> UnsignedExtendedInt(const UnsignedExtendedInt<u>& obj);
@@ -65,6 +67,9 @@ public:
     template<unsigned int u> inline typename extIntReturnSize<t, u>::uIntReturnTypeMax_ operator^(const UnsignedExtendedInt<u>& obj) const { return xorOperator(obj); }
     inline friend UnsignedExtendedInt<t> operator^(const UnsignedExtendedInt<t>& lhs, const UnsignedExtendedInt<t>& rhs) { return lhs.xorOperator(rhs); }
     UnsignedExtendedInt<t> operator~() const;
+    UnsignedExtendedInt<t>& operator++() { return this->prefixIncrement(); }
+    UnsignedExtendedInt<t>& operator++(int) { return this->postfixIncrement(); }
+
     friend std::ostream& operator<<(std::ostream& os, const UnsignedExtendedInt<t>& obj) {
         os << obj.extendedIntToString();
         return os;
@@ -504,6 +509,21 @@ UnsignedExtendedInt<t> UnsignedExtendedInt<t>::operator~() const {
     for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
         returnValue.ext_int[i] = ~(this->ext_int[i]);
     }
+    return returnValue;
+}
+
+
+template<unsigned int t>
+UnsignedExtendedInt<t>& UnsignedExtendedInt<t>::prefixIncrement() {
+    *this = *this + 1ULL;
+    return *this;
+}
+
+
+template<unsigned int t>
+UnsignedExtendedInt<t> UnsignedExtendedInt<t>::postfixIncrement() {
+    UnsignedExtendedInt<t> returnValue(*this);
+    *this = *this + 1ULL;
     return returnValue;
 }
 
