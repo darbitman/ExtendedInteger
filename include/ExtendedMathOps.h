@@ -4,18 +4,25 @@
 
 namespace ExtendedIntegerMathOperations {
     template<typename T>
-    void log(T val, const T& base) {
-        T result(0ULL);
+    T log(T val, const T& base) {
+        T returnValue(0ULL);
         while (val >= base) {
-            ++result;
+            ++returnValue;
             val = val / base;
         }
+        return returnValue;
     }
 
     template<typename T>
-    void logBase10(T& val) {
+    T logBase10(T& val) {
         T base(10);
-        log(val, base);
+        return log(val, base);
+    }
+
+    template<typename T>
+    T pow(T val, const T& base) {
+        T returnValue(0ULL);
+        return returnValue;
     }
 }
 

@@ -27,6 +27,8 @@ protected:
     template<unsigned int u> typename extIntReturnSize<t, u>::uIntReturnTypeMax_ xorOperator(const UnsignedExtendedInt<u>& obj) const;
     UnsignedExtendedInt<t>& prefixIncrement();
     UnsignedExtendedInt<t> postfixIncrement();
+    UnsignedExtendedInt<t>& prefixDecrement();
+    UnsignedExtendedInt<t> postfixDecrement();
 public:
 	UnsignedExtendedInt();
     template<unsigned int u> UnsignedExtendedInt(const UnsignedExtendedInt<u>& obj);
@@ -69,6 +71,8 @@ public:
     UnsignedExtendedInt<t> operator~() const;
     UnsignedExtendedInt<t>& operator++() { return this->prefixIncrement(); }
     UnsignedExtendedInt<t>& operator++(int) { return this->postfixIncrement(); }
+    UnsignedExtendedInt<t>& operator--() { return this->prefixDecrement(); }
+    UnsignedExtendedInt<t>& operator--(int) { return this->postfixDecrement(); }
 
     friend std::ostream& operator<<(std::ostream& os, const UnsignedExtendedInt<t>& obj) {
         os << obj.extendedIntToString();
@@ -524,6 +528,21 @@ template<unsigned int t>
 UnsignedExtendedInt<t> UnsignedExtendedInt<t>::postfixIncrement() {
     UnsignedExtendedInt<t> returnValue(*this);
     *this = *this + 1ULL;
+    return returnValue;
+}
+
+
+template<unsigned int t>
+UnsignedExtendedInt<t>& UnsignedExtendedInt<t>::prefixDecrement() {
+    *this = *this - 1ULL;
+    return *this;
+}
+
+
+template<unsigned int t>
+UnsignedExtendedInt<t> UnsignedExtendedInt<t>::postfixDecrement() {
+    UnsignedExtendedInt<t> returnValue(*this);
+    *this = *this - 1ULL;
     return returnValue;
 }
 
