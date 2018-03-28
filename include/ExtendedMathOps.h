@@ -20,8 +20,11 @@ namespace ExtendedIntegerMathOperations {
     }
 
     template<typename T>
-    T pow(T val, const T& base) {
-        T returnValue(0ULL);
+    T pow(T val, T exp) {
+        T returnValue(1ULL);
+        for (; exp > 0ULL; exp--) {
+            returnValue = returnValue * val;
+        }
         return returnValue;
     }
 }

@@ -70,9 +70,9 @@ public:
     inline friend UnsignedExtendedInt<t> operator^(const UnsignedExtendedInt<t>& lhs, const UnsignedExtendedInt<t>& rhs) { return lhs.xorOperator(rhs); }
     UnsignedExtendedInt<t> operator~() const;
     UnsignedExtendedInt<t>& operator++() { return this->prefixIncrement(); }
-    UnsignedExtendedInt<t>& operator++(int) { return this->postfixIncrement(); }
+    UnsignedExtendedInt<t> operator++(int) { return this->postfixIncrement(); }
     UnsignedExtendedInt<t>& operator--() { return this->prefixDecrement(); }
-    UnsignedExtendedInt<t>& operator--(int) { return this->postfixDecrement(); }
+    UnsignedExtendedInt<t> operator--(int) { return this->postfixDecrement(); }
 
     friend std::ostream& operator<<(std::ostream& os, const UnsignedExtendedInt<t>& obj) {
         os << obj.extendedIntToString();
