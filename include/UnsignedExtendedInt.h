@@ -34,6 +34,8 @@ public:
     template<unsigned int u> UnsignedExtendedInt(const UnsignedExtendedInt<u>& obj);
     template<unsigned int u> UnsignedExtendedInt(const SignedExtendedInt<u>& obj);
     UnsignedExtendedInt(unsigned long long obj);
+    UnsignedExtendedInt(long long obj);
+    UnsignedExtendedInt(int obj);
     UnsignedExtendedInt(const char* s) { stringToExtendedInt(s); }
     ~UnsignedExtendedInt() {}
     template<unsigned int u> UnsignedExtendedInt<t> operator=(const UnsignedExtendedInt<u>& obj) { return equalOperator(obj); }
@@ -114,6 +116,29 @@ template<unsigned int t>
 UnsignedExtendedInt<t>::UnsignedExtendedInt(unsigned long long obj) : ExtendedInt<t>() {
     this->ext_int[0] = obj & 0xFFFFFFFF;
     this->ext_int[1] = (obj >> 32) & 0xFFFFFFFF;
+}
+
+
+template<unsigned int t>
+UnsignedExtendedInt<t>::UnsignedExtendedInt(long long obj) : ExtendedInt<t>() {
+    this->ext_int[0] = obj & 0xFFFFFFFF;
+    this->ext_int[1] = (obj >> 32) & 0xFFFFFFFF;
+    if (obj < 0) {
+        for (unsigned int i = 2; i < this->ARRAY_SIZE; i++) {
+            this->ext_int[i] = 0xFFFFFFFF;
+        }
+    }
+}
+
+
+template<unsigned int t>
+UnsignedExtendedInt<t>::UnsignedExtendedInt(int obj) : ExtendedInt<t>() {
+    this->ext_int[0] = obj & 0xFFFFFFFF;
+    if (obj < 0) {
+        for (unsigned int i = 1; i < this->ARRAY_SIZE; i++) {
+            this->ext_int[i] = 0xFFFFFFFF;
+        }
+    }
 }
 
 
@@ -232,6 +257,9 @@ typename extIntReturnSize<t, u>::uIntReturnTypeMax_ UnsignedExtendedInt<t>::divi
     extIntReturnSize<t, u>::uIntReturnTypeMax_ tempDividend;
     extIntReturnSize<t, u>::uIntReturnTypeMax_ maskBit;
     maskBit.setValueAtIndex(1, 0);
+    if (divisor == 0) {
+        std::cout << "Divide by zero";
+    }
     if (*this < divisor) {              // if dividend is smaller than divisor (e.g. 10 / 20 = 0)
         if (op == ExtendedInt<t>::DIVIDE_OP) {
             return returnValue;

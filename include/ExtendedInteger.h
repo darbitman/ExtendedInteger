@@ -8,6 +8,4 @@
 #include "ExtendedMathOps.h"
 
 
-
-
 #endif
