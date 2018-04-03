@@ -95,6 +95,10 @@ UnsignedExtendedInt<t>::UnsignedExtendedInt() : ExtendedInt<t>() {}
 template<unsigned int t>
 template<unsigned int u>
 UnsignedExtendedInt<t>::UnsignedExtendedInt(const UnsignedExtendedInt<u>& obj) : ExtendedInt<t>() {
+    if (obj.ARRAY_SIZE > this->ARRAY_SIZE) {
+        std::cout << "Converting an object of " << obj.ARRAY_SIZE * 32 << " bits to " << this->ARRAY_SIZE * 32 << " bits "<< std::endl;
+        std::cout << "WARNING: Possible loss of data may result" << std::endl;
+    }
     unsigned int minArraySize = extIntReturnSize<t, u>::multipleOf32BitsMin_;
     for (unsigned int i = 0; i < minArraySize; i++) {
         this->ext_int[i] = obj.getValueAtIndex(i);
@@ -105,6 +109,10 @@ UnsignedExtendedInt<t>::UnsignedExtendedInt(const UnsignedExtendedInt<u>& obj) :
 template<unsigned int t>
 template<unsigned int u>
 UnsignedExtendedInt<t>::UnsignedExtendedInt(const SignedExtendedInt<u>& obj) : ExtendedInt<t>() {
+    if (obj.ARRAY_SIZE > this->ARRAY_SIZE) {
+        std::cout << "Converting an object of " << obj.ARRAY_SIZE * 32 << " bits to " << this->ARRAY_SIZE * 32 << " bits " << std::endl;
+        std::cout << "WARNING: Possible loss of data may result" << std::endl;
+    }
     unsigned int minArraySize = extIntReturnSize<t, u>::multipleOf32BitsMin_;
     for (unsigned int i = 0; i < minArraySize; i++) {
         this->ext_int[i] = obj.ext_int[i];
@@ -145,6 +153,11 @@ UnsignedExtendedInt<t>::UnsignedExtendedInt(int obj) : ExtendedInt<t>() {
 template<unsigned int t>
 template<unsigned int u>
 UnsignedExtendedInt<t> UnsignedExtendedInt<t>::equalOperator(const UnsignedExtendedInt<u>& obj) {
+    this->clearValue();
+    if (obj.ARRAY_SIZE > this->ARRAY_SIZE) {
+        std::cout << "Converting an object of " << obj.ARRAY_SIZE * 32 << " bits to " << this->ARRAY_SIZE * 32 << " bits " << std::endl;
+        std::cout << "WARNING: Possible loss of data may result" << std::endl;
+    }
     unsigned int minArraySize = extIntReturnSize<t, u>::multipleOf32BitsMin_;
     for (unsigned int i = 0; i < minArraySize; i++) {
         this->ext_int[i] = obj.getValueAtIndex(i);
@@ -204,6 +217,9 @@ typename extIntReturnSize<t, u>::uIntReturnTypeMax_ UnsignedExtendedInt<t>::addO
         z = x + y + carryBit;
         returnValue.ext_int[i] = z & 0xFFFFFFFF;
         carryBit = (z & 0x100000000) >> 32;
+    }
+    if (carryBit) {
+        std::cout << "WARNING: Possible overflow may have occurred" << std::endl;
     }
     return returnValue;
 }

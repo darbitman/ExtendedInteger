@@ -25,11 +25,16 @@ protected:
     template<unsigned int u> typename extIntReturnSize<t, u>::intReturnTypeMax_ andOperator(const SignedExtendedInt<u>& obj) const;
     template<unsigned int u> typename extIntReturnSize<t, u>::intReturnTypeMax_ orOperator(const SignedExtendedInt<u>& obj) const;
     template<unsigned int u> typename extIntReturnSize<t, u>::intReturnTypeMax_ xorOperator(const SignedExtendedInt<u>& obj) const;
+    SignedExtendedInt<t>& prefixIncrement();
+    SignedExtendedInt<t> postfixIncrement();
+    SignedExtendedInt<t>& prefixDecrement();
+    SignedExtendedInt<t> postfixDecrement();
 public:
     SignedExtendedInt();
     template<unsigned int u> SignedExtendedInt(const SignedExtendedInt<u>& obj);
     template<unsigned int u> SignedExtendedInt(const UnsignedExtendedInt<u>& obj);
     SignedExtendedInt(long long obj);
+    SignedExtendedInt(int obj);
     SignedExtendedInt(const char* s);
     ~SignedExtendedInt() {}
     template<unsigned int u> const SignedExtendedInt<t>& operator=(const SignedExtendedInt<u>& obj) { return equalOperator(obj); }
@@ -65,6 +70,10 @@ public:
     template<unsigned int u> inline typename extIntReturnSize<t, u>::intReturnTypeMax_ operator^(const SignedExtendedInt<u>& obj) const { return xorOperator(obj); }
     inline friend SignedExtendedInt<t> operator^(const SignedExtendedInt<t>& lhs, const SignedExtendedInt<t>& rhs) { return lhs.xorOperator(rhs); }
     SignedExtendedInt<t> operator~() const;
+    SignedExtendedInt<t>& operator++() { return this->prefixIncrement(); }
+    SignedExtendedInt<t> operator++(int) { return this->postfixIncrement(); }
+    SignedExtendedInt<t>& operator--() { return this->prefixDecrement(); }
+    SignedExtendedInt<t> operator--(int) { return this->postfixDecrement(); }
     friend std::ostream& operator<<(std::ostream& os, const SignedExtendedInt<t>& obj) {
         os << obj.extendedIntToString();
         return os;
@@ -110,6 +119,17 @@ SignedExtendedInt<t>::SignedExtendedInt(long long obj) : ExtendedInt<t>() {
     this->ext_int[1] = (obj >> 32) & 0xFFFFFFFF;
     if (obj < 0) {
         for (unsigned int i = 2; i < this->ARRAY_SIZE; i++) {
+            this->ext_int[i] = 0xFFFFFFFF;
+        }
+    }
+}
+
+
+template<unsigned int t>
+SignedExtendedInt<t>::SignedExtendedInt(int obj) : ExtendedInt<t>() {
+    this->ext_int[0] = obj;
+    if (obj < 0) {
+        for (unsigned int i = 1; i < this->ARRAY_SIZE; i++) {
             this->ext_int[i] = 0xFFFFFFFF;
         }
     }
@@ -584,6 +604,35 @@ typename extIntReturnSize<t, u>::intReturnTypeMax_ SignedExtendedInt<t>::divideM
         }
         return tempDividend;
     }
+}
+
+
+template<unsigned int t>
+SignedExtendedInt<t>& SignedExtendedInt<t>::prefixIncrement() {
+    *this = *this + 1;
+    return *this;
+}
+
+
+template<unsigned int t>
+SignedExtendedInt<t> SignedExtendedInt<t>::postfixIncrement() {
+    SignedExtendedInt<t> returnValue(*this);
+    *this = *this + 1;
+    return returnValue;
+}
+
+template<unsigned int t>
+SignedExtendedInt<t>& SignedExtendedInt<t>::prefixDecrement() {
+    *this = *this - 1;
+    return *this;
+}
+
+
+template<unsigned int t>
+SignedExtendedInt<t> SignedExtendedInt<t>::postfixDecrement() {
+    SignedExtendedInt<t> returnValue(*this);
+    *this = *this - 1;
+    return returnValue;
 }
 
 
