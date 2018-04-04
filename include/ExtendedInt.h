@@ -11,7 +11,8 @@ protected:
     enum DIVIDE_OPERATION { DIVIDE_OP, MOD_OP };
     unsigned int ARRAY_SIZE;
     unsigned int ext_int[t];
-    virtual void clearValue();
+    void clearValue();
+    bool validateString(const char* s, unsigned int strLen);
     ExtendedInt();
 public:
     virtual void setValueAtIndex(const unsigned long long val, const unsigned int index);
@@ -54,6 +55,13 @@ unsigned int ExtendedInt<t>::getValueAtIndex(const unsigned int index) const {
 template<unsigned int t>
 unsigned int ExtendedInt<t>::getArraySize() {
     return this->ARRAY_SIZE;
+}
+
+
+template<unsigned int t>
+bool ExtendedInt<t>::validateString(const char* s, unsigned int strLen) {
+    // Need to implement
+    return true;
 }
 
 #endif
