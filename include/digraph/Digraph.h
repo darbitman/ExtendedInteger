@@ -1,5 +1,5 @@
-#ifndef _EXTENDEDINT_H_
-#define _EXTENDEDINT_H_
+#ifndef _DIGRAPH_H_
+#define _DIGRAPH_H_
 
 class Digraph {
 private:
@@ -10,10 +10,11 @@ private:
         Vertex* lastVertexPtr;
     };
     Vertex** vertexPtrArray;
+    
 public:
     Digraph(unsigned int V);                            // construct new Digraph with total number of vertices V
+    ~Digraph();
     void addEdge(unsigned int v, unsigned int w);       // add edge (v --> w)
-
 };
 
 #endif

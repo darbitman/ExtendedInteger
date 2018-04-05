@@ -1,0 +1,5 @@
+add_library(NFA "")
+include_directories("../../include/NFA" "../../include/digraph")
+target_sources(NFA PRIVATE NFA.cpp "../../include/NFA/NFA.h" "../../include/digraph/Digraph.h")
+#add_executable(DigraphTest DigraphTest.cpp Digraph.cpp "../../include/digraph/Digraph.h")
+#target_link_libraries(DigraphTest Digraph)
