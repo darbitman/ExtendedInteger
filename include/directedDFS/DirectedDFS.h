@@ -1,10 +1,14 @@
 #pragma once
 
+
+#include "Digraph.h"
+
+
 class DirectedDFS {
 private:
     bool* marked;
-    void dfs(Digraph G, unsigned int v);            // recursive call
+    void dfs(Digraph* g, unsigned int v);            // recursive call
 public:
-    DirectedDFS(Digraph* G, unsigned int src);
+    DirectedDFS(Digraph* g, unsigned int src);
     ~DirectedDFS();
 };
