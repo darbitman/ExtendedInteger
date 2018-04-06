@@ -2,11 +2,13 @@
 #define _NFA_H_
 
 #include "Digraph.h"
-#include "Stack.h"
 
 class NFA {
 private:
-    Digraph* graph;
+    char* re;                                           // store reg exp
+    Digraph* graph;                                     // create digraph for epsilon transitions
+    unsigned int numChars;                              // reg exp length
+    void buildEpsilonTransitionDigraph();
 public:
     NFA(const char* regExp, unsigned int numChars);
 };
