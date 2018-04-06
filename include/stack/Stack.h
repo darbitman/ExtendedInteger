@@ -1,5 +1,4 @@
-#ifndef _STACK_H_
-#define _STACK_H_
+#pragma once
 
 class Stack {
 private:
@@ -14,7 +13,3 @@ public:
     void push(unsigned int data);
     unsigned int pop();
 };
-
-
-
-#endif

@@ -11,6 +11,8 @@ private:
     void buildEpsilonTransitionDigraph();
 public:
     NFA(const char* regExp, unsigned int numChars);
+    ~NFA();
+    bool recognizes(const char* txt);
 };
 
 #endif
