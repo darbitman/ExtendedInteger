@@ -13,8 +13,9 @@ private:
     unsigned int numOfObjects;
 public:
     Bag();
+    Bag(const Bag& rhs);
     ~Bag();
-    void add(T obj);
+    void add(T data);
     bool isEmpty() const;
     unsigned int size() const;
 
@@ -31,18 +32,8 @@ public:
         BagObject* iterDataPtr;
     };
 
-    iterator begin() {
-        return iterator(firstObjectPtr);
-    }
-
-    iterator end() {
-        if (lastObjectPtr == 0) {
-            return iterator(0);
-        }
-        else {
-            return iterator(lastObjectPtr->nextObjectPtr);
-        }
-    }
+    iterator begin() const;
+    iterator end() const;
 };
 
 
@@ -51,6 +42,28 @@ Bag<T>::Bag() {
     firstObjectPtr = 0;
     lastObjectPtr = 0;
     numOfObjects = 0;
+}
+
+
+template<typename T>
+Bag<T>::Bag(const Bag& rhs) {
+    firstObjectPtr = 0;
+    lastObjectPtr = 0;
+    numOfObjects = rhs.numOfObjects;
+    BagObject* rhsObjectPtr = rhs.firstObjectPtr;
+    for (unsigned int i = 0; i < numOfObjects; i++) {
+        if (i == 0) {
+            firstObjectPtr = new BagObject();
+            lastObjectPtr = firstObjectPtr;
+        }
+        else {
+            lastObjectPtr->nextObjectPtr = new BagObject();
+            lastObjectPtr = lastObjectPtr->nextObjectPtr;
+        }
+        lastObjectPtr->data = rhsObjectPtr->data;
+        rhsObjectPtr = rhsObjectPtr->nextObjectPtr;
+        lastObjectPtr->nextObjectPtr = 0;
+    }
 }
 
 
@@ -67,18 +80,17 @@ Bag<T>::~Bag() {
 
 
 template<typename T>
-void Bag<T>::add(T obj) {
+void Bag<T>::add(T data) {
     if (numOfObjects == 0) {
         firstObjectPtr = new BagObject();
-        firstObjectPtr->data = obj;
         lastObjectPtr = firstObjectPtr;
     }
     else {
         lastObjectPtr->nextObjectPtr = new BagObject();
         lastObjectPtr = lastObjectPtr->nextObjectPtr;
-        lastObjectPtr->data = obj;
-        lastObjectPtr->nextObjectPtr = 0;
     }
+    lastObjectPtr->data = data;
+    lastObjectPtr->nextObjectPtr = 0;
     numOfObjects++;
 }
 
@@ -132,4 +144,21 @@ bool Bag<T>::iterator::operator==(const iterator& rhs) {
 template<typename T>
 bool Bag<T>::iterator::operator!=(const iterator& rhs) {
     return iterDataPtr != rhs.iterDataPtr;
+}
+
+
+template<typename T>
+typename Bag<T>::iterator Bag<T>::begin() const {
+    return iterator(firstObjectPtr);
+}
+
+
+template<typename T>
+typename Bag<T>::iterator Bag<T>::end() const {
+    if (lastObjectPtr == 0) {
+        return iterator(0);
+    }
+    else {
+        return iterator(lastObjectPtr->nextObjectPtr);
+    }
 }

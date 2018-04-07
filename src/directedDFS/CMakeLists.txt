@@ -5,7 +5,6 @@ include_directories("../../include/directedDFS"
 target_sources(DirectedDFS PRIVATE
                DirectedDFS.cpp
                "../digraph/Digraph.cpp"
-               "../stack/Stack.cpp"
                "../../include/directedDFS/DirectedDFS.h"
                "../../include/digraph/Digraph.h"
                "../../include/bag/Bag.h")
