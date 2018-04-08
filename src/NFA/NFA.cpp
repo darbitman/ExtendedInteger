@@ -29,14 +29,14 @@ void NFA::buildEpsilonTransitionDigraph() {
             ops.push(i);                                    // store index of left parantheses or OR character
         }
         else if (re[i] == ')') {                            // pop left parantheses or OR character if exists
-            unsigned int or = ops.pop();                    // assume OR character, get its index
-            if (re[or ] == '|') {                           
+            unsigned int orChar = ops.pop();                // assume OR character, get its index
+            if (re[orChar] == '|') {
                 lp = ops.pop();                             // if OR, then pop left parantheses position
-                graph->addEdge(lp, or +1);                  // add directed edge from left parantheses to character immediately after OR
-                graph->addEdge(or , i);                     // add directed edge from OR to right parantheses
+                graph->addEdge(lp, orChar +1);              // add directed edge from left parantheses to character immediately after OR
+                graph->addEdge(orChar, i);                  // add directed edge from OR to right parantheses
             }
             else {                                          // if popped character was a left parantheses, then set accordingly
-                lp = or;
+                lp = orChar;
             }
         }
         if (re[i + 1] == '*' && i < numChars - 1) {         // one character lookahead for ASTERISK character
