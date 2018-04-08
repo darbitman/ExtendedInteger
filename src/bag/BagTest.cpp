@@ -1,4 +1,4 @@
-﻿#include "Bag.h"
+#include "Bag.h"
 #include <iostream>
 
 int main() {
