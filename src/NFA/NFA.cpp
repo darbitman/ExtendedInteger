@@ -22,7 +22,7 @@ NFA::~NFA() {
 
 
 void NFA::buildEpsilonTransitionDigraph() {
-    Stack ops;
+    Stack<unsigned int> ops;
     for (unsigned int i = 0; i < numChars; i++) {
         unsigned int lp = i;
         if (re[i] == '(' || re[i] == '|') {

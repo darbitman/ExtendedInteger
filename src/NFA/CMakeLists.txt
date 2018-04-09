@@ -7,7 +7,6 @@ include_directories("../../include/NFA"
 set(NFA_Sources
     NFA.cpp
     "../digraph/Digraph.cpp"
-    "../stack/Stack.cpp"
     "../directedDFS/DirectedDFS.cpp"
     "../../include/directedDFS/DirectedDFS.h"
     "../../include/NFA/NFA.h"
@@ -23,6 +22,5 @@ add_executable(NFATest
                ${NFA_Sources})
 target_link_libraries(NFATest
                       NFA
-                      Stack
                       Digraph
                       DirectedDFS)

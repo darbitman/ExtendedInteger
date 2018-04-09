@@ -8,6 +8,18 @@ Digraph::Digraph(unsigned int V) : totalVertices(V) {
 }
 
 
+Digraph::Digraph(const Digraph& rhs) {
+    totalVertices = rhs.totalVertices;
+    totalEdges = rhs.totalEdges;
+    vertexArray = new Bag<unsigned int>[totalVertices];
+    for (unsigned int i = 0; i < totalVertices; i++) {
+        for (Bag<unsigned int>::iterator iter = vertexArray[i].begin(); iter != vertexArray[i].end(); iter++) {
+            vertexArray[i].add(*iter);
+        }
+    }
+}
+
+
 Digraph::~Digraph() {
     delete[] vertexArray;
 }
@@ -21,6 +33,7 @@ void Digraph::addEdge(unsigned int v, unsigned int w) {
 Bag<unsigned int>& Digraph::adj(unsigned int v) {
     return vertexArray[v];
 }
+
 
 unsigned int Digraph::V() const {
     return totalVertices;
