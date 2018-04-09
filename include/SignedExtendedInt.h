@@ -13,7 +13,7 @@ protected:
     template<unsigned int u> typename extIntReturnSize<t, u>::intReturnTypeMax_ addOperator(const SignedExtendedInt<u>& obj) const;
     template<unsigned int u> typename extIntReturnSize<t, u>::intReturnTypeMax_ subtractOperator(const SignedExtendedInt<u>& obj) const;
     template<unsigned int u> typename extIntReturnSize<t, u>::intReturnTypeTot_ multiplyOperator(const SignedExtendedInt<u>& obj) const;
-    template<unsigned int u> typename extIntReturnSize<t, u>::intReturnTypeMax_ divideModOperator(const SignedExtendedInt<u>& obj, const ExtendedInt<t>::DIVIDE_OPERATION op) const;
+    template<unsigned int u> typename extIntReturnSize<t, u>::intReturnTypeMax_ divideModOperator(const SignedExtendedInt<u>& obj, const typename ExtendedInt<t>::DIVIDE_OPERATION op) const;
     template<unsigned int u> SignedExtendedInt<t>& equalOperator(const SignedExtendedInt<u>& obj);
     template<unsigned int u> bool isEqualOperator(const SignedExtendedInt<u>& obj) const;
     template<unsigned int u> bool greaterThanOperator(const SignedExtendedInt<u>& obj) const;
@@ -140,7 +140,7 @@ template<unsigned int t>
 template<unsigned int u>
 SignedExtendedInt<t>& SignedExtendedInt<t>::equalOperator(const SignedExtendedInt<u>& obj) {
     this->clearValue();
-    unsigned int minArraySize = typename extIntReturnSize<t, u>::multipleOf32BitsMin_;
+    unsigned int minArraySize = extIntReturnSize<t, u>::multipleOf32BitsMin_;
     for (unsigned int i = 0; i < minArraySize; i++) {
         this->ext_int[i] = obj.getValueAtIndex(i);
     }
@@ -201,9 +201,9 @@ bool SignedExtendedInt<t>::isEqualOperator(const SignedExtendedInt<u>& obj) cons
 template<unsigned int t>
 template<unsigned int u>
 bool SignedExtendedInt<t>::greaterThanOperator(const SignedExtendedInt<u>& obj) const {
-    extIntReturnSize<t, u>::intReturnTypeMax_ thisOfMaxSize(*this);
-    extIntReturnSize<t, u>::intReturnTypeMax_ objOfMaxSize(obj);
-    extIntReturnSize<t, u>::intReturnTypeMax_ returnValue;
+    typename extIntReturnSize<t, u>::intReturnTypeMax_ thisOfMaxSize(*this);
+    typename extIntReturnSize<t, u>::intReturnTypeMax_ objOfMaxSize(obj);
+    typename extIntReturnSize<t, u>::intReturnTypeMax_ returnValue;
     unsigned long long sign1 = (thisOfMaxSize.ext_int[thisOfMaxSize.ARRAY_SIZE - 1] >> 31) & 0x1;   // Extract sign bit of calling obj
     unsigned long long sign2 = (objOfMaxSize.ext_int[objOfMaxSize.ARRAY_SIZE - 1] >> 31) & 0x1;     // Extract sign bit of rhs obj
     if (sign1 && !sign2) {
@@ -232,9 +232,9 @@ bool SignedExtendedInt<t>::greaterThanOperator(const SignedExtendedInt<u>& obj) 
 template<unsigned int t>
 template<unsigned int u>
 bool SignedExtendedInt<t>::greaterThanOrEqualOperator(const SignedExtendedInt<u>& obj) const {
-    extIntReturnSize<t, u>::intReturnTypeMax_ thisOfMaxSize(*this);
-    extIntReturnSize<t, u>::intReturnTypeMax_ objOfMaxSize(obj);
-    extIntReturnSize<t, u>::intReturnTypeMax_ returnValue;
+    typename extIntReturnSize<t, u>::intReturnTypeMax_ thisOfMaxSize(*this);
+    typename extIntReturnSize<t, u>::intReturnTypeMax_ objOfMaxSize(obj);
+    typename extIntReturnSize<t, u>::intReturnTypeMax_ returnValue;
     unsigned long long sign1 = (thisOfMaxSize.ext_int[thisOfMaxSize.ARRAY_SIZE - 1] >> 31) & 0x1;   // Extract sign bit of calling obj
     unsigned long long sign2 = (objOfMaxSize.ext_int[objOfMaxSize.ARRAY_SIZE - 1] >> 31) & 0x1;     // Extract sign bit of rhs obj
     if (sign1 && !sign2) {
@@ -263,9 +263,9 @@ bool SignedExtendedInt<t>::greaterThanOrEqualOperator(const SignedExtendedInt<u>
 template<unsigned int t>
 template<unsigned int u>
 bool SignedExtendedInt<t>::lessThanOperator(const SignedExtendedInt<u>& obj) const {
-    extIntReturnSize<t, u>::intReturnTypeMax_ thisOfMaxSize(*this);
-    extIntReturnSize<t, u>::intReturnTypeMax_ objOfMaxSize(obj);
-    extIntReturnSize<t, u>::intReturnTypeMax_ returnValue;
+    typename extIntReturnSize<t, u>::intReturnTypeMax_ thisOfMaxSize(*this);
+    typename extIntReturnSize<t, u>::intReturnTypeMax_ objOfMaxSize(obj);
+    typename extIntReturnSize<t, u>::intReturnTypeMax_ returnValue;
     unsigned long long sign1 = (thisOfMaxSize.ext_int[thisOfMaxSize.ARRAY_SIZE - 1] >> 31) & 0x1;   // Extract sign bit of calling obj
     unsigned long long sign2 = (objOfMaxSize.ext_int[objOfMaxSize.ARRAY_SIZE - 1] >> 31) & 0x1;     // Extract sign bit of rhs obj
     if (sign1 && !sign2) {
@@ -294,9 +294,9 @@ bool SignedExtendedInt<t>::lessThanOperator(const SignedExtendedInt<u>& obj) con
 template<unsigned int t>
 template<unsigned int u>
 bool SignedExtendedInt<t>::lessThanOrEqualOperator(const SignedExtendedInt<u>& obj) const {
-    extIntReturnSize<t, u>::intReturnTypeMax_ thisOfMaxSize(*this);
-    extIntReturnSize<t, u>::intReturnTypeMax_ objOfMaxSize(obj);
-    extIntReturnSize<t, u>::intReturnTypeMax_ returnValue;
+    typename extIntReturnSize<t, u>::intReturnTypeMax_ thisOfMaxSize(*this);
+    typename extIntReturnSize<t, u>::intReturnTypeMax_ objOfMaxSize(obj);
+    typename extIntReturnSize<t, u>::intReturnTypeMax_ returnValue;
     unsigned long long sign1 = (thisOfMaxSize.ext_int[thisOfMaxSize.ARRAY_SIZE - 1] >> 31) & 0x1;   // Extract sign bit of calling obj
     unsigned long long sign2 = (objOfMaxSize.ext_int[objOfMaxSize.ARRAY_SIZE - 1] >> 31) & 0x1;     // Extract sign bit of rhs obj
     if (sign1 && !sign2) {
@@ -325,9 +325,9 @@ bool SignedExtendedInt<t>::lessThanOrEqualOperator(const SignedExtendedInt<u>& o
 template<unsigned int t>
 template<unsigned int u>
 typename extIntReturnSize<t, u>::intReturnTypeMax_ SignedExtendedInt<t>::addOperator(const SignedExtendedInt<u>& obj) const {
-    extIntReturnSize<t, u>::intReturnTypeMax_ thisOfMaxSize(*this);
-    extIntReturnSize<t, u>::intReturnTypeMax_ objOfMaxSize(obj);
-    extIntReturnSize<t, u>::intReturnTypeMax_ returnValue;
+    typename extIntReturnSize<t, u>::intReturnTypeMax_ thisOfMaxSize(*this);
+    typename extIntReturnSize<t, u>::intReturnTypeMax_ objOfMaxSize(obj);
+    typename extIntReturnSize<t, u>::intReturnTypeMax_ returnValue;
     unsigned long long x = 0;
     unsigned long long y = 0;
     unsigned long long z = 0;
@@ -347,9 +347,9 @@ typename extIntReturnSize<t, u>::intReturnTypeMax_ SignedExtendedInt<t>::addOper
 template<unsigned int t>
 template<unsigned int u>
 typename extIntReturnSize<t, u>::intReturnTypeMax_ SignedExtendedInt<t>::subtractOperator(const SignedExtendedInt<u>& obj) const {
-    extIntReturnSize<t, u>::intReturnTypeMax_ thisOfMaxSize(*this);
-    extIntReturnSize<t, u>::intReturnTypeMax_ objOfMaxSize(~obj + 1);
-    extIntReturnSize<t, u>::intReturnTypeMax_ returnValue;
+    typename extIntReturnSize<t, u>::intReturnTypeMax_ thisOfMaxSize(*this);
+    typename extIntReturnSize<t, u>::intReturnTypeMax_ objOfMaxSize(~obj + 1);
+    typename extIntReturnSize<t, u>::intReturnTypeMax_ returnValue;
     unsigned long long x = 0;
     unsigned long long y = 0;
     unsigned long long z = 0;
@@ -547,7 +547,7 @@ typename extIntReturnSize<t, u>::intReturnTypeTot_ SignedExtendedInt<t>::multipl
 
 template<unsigned int t>
 template<unsigned int u>
-typename extIntReturnSize<t, u>::intReturnTypeMax_ SignedExtendedInt<t>::divideModOperator(const SignedExtendedInt<u>& divisor, const ExtendedInt<t>::DIVIDE_OPERATION op) const {
+typename extIntReturnSize<t, u>::intReturnTypeMax_ SignedExtendedInt<t>::divideModOperator(const SignedExtendedInt<u>& divisor, const typename ExtendedInt<t>::DIVIDE_OPERATION op) const {
     unsigned long long sign1 = (this->ext_int[this->ARRAY_SIZE - 1] >> 31) & 0x1;       // Extract sign bit of calling obj
     unsigned long long sign2 = (divisor.ext_int[divisor.ARRAY_SIZE - 1] >> 31) & 0x1;   // Extract sign bit of divisor
     SignedExtendedInt<t> unsignedThis(sign1 ? ((~(*this)) + 1) : (*this));              // if calling obj is negative, return positive value

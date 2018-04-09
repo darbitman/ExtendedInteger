@@ -10,7 +10,7 @@ class UnsignedExtendedInt : public ExtendedInt<t> {
 protected:
     void stringToExtendedInt(const char* s);
     std::string extendedIntToString() const;
-    template<unsigned int u> typename extIntReturnSize<t, u>::uIntReturnTypeMax_ divideModOperator(const UnsignedExtendedInt<u>& divisor, const ExtendedInt<t>::DIVIDE_OPERATION op) const;
+    template<unsigned int u> typename extIntReturnSize<t, u>::uIntReturnTypeMax_ divideModOperator(const UnsignedExtendedInt<u>& divisor, const typename ExtendedInt<t>::DIVIDE_OPERATION op) const;
     template<unsigned int u> typename extIntReturnSize<t, u>::uIntReturnTypeMax_ addOperator(const UnsignedExtendedInt<u>& obj) const;
     template<unsigned int u> typename extIntReturnSize<t, u>::uIntReturnTypeMax_ subtractOperator(const UnsignedExtendedInt<u>& obj) const;
     template<unsigned int u> typename extIntReturnSize<t, u>::uIntReturnTypeTot_ multiplyOperator(const UnsignedExtendedInt<u>& obj) const;
@@ -81,7 +81,7 @@ public:
         return os;
     }
 
-    friend class UnsignedExtendedInt;       // allows access between private members between UnsignedExtendedInt<n> and UnsignedExtendedInt<m> for some n,m
+    template<unsigned int u> friend class UnsignedExtendedInt;       // allows access between private members between UnsignedExtendedInt<n> and UnsignedExtendedInt<m> for some n,m
     template<unsigned int u> friend class SignedExtendedInt;
 };
 
@@ -206,9 +206,9 @@ std::string UnsignedExtendedInt<t>::extendedIntToString() const {
 template<unsigned int t>
 template<unsigned int u>
 typename extIntReturnSize<t, u>::uIntReturnTypeMax_ UnsignedExtendedInt<t>::addOperator(const UnsignedExtendedInt<u>& obj) const {
-    extIntReturnSize<t, u>::uIntReturnTypeMax_ thisOfMaxSize(*this);
-    extIntReturnSize<t, u>::uIntReturnTypeMax_ objOfMaxSize(obj);
-    extIntReturnSize<t, u>::uIntReturnTypeMax_ returnValue;
+    typename extIntReturnSize<t, u>::uIntReturnTypeMax_ thisOfMaxSize(*this);
+    typename extIntReturnSize<t, u>::uIntReturnTypeMax_ objOfMaxSize(obj);
+    typename extIntReturnSize<t, u>::uIntReturnTypeMax_ returnValue;
     unsigned long long x = 0;
     unsigned long long y = 0;
     unsigned long long z = 0;
@@ -245,8 +245,8 @@ typename extIntReturnSize<t, u>::uIntReturnTypeTot_ UnsignedExtendedInt<t>::mult
     unsigned int upperResultBits = 0;
     unsigned int lowerResultBits = 0;
     unsigned int leftShiftValue = 0;
-    extIntReturnSize<t, u>::uIntReturnTypeTot_ returnValue;
-    extIntReturnSize<t, u>::uIntReturnTypeTot_ uExtIntTemp;
+    typename extIntReturnSize<t, u>::uIntReturnTypeTot_ returnValue;
+    typename extIntReturnSize<t, u>::uIntReturnTypeTot_ uExtIntTemp;
     for (unsigned int i = 0; i < this->ARRAY_SIZE; i++) {
         for (unsigned int j = 0; j < obj.ARRAY_SIZE; j++) {
             leftShiftValue = i + j;
@@ -269,12 +269,12 @@ typename extIntReturnSize<t, u>::uIntReturnTypeTot_ UnsignedExtendedInt<t>::mult
 
 template<unsigned int t>
 template<unsigned int u>
-typename extIntReturnSize<t, u>::uIntReturnTypeMax_ UnsignedExtendedInt<t>::divideModOperator(const UnsignedExtendedInt<u>& divisor, const ExtendedInt<t>::DIVIDE_OPERATION op) const {
+typename extIntReturnSize<t, u>::uIntReturnTypeMax_ UnsignedExtendedInt<t>::divideModOperator(const UnsignedExtendedInt<u>& divisor, const typename ExtendedInt<t>::DIVIDE_OPERATION op) const {
     unsigned long long x = 0;
     unsigned long long y = 0;
-    extIntReturnSize<t, u>::uIntReturnTypeMax_ returnValue;
-    extIntReturnSize<t, u>::uIntReturnTypeMax_ tempDividend;
-    extIntReturnSize<t, u>::uIntReturnTypeMax_ maskBit;
+    typename extIntReturnSize<t, u>::uIntReturnTypeMax_ returnValue;
+    typename extIntReturnSize<t, u>::uIntReturnTypeMax_ tempDividend;
+    typename extIntReturnSize<t, u>::uIntReturnTypeMax_ maskBit;
     maskBit.setValueAtIndex(1, 0);
     if (divisor == 0) {
         std::cout << "Divide by zero";
