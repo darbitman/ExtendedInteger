@@ -28,47 +28,58 @@ void NFA::buildEpsilonTransitionDigraph() {
   for (unsigned int i = 0; i < numChars; i++) {
     unsigned int lp = i;
     if (re[i] == '(' || re[i] == '|') {
-      ops.push(i);                                      // store index of left parantheses or OR character
+      ops.push(i);                                      // store index of left paranthesis or OR character
     }
-    else if (re[i] == ')') {                            // pop left parantheses or OR character if exists
-      // unsigned int orChar = ops.pop();                  // assume OR character, get its index
-      unsigned int or = 0;
-      try {
-        while (re[ops.peek()] == '|') {                   // extract all possible OR characters
-          or = ops.pop();
-          orOps.push(or);                                 // create OR stack to use later for endpoint of directed edge
-          graph->addEdge(or, i);
+    else if (re[i] == ')') {                            // process closing paranthesis: search for OR characters and opening paranthesis
+      unsigned int orOp = 0;
+      while (!ops.isEmpty()) {                          // extract all possible OR characters
+        try {
+          if (re[ops.peek()] == '|') {
+            orOp = ops.pop();
+            orOps.push(orOp);                           // create OR stack to use later for endpoint of directed edge
+            graph->addEdge(orOp, i);                    // add edge from OR vertex to closing paranthesis
+          }
+          else {                                        // break out of while loop if opening paranthesis
+            break;
+          }
         }
-      }
-      catch (StackEmptyException e) {
-        // fall through to break out of while loop
+        catch (StackEmptyException e) {
+          e.printError();
+        }
       }
       try {
         if (re[ops.peek()] == '(') {
-          unsigned int or;
+          unsigned int orOp = 0;
           lp = ops.pop();
-          while (1) {
-            or = orOps.pop();
-            graph->addEdge(lp, or + 1);
+          while (!orOps.isEmpty()) {
+            orOp = orOps.pop();
+            graph->addEdge(lp, orOp + 1);
           }
         }
       }
       catch (StackEmptyException e) {
-        // intentional exception to break out of while loop (fall through)
+        e.printError();
       }
-      if (re[i + 1] == '*' && i < numChars - 1) {       // if closing parantheses and next character is ASTERISK need epsilon transition to/from opening parantheses
+      if (re[i + 1] == '*' && i < numChars - 1) {       // if closing paranthesis and next character is ASTERISK, need epsilon transition between it and opening paranthesis
         graph->addEdge(lp, i + 1);
         graph->addEdge(i + 1, lp);
       }
+      if (re[i + 1] == '.' && i < numChars - 1) {       // if closing paranthesis and next character is a PERIOD need epsilon transition from opening paranthesis to it, and from it to next
+        graph->addEdge(lp, i + 1);                      // add edge from opening paranthesis to PERIOD
+      }
     }
-    if (re[i + 1] == '*' && i < numChars - 1
-                         && re[i] != '('
-                         && re[i] != '*'
-                         && re[i] != ')') {             // one character lookahead for ASTERISK character AND not a metacharacter
+    if (re[i + 1] == '*'                                // one character lookahead for ASTERISK character, but also make sure current character is not a metacharacter
+      && i < numChars - 1                               // make sure re[] isn't accessed past the end
+      && re[i] != ')'
+      && re[i] != '*'
+      && re[i] != '(') {
       graph->addEdge(i, i + 1);                         // add loop edges
       graph->addEdge(i + 1, i);
     }
-    if (re[i] == '(' || re[i] == '*' || re[i] == ')') { // add epsilon transition to next state if metacharacter
+    if (re[i] == '(' ||
+        re[i] == '*' ||
+        re[i] == ')' ||
+        re[i] == '.') {                                 // add epsilon transition to next state if metacharacter
       graph->addEdge(i, i + 1);
     }
   }
