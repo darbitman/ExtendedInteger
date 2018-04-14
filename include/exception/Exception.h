@@ -2,11 +2,11 @@
 
 class Exceptions {
 public:
-    virtual void printError();
+  virtual void printError();
 };
 
 
 class StackEmptyException : private Exceptions {
 public:
-    virtual void printError();
+  virtual void printError();
 };
