@@ -174,8 +174,9 @@ void UnsignedExtendedInt<t>::stringToExtendedInt(const char* s) {
     while (s[strLength] != 0) {             // compute string length
         strLength++;
     }
-    if (this->validateString(s, strLength)) {
-        std::cout << "String contains an invalid character" << std::endl;
+    if (!this->validateString(s, strLength)) {
+        std::cout << "Input string ( " << s << " ) contains an invalid character" << std::endl;
+        return;
     }
     UnsignedExtendedInt<t> TEN(10);
     UnsignedExtendedInt<t> powersOfTen(1);

@@ -3,6 +3,7 @@
 #include "Bag.h"
 #include "DirectedDFS.h"
 #include "Exception.h"
+#include "Digraph.h"
 
 
 NFA::NFA(const char* regExp, unsigned int numChars) {
@@ -86,11 +87,21 @@ void NFA::buildEpsilonTransitionDigraph() {
 }
 
 
-bool NFA::recognizes(const char* txt) {
+bool NFA::validateTxt(const char* txt) {
   unsigned int txtLength = 0;
   while (txt[txtLength] != 0) {                                   // compute string length
     txtLength++;
   }
+  return recognizes(txt, txtLength);
+}
+
+
+bool NFA::validateTxt(const char* txt, unsigned int txtLength) {
+  return recognizes(txt, txtLength);
+}
+
+
+bool NFA::recognizes(const char* txt, unsigned int txtLength) {
   Bag<unsigned int>* reachableStates = new Bag<unsigned int>();   // declare a bag that will be used for all reachable states via epsilon transitions
   DirectedDFS* dfs = new DirectedDFS(graph, 0);                   // find all reachable states starting from state 0
   for (unsigned int i = 0; i < graph->V(); i++) {

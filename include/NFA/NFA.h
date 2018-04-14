@@ -1,5 +1,7 @@
 #pragma once
-#include "Digraph.h"
+
+
+class Digraph;
 
 class NFA {
 private:
@@ -7,8 +9,10 @@ private:
   Digraph* graph;                                     // create digraph for epsilon transitions
   unsigned int numChars;                              // reg exp length
   void buildEpsilonTransitionDigraph();
+  bool recognizes(const char* txt, unsigned int txtLength);
 public:
   NFA(const char* regExp, unsigned int numChars);
   ~NFA();
-  bool recognizes(const char* txt);
+  bool validateTxt(const char* txt);
+  bool validateTxt(const char* txt, unsigned int txtLength);
 };
