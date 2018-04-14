@@ -1,6 +1,6 @@
 # extendedmath
 
-This library provides users to utilize signed and unsigned integers that are larger than native 64-bit integers. The library allows for arbitrarily large integers in multiples of 32-bits.
+This library allows users to utilize signed and unsigned integers that are larger than native 64-bit integers. The library allows for arbitrarily large integers in multiples of 32-bits.
 
 ### The following types are natively supported  
 > **uextint128_t** (128-bit unsigned extended int)  
