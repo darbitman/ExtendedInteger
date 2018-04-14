@@ -16,6 +16,8 @@ This library allows users to utilize signed and unsigned integers that are large
 > uextint128_t foo(1234)  
 > extint128_t foo(-1234)  
 > extint128_t foo(1234)  
+> foo = "123456"
+> foo = 123456
 
 ### The following operations are supported  
 > multiply  
