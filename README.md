@@ -23,7 +23,7 @@ This library provides users to utilize signed and unsigned integers that are lar
 > mod  
 > add  
 > subtract  
-> ==  
+> \==  
 > \>  
 > \>=  
 > <  
