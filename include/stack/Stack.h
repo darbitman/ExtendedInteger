@@ -96,5 +96,5 @@ T Stack<T>::peek() const {
   if (numEntries == 0) {
     throw StackEmptyException();
   }
-  return stackPtr[numEntries];
+  return stackPtr[numEntries - 1];
 }

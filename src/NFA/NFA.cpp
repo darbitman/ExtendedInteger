@@ -24,28 +24,47 @@ NFA::~NFA() {
 
 void NFA::buildEpsilonTransitionDigraph() {
   Stack<unsigned int> ops;
+  Stack<unsigned int> orOps;
   for (unsigned int i = 0; i < numChars; i++) {
     unsigned int lp = i;
     if (re[i] == '(' || re[i] == '|') {
       ops.push(i);                                      // store index of left parantheses or OR character
     }
     else if (re[i] == ')') {                            // pop left parantheses or OR character if exists
-      unsigned int orChar = ops.pop();                  // assume OR character, get its index
-      if (re[orChar] == '|') {
-        try {
-          lp = ops.pop();                               // if OR, then pop left parantheses position
+      // unsigned int orChar = ops.pop();                  // assume OR character, get its index
+      unsigned int or = 0;
+      try {
+        while (re[ops.peek()] == '|') {                   // extract all possible OR characters
+          or = ops.pop();
+          orOps.push(or);                                 // create OR stack to use later for endpoint of directed edge
+          graph->addEdge(or, i);
         }
-        catch (StackEmptyException e) {
-          e.printError();
-        }
-        graph->addEdge(lp, orChar + 1);                 // add directed edge from left parantheses to character immediately after OR
-        graph->addEdge(orChar, i);                      // add directed edge from OR to right parantheses
       }
-      else {                                            // if popped character was a left parantheses, then set accordingly
-        lp = orChar;
+      catch (StackEmptyException e) {
+        // fall through to break out of while loop
+      }
+      try {
+        if (re[ops.peek()] == '(') {
+          unsigned int or;
+          lp = ops.pop();
+          while (1) {
+            or = orOps.pop();
+            graph->addEdge(lp, or + 1);
+          }
+        }
+      }
+      catch (StackEmptyException e) {
+        // intentional exception to break out of while loop (fall through)
+      }
+      if (re[i + 1] == '*' && i < numChars - 1) {       // if closing parantheses and next character is ASTERISK need epsilon transition to/from opening parantheses
+        graph->addEdge(lp, i + 1);
+        graph->addEdge(i + 1, lp);
       }
     }
-    if (re[i + 1] == '*' && i < numChars - 1) {         // one character lookahead for ASTERISK character
+    if (re[i + 1] == '*' && i < numChars - 1
+                         && re[i] != '('
+                         && re[i] != '*'
+                         && re[i] != ')') {             // one character lookahead for ASTERISK character AND not a metacharacter
       graph->addEdge(i, i + 1);                         // add loop edges
       graph->addEdge(i + 1, i);
     }
