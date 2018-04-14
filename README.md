@@ -12,7 +12,32 @@ This library provides users to utilize signed and unsigned integers that are lar
 ##### If you need extended integers with more bits, see _typedefs.h_ for examples how to define them
 
 ### Here are some examples of how to declare/define extended integers
-#### uextint128_t("123456789")
-#### uextint128_t(1234)
-#### extint128_t(-1234)
-#### extint128_t(1234)
+#### uextint128_t foo("123456789");
+#### uextint128_t foo(1234);
+#### extint128_t foo(-1234);
+#### extint128_t foo(1234);
+
+### The following operations are supported
+> #### multiply
+> #### divide
+> #### mod
+> #### add
+> #### subtract
+> #### ==
+> #### >
+> #### >=
+> #### <
+> #### <=
+> #### right shift
+> #### left shift
+> #### bitwise and
+> #### bitwise or
+> #### bitwise xor
+> #### bitwise not
+> #### prefix/postfix increment/decrement
+
+### The following math operations are currently supported as well
+> #### logBase10
+> #### log
+> #### power
+> #### factorial
