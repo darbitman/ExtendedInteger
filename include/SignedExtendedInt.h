@@ -155,6 +155,10 @@ void SignedExtendedInt<t>::stringToExtendedInt(const char* s) {
     while (s[strLength] != 0) {
         strLength++;
     }
+    if (!this->validateString(s, strLength)) {
+      std::cout << "Input string ( " << s << " ) contains an invalid character" << std::endl;
+      return;
+    }
     SignedExtendedInt<t> TEN;
     SignedExtendedInt<t> powersOfTen;
     powersOfTen.setValueAtIndex(1, 0);
