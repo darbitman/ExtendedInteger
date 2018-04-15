@@ -1,9 +1,10 @@
 #pragma once
-
 #include "ExtendedIntLengths.h"
 #include "NFA.h"
+#include "Exception.h"
 #include <iostream>
 #include <string>
+
 
 template<unsigned int t = 4>
 class ExtendedInt {

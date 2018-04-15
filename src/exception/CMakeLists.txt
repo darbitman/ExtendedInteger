@@ -5,3 +5,8 @@ set(Exception_Sources
     "../../include/exception/Exception.h")
 target_sources(Exception PRIVATE
                ${Exception_Sources})
+add_executable(ExceptionTest
+               ExceptionTest.cpp
+               ${Exception_Sources})
+target_link_libraries(ExceptionTest
+                      Exception)

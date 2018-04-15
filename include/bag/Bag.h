@@ -19,6 +19,7 @@ public:
   bool isEmpty() const;
   unsigned int size() const;
 
+
   class iterator {
   public:
     iterator();
@@ -29,8 +30,9 @@ public:
     bool operator==(const iterator& rhs);
     bool operator!=(const iterator& rhs);
   private:
-    BagObject * iterDataPtr;
+    BagObject* iterDataPtr;
   };
+
 
   iterator begin() const;
   iterator end() const;

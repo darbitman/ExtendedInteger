@@ -1,7 +1,4 @@
-#ifndef _TYPEDEFS_H_
-#define _TYPEDEFS_H_
-
-
+#pragma once
 #include "ExtendedIntLengths.h"
 
 
@@ -17,6 +14,3 @@ typedef UnsignedExtendedInt<12> uextint512_t;
 typedef SignedExtendedInt<4> extint128_t;
 typedef SignedExtendedInt<8> extint256_t;
 typedef SignedExtendedInt<12> extint512_t;
-
-
-#endif

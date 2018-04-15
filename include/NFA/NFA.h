@@ -3,6 +3,7 @@
 
 class Digraph;
 
+
 class NFA {
 private:
   char* re;                                           // store reg exp
