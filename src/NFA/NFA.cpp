@@ -7,7 +7,7 @@
 
 
 NFA::NFA(const char* regExp, unsigned int numChars) {
-  graphPtr = new Digraph(numChars + 1);           // create digraph with numChars + 1 vertices. need extra vertex for "match" state
+  graphPtr = new Digraph(numChars + 1);                 // create digraph with numChars + 1 vertices. need extra vertex for "match" state
   this->numChars = numChars;
   rePtr = new char[numChars];
   for (unsigned int i = 0; i < numChars; i++) {         // copy characters
@@ -90,7 +90,7 @@ void NFA::buildEpsilonTransitionDigraph() {
     if (rePtr[i] == '(' ||
       rePtr[i] == '*' ||
       rePtr[i] == ')' ||
-      rePtr[i] == '.') {                              // add epsilon transition to next state if metacharacter
+      rePtr[i] == '.') {                                // add epsilon transition to next state if metacharacter
       graphPtr->addEdge(i, i + 1);
     }
   }
