@@ -71,4 +71,5 @@ unsigned int ExtendedInt<t>::getArraySize() {
 template<unsigned int t>
 bool ExtendedInt<t>::validateString(const char* s, unsigned int strLen) {
   return getNFAInstance().validateTxt(s, strLen);
+
 }
