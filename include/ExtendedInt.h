@@ -25,7 +25,7 @@ public:
 
 template<unsigned int t = 4>
 NFA& ExtendedInt<t>::getNFAInstance() {
-  static std::string regExp = "(((0x)|(-)).(0|1|2|3|4|5|6|7|8|9)*)";
+  static std::string regExp = "(((-).(0|1|2|3|4|5|6|7|8|9)*)|((0x)(0|1|2|3|4|5|6|7|8|9|A|B|C|D|E|F)*))";
   static NFA inputValidationNFA(regExp.c_str(), regExp.length());
   return inputValidationNFA;
 }

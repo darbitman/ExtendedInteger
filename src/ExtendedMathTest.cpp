@@ -7,8 +7,8 @@ using namespace ExtendedIntegerMathOperations;
 
 
 int main() {
-  uextint256_t a(0);
+  uextint256_t a("0");
   uextint128_t b("1234");
-  b / a;
+  a = 1;
   return 0;
 }

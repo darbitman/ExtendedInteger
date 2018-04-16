@@ -36,7 +36,16 @@ public:
   UnsignedExtendedInt(int obj);
   UnsignedExtendedInt(const char* s);
   ~UnsignedExtendedInt() {}
-  template<unsigned int u> UnsignedExtendedInt<t> operator=(const UnsignedExtendedInt<u>& obj) { return equalOperator(obj); }
+
+  template<unsigned int u>
+  UnsignedExtendedInt<t> operator=(const UnsignedExtendedInt<u>& obj) {
+    return equalOperator(obj);
+  }
+
+  UnsignedExtendedInt<t> operator=(int obj) {
+    return equalOperator(UnsignedExtendedInt(obj));
+  }
+
   const UnsignedExtendedInt& operator=(const char* s) {
     try {
       stringToExtendedInt(s);
@@ -47,10 +56,24 @@ public:
     return *this;
   }
 
-  template<unsigned int u> typename extIntReturnSize<t, u>::uIntReturnTypeMax_ operator+(const UnsignedExtendedInt<u>& obj) const { return addOperator(obj); }
-  friend UnsignedExtendedInt<t> operator+(const UnsignedExtendedInt<t>& lhs, const UnsignedExtendedInt<t>& rhs) { return lhs.addOperator(rhs); }
-  template<unsigned int u> typename extIntReturnSize<t, u>::uIntReturnTypeMax_ operator-(const UnsignedExtendedInt<u>& obj) const { return subtractOperator(obj); }
-  friend UnsignedExtendedInt<t> operator-(const UnsignedExtendedInt<t>& lhs, const UnsignedExtendedInt<t>& rhs) { return lhs.subtractOperator(rhs); }
+  template<unsigned int u>
+  typename extIntReturnSize<t, u>::uIntReturnTypeMax_ operator+(const UnsignedExtendedInt<u>& obj) const {
+    return addOperator(obj);
+  }
+
+  UnsignedExtendedInt<t> operator+(const UnsignedExtendedInt<t>& rhs) const {
+    return addOperator(rhs);
+  }
+
+  template<unsigned int u>
+  typename extIntReturnSize<t, u>::uIntReturnTypeMax_ operator-(const UnsignedExtendedInt<u>& obj) const {
+    return subtractOperator(obj);
+  }
+
+  UnsignedExtendedInt<t> operator-(const UnsignedExtendedInt<t>& rhs) const {
+    return subtractOperator(rhs);
+  }
+
   template<unsigned int u> typename extIntReturnSize<t, u>::uIntReturnTypeTot_ operator*(const UnsignedExtendedInt<u>& obj) const { return multiplyOperator(obj); }
   friend typename extIntReturnSize<t, t>::uIntReturnTypeTot_ operator*(const UnsignedExtendedInt<t>& lhs, const UnsignedExtendedInt<t>& rhs) {
     return lhs.multiplyOperator(rhs);
@@ -65,54 +88,149 @@ public:
     }
   }
 
-  friend typename extIntReturnSize<t, t>::uIntReturnTypeMax_ operator/(const UnsignedExtendedInt<t>& dividend, const UnsignedExtendedInt<t>& divisor) {
+  typename extIntReturnSize<t, t>::uIntReturnTypeMax_ operator/( const UnsignedExtendedInt<t>& divisor) const {
     try {
-      return dividend.divideModOperator(divisor, ExtendedInt<t>::DIVIDE_OP);
+      return divideModOperator(divisor, ExtendedInt<t>::DIVIDE_OP);
     }
     catch (const Exception& e) {
       e.printError();
     }
   }
 
-  template<unsigned int u> typename extIntReturnSize<t, u>::uIntReturnTypeMax_ operator%(const UnsignedExtendedInt<u>& divisor) const {
-    return divideModOperator(divisor, ExtendedInt<t>::MOD_OP);
+  template<unsigned int u>
+  typename extIntReturnSize<t, u>::uIntReturnTypeMax_ operator%(const UnsignedExtendedInt<u>& divisor) const {
+    try {
+      return divideModOperator(divisor, ExtendedInt<t>::MOD_OP);
+    }
+    catch (const Exception& e) {
+      e.printError();
+    }
   }
-  friend typename extIntReturnSize<t, t>::uIntReturnTypeMax_ operator%(const UnsignedExtendedInt<t>& dividend, const UnsignedExtendedInt<t>& divisor) {
-    return dividend.divideModOperator(divisor, ExtendedInt<t>::MOD_OP);
+
+  typename extIntReturnSize<t, t>::uIntReturnTypeMax_ operator%(const UnsignedExtendedInt<t>& divisor) const {
+    try {
+      return divideModOperator(divisor, ExtendedInt<t>::MOD_OP);
+    }
+    catch (const Exception& e) {
+      e.printError();
+    }
   }
-  template<unsigned int u> bool operator==(const UnsignedExtendedInt<u>& obj) const { return isEqualOperator(obj); }
-  friend bool operator==(const UnsignedExtendedInt<t>& lhs, const UnsignedExtendedInt<t>& rhs) { return lhs.isEqualOperator(rhs); }
-  template<unsigned int u> bool operator>(const UnsignedExtendedInt<u>& obj) const { return greaterThanOperator(obj); }
-  friend bool operator>(const UnsignedExtendedInt<t>& lhs, const UnsignedExtendedInt<t>& rhs) { return lhs.greaterThanOperator(rhs); }
-  template<unsigned int u> bool operator>=(const UnsignedExtendedInt<u>& obj) const { return greaterThanOrEqualOperator(obj); }
-  friend bool operator>=(const UnsignedExtendedInt<t>& lhs, const UnsignedExtendedInt<t>& rhs) { return lhs.greaterThanOrEqualOperator(rhs); }
-  template<unsigned int u> bool operator<(const UnsignedExtendedInt<u>& obj) const { return lessThanOperator(obj); }
-  friend bool operator<(const UnsignedExtendedInt<t>& lhs, const UnsignedExtendedInt<t>& rhs) { return lhs.lessThanOperator(rhs); }
-  template<unsigned int u> bool operator<=(const UnsignedExtendedInt<u>& obj) const { return lessThanOrEqualOperator(obj); }
-  friend bool operator<=(const UnsignedExtendedInt<t>& lhs, const UnsignedExtendedInt<t>& rhs) { return lhs.lessThanOrEqualOperator(rhs); }
-  template<unsigned int u> UnsignedExtendedInt<t> operator>>(const UnsignedExtendedInt<u>& obj) const { return rightShiftOperator(obj); }
-  friend UnsignedExtendedInt<t> operator>>(const UnsignedExtendedInt<t>& lhs, const UnsignedExtendedInt<t>& rhs) { return lhs.rightShiftOperator(rhs); }
-  template<unsigned int u> UnsignedExtendedInt<t> operator<<(const UnsignedExtendedInt<u>& obj) const { return leftShiftOperator(obj); }
-  friend UnsignedExtendedInt<t> operator<<(const UnsignedExtendedInt<t>& lhs, const UnsignedExtendedInt<t>& rhs) { return lhs.leftShiftOperator(rhs); }
-  template<unsigned int u> typename extIntReturnSize<t, u>::uIntReturnTypeMax_ operator&(const UnsignedExtendedInt<u>& obj) const { return andOperator(obj); }
-  friend UnsignedExtendedInt<t> operator&(const UnsignedExtendedInt<t>& lhs, const UnsignedExtendedInt<t>& rhs) { return lhs.andOperator(rhs); }
-  template<unsigned int u> typename extIntReturnSize<t, u>::uIntReturnTypeMax_ operator|(const UnsignedExtendedInt<u>& obj) const { return orOperator(obj); }
-  friend UnsignedExtendedInt<t> operator|(const UnsignedExtendedInt<t>& lhs, const UnsignedExtendedInt<t>& rhs) { return lhs.orOperator(rhs); }
-  template<unsigned int u> typename extIntReturnSize<t, u>::uIntReturnTypeMax_ operator^(const UnsignedExtendedInt<u>& obj) const { return xorOperator(obj); }
-  friend UnsignedExtendedInt<t> operator^(const UnsignedExtendedInt<t>& lhs, const UnsignedExtendedInt<t>& rhs) { return lhs.xorOperator(rhs); }
+
+  template<unsigned int u>
+  bool operator==(const UnsignedExtendedInt<u>& obj) const {
+    return isEqualOperator(obj);
+  }
+
+  bool operator==(const UnsignedExtendedInt<t>& rhs) const {
+    return isEqualOperator(rhs);
+  }
+
+  template<unsigned int u>
+  bool operator>(const UnsignedExtendedInt<u>& obj) const {
+    return greaterThanOperator(obj);
+  }
+
+  bool operator>(const UnsignedExtendedInt<t>& rhs) const {
+    return greaterThanOperator(rhs);
+  }
+
+  template<unsigned int u>
+  bool operator>=(const UnsignedExtendedInt<u>& obj) const {
+    return greaterThanOrEqualOperator(obj);
+  }
+
+  bool operator>=(const UnsignedExtendedInt<t>& rhs) const {
+    return greaterThanOrEqualOperator(rhs);
+  }
+
+  template<unsigned int u>
+  bool operator<(const UnsignedExtendedInt<u>& obj) const {
+    return lessThanOperator(obj);
+  }
+
+  bool operator<(const UnsignedExtendedInt<t>& rhs) const {
+    return lessThanOperator(rhs);
+  }
+
+  template<unsigned int u>
+  bool operator<=(const UnsignedExtendedInt<u>& obj) const {
+    return lessThanOrEqualOperator(obj);
+  }
+
+  bool operator<=(const UnsignedExtendedInt<t>& rhs) const {
+    return lessThanOrEqualOperator(rhs);
+  }
+
+  template<unsigned int u>
+  UnsignedExtendedInt<t> operator>>(const UnsignedExtendedInt<u>& obj) const {
+    return rightShiftOperator(obj);
+  }
+
+  UnsignedExtendedInt<t> operator>>(const UnsignedExtendedInt<t>& rhs) const {
+    return rightShiftOperator(rhs);
+  }
+
+  template<unsigned int u>
+  UnsignedExtendedInt<t> operator<<(const UnsignedExtendedInt<u>& obj) const {
+    return leftShiftOperator(obj);
+  }
+
+  UnsignedExtendedInt<t> operator<<(const UnsignedExtendedInt<t>& rhs) const {
+    return leftShiftOperator(rhs);
+  }
+
+  template<unsigned int u>
+  typename extIntReturnSize<t, u>::uIntReturnTypeMax_ operator&(const UnsignedExtendedInt<u>& obj) const {
+    return andOperator(obj);
+  }
+
+  UnsignedExtendedInt<t> operator&(const UnsignedExtendedInt<t>& rhs) const {
+    return andOperator(rhs);
+  }
+
+  template<unsigned int u>
+  typename extIntReturnSize<t, u>::uIntReturnTypeMax_ operator|(const UnsignedExtendedInt<u>& obj) const {
+    return orOperator(obj);
+  }
+
+  UnsignedExtendedInt<t> operator|(const UnsignedExtendedInt<t>& rhs) const {
+    return orOperator(rhs);
+  }
+
+  template<unsigned int u>
+  typename extIntReturnSize<t, u>::uIntReturnTypeMax_ operator^(const UnsignedExtendedInt<u>& obj) const {
+    return xorOperator(obj);
+  }
+
+  UnsignedExtendedInt<t> operator^(const UnsignedExtendedInt<t>& rhs) const {
+    return xorOperator(rhs);
+  }
+
   UnsignedExtendedInt<t> operator~() const;
-  UnsignedExtendedInt<t>& operator++() { return this->prefixIncrement(); }
-  UnsignedExtendedInt<t> operator++(int) { return this->postfixIncrement(); }
-  UnsignedExtendedInt<t>& operator--() { return this->prefixDecrement(); }
-  UnsignedExtendedInt<t> operator--(int) { return this->postfixDecrement(); }
+
+  UnsignedExtendedInt<t>& operator++() {
+    return prefixIncrement();
+  }
+
+  UnsignedExtendedInt<t> operator++(int) {
+    return postfixIncrement();
+  }
+
+  UnsignedExtendedInt<t>& operator--() {
+    return prefixDecrement();
+  }
+
+  UnsignedExtendedInt<t> operator--(int) {
+    return postfixDecrement();
+  }
 
   friend std::ostream& operator<<(std::ostream& os, const UnsignedExtendedInt<t>& obj) {
     os << obj.extendedIntToString();
     return os;
   }
 
-  template<unsigned int u> friend class UnsignedExtendedInt;       // allows access between private members between UnsignedExtendedInt<n> and UnsignedExtendedInt<m> for some n,m
-  template<unsigned int u> friend class SignedExtendedInt;
+  template<unsigned int u> friend class UnsignedExtendedInt;      // allows access between private members between UnsignedExtendedInt<n> and UnsignedExtendedInt<m> for some n,m
+  template<unsigned int u> friend class SignedExtendedInt;        // allows access between private members between UnsignedExtendedInt<n> and SignedExtendedInt<m> for some n,m
 };
 
 
@@ -211,6 +329,7 @@ UnsignedExtendedInt<t> UnsignedExtendedInt<t>::equalOperator(const UnsignedExten
 template<unsigned int t>
 void UnsignedExtendedInt<t>::stringToExtendedInt(const char* s) {
   this->clearValue();
+  unsigned int hexVal = 0;
   unsigned int strLength = 0;
   while (s[strLength] != 0) {             // compute string length
     strLength++;
@@ -218,13 +337,31 @@ void UnsignedExtendedInt<t>::stringToExtendedInt(const char* s) {
   if (!this->validateString(s, strLength)) {
     throw InputStringInvalidCharacterException();
   }
-  UnsignedExtendedInt<t> TEN(10);
-  UnsignedExtendedInt<t> powersOfTen(1);
+  if (s[0] == '0' && s[1] == 'x') {
+    hexVal = 1;
+  }
+  UnsignedExtendedInt<t> baseValue;
+  UnsignedExtendedInt<t> powersOfBaseValue;
+  powersOfBaseValue.setValueAtIndex(1, 0);
+  if (hexVal) {
+    baseValue.setValueAtIndex(16, 0);
+  }
+  else {
+    baseValue.setValueAtIndex(10, 0);
+  }
   UnsignedExtendedInt<t> readInt;
   for (int i = strLength - 1; i >= 0; i--) {
-    readInt.ext_int[0] = s[i] - '0';
-    *this = *this + (powersOfTen * readInt);
-    powersOfTen = powersOfTen * TEN;
+    if (hexVal && (i == 0 || i == 1)) {     // if hex value, ignore bit 0 and bit 1 for ('0x')
+      continue;
+    }
+    if (hexVal) {
+      // todo
+    }
+    else {
+      readInt.setValueAtIndex(s[i] - '0', 0);
+    }
+    *this = *this + (powersOfBaseValue * readInt);
+    powersOfBaseValue = powersOfBaseValue * baseValue;
   }
 }
 

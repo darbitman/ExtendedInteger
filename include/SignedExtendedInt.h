@@ -35,7 +35,17 @@ public:
   SignedExtendedInt(const char* s);
   ~SignedExtendedInt() {}
   template<unsigned int u> const SignedExtendedInt<t>& operator=(const SignedExtendedInt<u>& obj) { return equalOperator(obj); }
-  const SignedExtendedInt<t>& operator=(const char* s) { this->initialize(); stringToExtendedInt(s); return *this; }
+
+  const SignedExtendedInt<t>& operator=(const char* s) {
+    try {
+      stringToExtendedInt(s);
+    }
+    catch (const Exception& e) {
+      e.printError();
+    }
+    return *this;
+  }
+
   template<unsigned int u> inline typename extIntReturnSize<t, u>::intReturnTypeMax_ operator+(const SignedExtendedInt<u>& obj) const { return addOperator(obj); }
   inline friend SignedExtendedInt<t> operator+(const SignedExtendedInt<t>& lhs, const SignedExtendedInt<t>& rhs) { return lhs.addOperator(rhs); }
   template<unsigned int u> inline typename extIntReturnSize<t, u>::intReturnTypeMax_ operator-(const SignedExtendedInt<u>& obj) const { return subtractOperator(obj); }
@@ -147,28 +157,47 @@ SignedExtendedInt<t>& SignedExtendedInt<t>::equalOperator(const SignedExtendedIn
 
 template<unsigned int t>
 void SignedExtendedInt<t>::stringToExtendedInt(const char* s) {
+  this->clearValue();
   unsigned int signBit = 0;
+  unsigned int hexVal = 0;
   unsigned int strLength = 0;
   while (s[strLength] != 0) {
     strLength++;
   }
   if (!this->validateString(s, strLength)) {
-    std::cout << "Input string ( " << s << " ) contains an invalid character" << std::endl;
-    return;
+    throw InputStringInvalidCharacterException();
   }
-  SignedExtendedInt<t> TEN;
-  SignedExtendedInt<t> powersOfTen;
-  powersOfTen.setValueAtIndex(1, 0);
-  TEN.setValueAtIndex(10, 0);
+  if (s[0] == '-') {                        // check for sign bit
+    signBit = 1;
+  }
+  else if (s[0] == '0' && s[1] == 'x') {    // check if input is a hex value
+    hexVal = 1;
+  }
+  SignedExtendedInt<t> baseValue;
+  SignedExtendedInt<t> powersOfBaseValue;
+  powersOfBaseValue.setValueAtIndex(1, 0);
+  if (hexVal) {
+    baseValue.setValueAtIndex(16, 0);
+  }
+  else {
+    baseValue.setValueAtIndex(10, 0);
+  }
   SignedExtendedInt<t> readInt;
   for (int i = strLength - 1; i >= 0; i--) {
-    if (i == strLength - 1 && s[i] == '-') {
-      signBit = 1;
+    if (signBit && i == 0) {                // if sign bit, ignore bit 0 for ('-')
       continue;
     }
-    readInt.ext_int[0] = s[i] - '0';
-    *this = *this + (powersOfTen * readInt);
-    powersOfTen = powersOfTen * TEN;
+    if (hexVal && (i == 0 || i == 1)) {     // if hex value, ignore bit 0 and bit 1 for ('0x')
+      continue
+    }
+    if (hexVal) {
+      // todo
+    }
+    else {
+      readInt.setValueAtIndex(s[i] - '0', 0);
+    }
+    *this = *this + (powersOfBaseValue * readInt);
+    powersOfTen = powersOfBaseValue * baseValue;
   }
 }
 
