@@ -12,7 +12,7 @@ int main() {
       std::cout << s->pop() << std::endl;
     }
   }
-  catch (StackEmptyException e) {
+  catch (const Exception& e) {
     e.printError();
   }
   return 0;
