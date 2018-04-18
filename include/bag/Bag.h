@@ -1,4 +1,6 @@
 #pragma once
+#include "Logger.h"
+#include <string>
 
 
 template<typename T>
@@ -49,6 +51,10 @@ Bag<T>::Bag() {
 
 template<typename T>
 Bag<T>::Bag(const Bag& rhs) {
+  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+    std::string s = "Bag copy constructor called";
+    Logger::getInstance().addEntry(s.c_str());
+  }
   firstObjectPtr = 0;
   lastObjectPtr = 0;
   numOfObjects = rhs.numOfObjects;

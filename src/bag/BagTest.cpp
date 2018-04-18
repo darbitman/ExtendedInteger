@@ -11,5 +11,6 @@ int main() {
     std::cout << *iter++ << std::endl;
     std::cout << *(++iter) << std::endl;
     std::cout << (iter == b.end());
+    Bag<unsigned int> c(b);
     return 0;
 }
