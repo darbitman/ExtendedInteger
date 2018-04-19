@@ -3,6 +3,9 @@
 #include <string>
 
 
+/**
+This class implements a bag using a singly linked list
+ */
 template<typename T>
 class Bag {
 private:
@@ -41,14 +44,24 @@ public:
 };
 
 
+/**
+Create an empty bag
+*/
 template<typename T>
 Bag<T>::Bag() {
+  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+    std::string s = "Creating empty bag";
+    Logger::getInstance().addEntry(s.c_str());
+  }
   firstObjectPtr = 0;
   lastObjectPtr = 0;
   numOfObjects = 0;
 }
 
 
+/**
+Bag copy constructor
+*/
 template<typename T>
 Bag<T>::Bag(const Bag& rhs) {
   if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
@@ -75,8 +88,13 @@ Bag<T>::Bag(const Bag& rhs) {
 }
 
 
+
 template<typename T>
 Bag<T>::~Bag() {
+  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+    std::string s = "Bag destructor called";
+    Logger::getInstance().addEntry(s.c_str());
+  }
   BagObject* nextObjectToDelete;
   while (numOfObjects) {
     numOfObjects--;
@@ -87,8 +105,16 @@ Bag<T>::~Bag() {
 }
 
 
+/**
+Add element to the end of the bag
+*/
 template<typename T>
 void Bag<T>::add(T data) {
+  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+    std::string s = "Adding element: ";
+    s = s + std::to_string(data);
+    Logger::getInstance().addEntry(s.c_str());
+  }
   if (numOfObjects == 0) {
     firstObjectPtr = new BagObject();
     lastObjectPtr = firstObjectPtr;
@@ -105,12 +131,24 @@ void Bag<T>::add(T data) {
 
 template<typename T>
 bool Bag<T>::isEmpty() const {
+  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+    std::string s = "Checking if bag is empty";
+    Logger::getInstance().addEntry(s.c_str());
+  }
   return numOfObjects > 0 ? false : true;
 }
 
 
+/**
+Returns number of items in the bag
+*/
 template<typename T>
 unsigned int Bag<T>::size() const {
+  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+    std::string s = "Getting number of elements in the bag: ";
+    s = s + std::to_string(numOfObjects);
+    Logger::getInstance().addEntry(s.c_str());
+  }
   return numOfObjects;
 }
 
@@ -122,47 +160,97 @@ Bag<T>::iterator::iterator() {}
 template<typename T>
 Bag<T>::iterator::iterator(BagObject* dataPtr): iterDataPtr(dataPtr) {}
 
+
+/**
+Increments the iterator after returning the current data iterator points to
+*/
 template<typename T>
 typename Bag<T>::iterator Bag<T>::iterator::operator++(int) {
+  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+    std::string s = "Post-increment iterator";
+    Logger::getInstance().addEntry(s.c_str());
+  }
   iterator iteratorToReturn = *this;
   iterDataPtr = iterDataPtr->nextObjectPtr;
   return iteratorToReturn;
 }
 
 
+/**
+Increments the iterator and returns the data iterator now points to
+*/
 template<typename T>
 typename Bag<T>::iterator Bag<T>::iterator::operator++() {
+  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+    std::string s = "Pre-increment bag iterator";
+    Logger::getInstance().addEntry(s.c_str());
+  }
   iterDataPtr = iterDataPtr->nextObjectPtr;
   return *this;
 }
 
 
+/**
+Dereference the iterator
+*/
 template<typename T>
 T Bag<T>::iterator::operator*() const {
+  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+    std::string s = "Dereference bag iterator";
+    Logger::getInstance().addEntry(s.c_str());
+  }
   return iterDataPtr->data;
 }
 
 
+/**
+Compares equality of two iterators
+*/
 template<typename T>
 bool Bag<T>::iterator::operator==(const iterator& rhs) {
+  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+    std::string s = "Comparing if two bag iterators are equal";
+    Logger::getInstance().addEntry(s.c_str());
+  }
   return iterDataPtr == rhs.iterDataPtr;
 }
 
 
+/**
+Compares inequality of two iterators
+*/
 template<typename T>
 bool Bag<T>::iterator::operator!=(const iterator& rhs) {
+  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+    std::string s = "Comparing if two bag iterators are not equal";
+    Logger::getInstance().addEntry(s.c_str());
+  }
   return iterDataPtr != rhs.iterDataPtr;
 }
 
 
+/**
+Get an iterator to the beginning of the bag
+*/
 template<typename T>
 typename Bag<T>::iterator Bag<T>::begin() const {
+  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+    std::string s = "Getting bag iterator to the beginning";
+    Logger::getInstance().addEntry(s.c_str());
+  }
   return iterator(firstObjectPtr);
 }
 
 
+/**
+Get an iterator to the end of the bag
+*/
 template<typename T>
 typename Bag<T>::iterator Bag<T>::end() const {
+  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+    std::string s = "Getting bag iterator to the end";
+    Logger::getInstance().addEntry(s.c_str());
+  }
   if (lastObjectPtr == 0) {
     return iterator(0);
   }

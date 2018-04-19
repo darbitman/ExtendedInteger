@@ -2,6 +2,9 @@
 #include "Bag.h"
 
 
+/**
+This class implements a directed graph
+*/
 class Digraph {
 private:
   unsigned int totalVertices;

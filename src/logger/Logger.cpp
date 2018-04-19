@@ -10,7 +10,7 @@ Logger& Logger::getInstance() {
 
 Logger::Logger() {
   std::string logFileName = "log.txt";
-  logFile.open(logFileName.c_str(), std::ofstream::out | std::ofstream::app);
+  logFile.open(logFileName.c_str(), std::ofstream::out);
 }
 
 
