@@ -111,7 +111,7 @@ Add element to the end of the bag
 template<typename T>
 void Bag<T>::add(T data) {
   if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
-    std::string s = "Adding element: ";
+    std::string s = "Adding bag element: ";
     s = s + std::to_string(data);
     Logger::getInstance().addEntry(s.c_str());
   }
@@ -129,6 +129,9 @@ void Bag<T>::add(T data) {
 }
 
 
+/**
+Returns true if bag is empty
+*/
 template<typename T>
 bool Bag<T>::isEmpty() const {
   if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
