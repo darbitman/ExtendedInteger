@@ -78,7 +78,7 @@ void NFA::buildEpsilonTransitionDigraph() {
             break;
           }
         }
-        catch (StackEmptyException e) {
+        catch (const Exception& e) {
           e.printError();
         }
       }
@@ -92,7 +92,7 @@ void NFA::buildEpsilonTransitionDigraph() {
           }
         }
       }
-      catch (StackEmptyException e) {
+      catch (const Exception& e) {
         e.printError();
       }
       if (rePtr[i + 1] == '*' && i < numChars - 1) {    // if closing paranthesis and next character is ASTERISK, need epsilon transition between it and opening paranthesis
@@ -126,8 +126,9 @@ Returns true if string txt matches reg exp
 */
 bool NFA::validateTxt(const char* txt) {
   if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
-    std::string s = "Check if text matches reg exp: ";
-      s = s + txt;
+    std::string s = "Checking if string (";
+    s = s + txt;
+    s = s + ") matches regular expression";
     Logger::getInstance().addEntry(s.c_str());
   }
   unsigned int txtLength = 0;
@@ -139,10 +140,20 @@ bool NFA::validateTxt(const char* txt) {
 
 
 bool NFA::validateTxt(const char* txt, unsigned int txtLength) {
+  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+    std::string s = "Checking if string (";
+    s = s + txt;
+    s = s + ") matches regular expression";
+    Logger::getInstance().addEntry(s.c_str());
+  }
   return recognizes(txt, txtLength);
 }
 
 
+
+/**
+Returns true if string txt matches reg exp
+*/
 bool NFA::recognizes(const char* txt, unsigned int txtLength) {
   Bag<unsigned int>* reachableStates = new Bag<unsigned int>();   // declare a bag that will be used for all reachable states via epsilon transitions
   DirectedDFS* dfs = new DirectedDFS(graphPtr, 0);                // find all reachable states starting from state 0

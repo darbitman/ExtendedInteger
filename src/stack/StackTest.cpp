@@ -9,11 +9,13 @@ int main() {
   }
   try {
     for (unsigned int i = 0; i < 15; i++) {
+      s->peek();
       std::cout << s->pop() << std::endl;
     }
   }
   catch (const Exception& e) {
     e.printError();
   }
+  delete s;
   return 0;
 }
