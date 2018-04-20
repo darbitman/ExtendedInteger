@@ -2,6 +2,9 @@
 #include "Digraph.h"
 
 
+/**
+Perform depth first search on graph g
+*/
 class DirectedDFS {
 private:
   bool* marked;

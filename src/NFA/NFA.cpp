@@ -4,9 +4,18 @@
 #include "DirectedDFS.h"
 #include "Exception.h"
 #include "Digraph.h"
+#include "Logger.h"
 
 
+/**
+Create an NFA to represent a regular expression
+*/
 NFA::NFA(const char* regExp, unsigned int numChars) {
+  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+    std::string s = "Creating an NFA with reg exp: ";
+    s = s + regExp;
+    Logger::getInstance().addEntry(s.c_str());
+  }
   graphPtr = new Digraph(numChars + 1);                 // create digraph with numChars + 1 vertices. need extra vertex for "match" state
   this->numChars = numChars;
   rePtr = new char[numChars];
@@ -18,6 +27,10 @@ NFA::NFA(const char* regExp, unsigned int numChars) {
 
 
 NFA::NFA(const NFA& rhs) {
+  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+    std::string s = "Calling the NFA copy constructor";
+    Logger::getInstance().addEntry(s.c_str());
+  }
   numChars = rhs.numChars;
   rePtr = new char[numChars];
   for (unsigned int i = 0; i < numChars; i++) {         // copy characters
@@ -28,12 +41,23 @@ NFA::NFA(const NFA& rhs) {
 
 
 NFA::~NFA() {
+  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+    std::string s = "Calling the NFA destructor";
+    Logger::getInstance().addEntry(s.c_str());
+  }
   delete graphPtr;
   delete[] rePtr;
 }
 
 
+/**
+Build epsilond transition digraph given regular expression
+*/
 void NFA::buildEpsilonTransitionDigraph() {
+  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+    std::string s = "Building the epsilon transition graph using Digraph class";
+    Logger::getInstance().addEntry(s.c_str());
+  }
   Stack<unsigned int> ops;
   Stack<unsigned int> orOps;
   for (unsigned int i = 0; i < numChars; i++) {
@@ -97,7 +121,15 @@ void NFA::buildEpsilonTransitionDigraph() {
 }
 
 
+/**
+Returns true if string txt matches reg exp
+*/
 bool NFA::validateTxt(const char* txt) {
+  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+    std::string s = "Check if text matches reg exp: ";
+      s = s + txt;
+    Logger::getInstance().addEntry(s.c_str());
+  }
   unsigned int txtLength = 0;
   while (txt[txtLength] != 0) {                         // compute string length
     txtLength++;

@@ -1,9 +1,9 @@
 #pragma once
-
-
 class Digraph;
 
-
+/**
+Nondeterministic finite state automata
+*/
 class NFA {
 private:
   char* rePtr;                                        // store reg exp

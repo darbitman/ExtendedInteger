@@ -4,7 +4,8 @@ include_directories("../../include/NFA"
                     "../../include/stack"
                     "../../include/bag"
                     "../../include/directedDFS"
-                    "../../include/exception")
+                    "../../include/exception"
+                    "../../include/logger")
 set(NFA_Sources
     NFA.cpp
     "../digraph/Digraph.cpp"
@@ -25,4 +26,5 @@ target_link_libraries(NFATest
                       NFA
                       Digraph
                       DirectedDFS
-                      Exception)
+                      Exception
+                      Logger)

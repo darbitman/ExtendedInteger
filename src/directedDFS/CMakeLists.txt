@@ -1,7 +1,8 @@
 add_library(DirectedDFS "")
 include_directories("../../include/directedDFS"
                     "../../include/digraph"
-                    "../../include/bag")
+                    "../../include/bag"
+                    "../../include/logger")
 target_sources(DirectedDFS PRIVATE
                DirectedDFS.cpp
                "../digraph/Digraph.cpp"
@@ -15,4 +16,6 @@ add_executable(DirectedDFSTest
                "../../include/directedDFS/DirectedDFS.h"
                "../../include/digraph/Digraph.h"
                "../../include/bag/Bag.h")
-target_link_libraries(DirectedDFSTest DirectedDFS)
+target_link_libraries(DirectedDFSTest
+                      DirectedDFS
+                      Logger)
