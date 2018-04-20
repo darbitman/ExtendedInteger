@@ -11,4 +11,6 @@ add_subdirectory(directedDFS)
 add_subdirectory(bag)
 add_subdirectory(exception)
 add_subdirectory(logger)
-target_link_libraries(ExtendedMathTest NFA Exception)
+target_link_libraries(ExtendedMathTest
+                      NFA
+                      Exception)
