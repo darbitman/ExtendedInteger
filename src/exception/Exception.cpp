@@ -20,3 +20,8 @@ void DivideByZeroException::printError() const {
 void InputStringInvalidCharacterException::printError() const {
   std::cout << "ERROR: Input string contains an invalid character" << std::endl;
 }
+
+
+void IndexOutOfBoundsException::printError() const {
+  std::cout << "ERROR: Index out of bounds" << std::endl;
+}

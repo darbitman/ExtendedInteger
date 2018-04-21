@@ -22,3 +22,9 @@ class InputStringInvalidCharacterException : public Exception {
 public:
   virtual void printError() const;
 };
+
+
+class IndexOutOfBoundsException : public Exception {
+public:
+  virtual void printError() const;
+};
