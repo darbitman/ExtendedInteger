@@ -20,3 +20,7 @@ target_sources(UnsignedExtendedInt
                ${UnsignedExtendedInt_Sources})
 target_link_libraries(UnsignedExtendedInt
                       ExtendedInt)
+add_executable(UnsignedExtendedIntTest
+               UnsignedExtendedIntTest.cpp)
+target_link_libraries(UnsignedExtendedIntTest
+                      UnsignedExtendedInt)

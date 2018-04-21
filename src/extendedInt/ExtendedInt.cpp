@@ -47,3 +47,58 @@ NFA& ExtendedInt::getNFAInstance() {
   static NFA inputValidationNFA(regExp.c_str(), regExp.length());
   return inputValidationNFA;
 }
+
+
+void ExtendedInt::newArraySize(unsigned int newArraySize) {
+  if (newArraySize > arraySize) {
+    arraySize = newArraySize;
+    delete[] ext_int;
+    ext_int = new unsigned int[newArraySize];
+    clearValue();
+  }
+}
+
+
+void ExtendedInt::increaseArraySizeTo(unsigned int newArraySize) {
+  unsigned int* newExtIntPtr = new unsigned int[newArraySize];
+  for (unsigned int i = 0; i < newArraySize; i++) {   // clear new array
+    newExtIntPtr[i] = 0;
+  }
+  for (unsigned int i = 0; i < arraySize; i++) {          // copy over previous values
+    newExtIntPtr[i] = ext_int[i];
+  }
+  delete[] ext_int;
+  ext_int = newExtIntPtr;
+  arraySize = newArraySize;
+}
+
+
+void ExtendedInt::decreaseArraySizeTo(unsigned int newArraySize) {
+  unsigned int* newExtIntPtr = new unsigned int[newArraySize];
+  for (unsigned int i = 0; i < newArraySize; i++) {       // clear new array
+    newExtIntPtr[i] = 0;
+  }
+  for (unsigned int i = 0; i < newArraySize; i++) {       // copy over previous values
+    newExtIntPtr[i] = ext_int[i];
+  }
+  delete[] ext_int;
+  ext_int = newExtIntPtr;
+  arraySize = newArraySize;
+}
+
+
+void ExtendedInt::clearUnusedMemory() {
+  unsigned int numEntriesToDelete = 0;
+  for (int i = arraySize - 1; i >= 0; i--) {
+    if (ext_int[i] == 0) {
+      numEntriesToDelete++;
+    }
+    else {
+      break;
+    }
+  }
+  if (numEntriesToDelete > 0) {
+    unsigned int newArraySize = arraySize - numEntriesToDelete;
+    decreaseArraySizeTo(newArraySize);
+  }
+}
