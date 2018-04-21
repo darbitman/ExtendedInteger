@@ -8,22 +8,18 @@ include_directories("../../include/NFA"
                     "../../include/logger")
 set(NFA_Sources
     NFA.cpp
-    "../digraph/Digraph.cpp"
-    "../directedDFS/DirectedDFS.cpp"
-    "../exception/Exception.cpp"
-    "../../include/exception/Exception.h"
-    "../../include/directedDFS/DirectedDFS.h"
-    "../../include/NFA/NFA.h"
-    "../../include/digraph/Digraph.h"
-    "../../include/stack/Stack.h"
-    "../../include/bag/Bag.h")
+    "../../include/NFA/NFA.h")
 target_sources(NFA PRIVATE
                ${NFA_Sources})
 add_executable(NFATest
-               NFATest.cpp
-               ${NFA_Sources})
+               NFATest.cpp)
 target_link_libraries(NFATest
                       NFA
+                      Digraph
+                      DirectedDFS
+                      Exception
+                      Logger)
+target_link_libraries(NFA
                       Digraph
                       DirectedDFS
                       Exception
