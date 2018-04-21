@@ -97,7 +97,6 @@ UnsignedExtendedInt UnsignedExtendedInt::operator*(const UnsignedExtendedInt& ob
   unsigned long long z = 0;
   UnsignedExtendedInt intermediateResult;
   intermediateResult.increaseArraySizeTo(resultArraySize);
-  unsigned long long upperResultBits = 0;
   for (unsigned int i = 0; i < arraySize; i++) {
     for (unsigned int j = 0; j < obj.arraySize; j++) {
       leftShiftValue = i + j;
@@ -282,16 +281,37 @@ bool UnsignedExtendedInt::operator<=(const UnsignedExtendedInt& obj) const {
 
 
 UnsignedExtendedInt UnsignedExtendedInt::operator>>(const UnsignedExtendedInt& obj) const {
+  unsigned long long x = 0;
+  unsigned long long y = 0;
   UnsignedExtendedInt returnValue;
   returnValue.newArraySize(arraySize);
   unsigned long long shiftVal = obj.ext_int[0];                         // extract 64bits since that limits shift to 2^64
   shiftVal = (shiftVal > arraySize * 32 ? arraySize * 32 : shiftVal);   // bound maximum shift
   while (shiftVal > 0) {
     for (unsigned int i = 0; i < arraySize; i++) {
-      x = returnValue.ext_int[i];
-      x = x << 32;
+      x = returnValue.ext_int[i];                                       // get bottom 32bits
+      x = x << 32;                                                      // left shift to upper 32bits
+      x = x >> (shiftVal > 32 ? 32 : shiftVal);                         // perform shift
+      returnValue.ext_int[i] = (x & 0xFFFFFFFF00000000) >> 32;          // upper 32bits are the result
+      if (i > 0) {
+        y = returnValue.ext_int[i - 1];                                 // get result of previous shift
+        
+        // lower 32bits of previous shift ORd with previous entry since these bits
+        // were shifted into the adjacent 32bits
+        returnValue.ext_int[i - 1] = (unsigned int) ((x & 0xFFFFFFFF) | y);
+      }
     }
+    shiftVal = (shiftVal >= 32 ? shiftVal - 32 : 0);
   }
+  return returnValue;
+}
+
+
+UnsignedExtendedInt UnsignedExtendedInt::operator<<(const UnsignedExtendedInt& shiftVal) const {
+  UnsignedExtendedInt returnValue;
+  
+  
+  return returnValue;
 }
 
 
