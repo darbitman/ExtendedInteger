@@ -40,9 +40,10 @@ UnsignedExtendedInt::UnsignedExtendedInt(int obj) : ExtendedInt() {
 
 
 UnsignedExtendedInt UnsignedExtendedInt::operator=(const UnsignedExtendedInt& obj) {
+  // will need to make sure both objects are of the same size
+  // to ensure no data loss and to save memory
   if (arraySize != obj.arraySize) {
-    unsigned int newArraySize = arraySize > obj.arraySize ? arraySize : obj.arraySize;
-    increaseArraySizeTo(newArraySize);
+    unsigned int newArraySize = (arraySize > obj.arraySize ? arraySize : obj.arraySize);
     if (arraySize > obj.arraySize) {
       decreaseArraySizeTo(obj.arraySize);
     }
@@ -53,6 +54,7 @@ UnsignedExtendedInt UnsignedExtendedInt::operator=(const UnsignedExtendedInt& ob
   for (unsigned int i = 0; i < arraySize; i++) {
     ext_int[i] = obj.ext_int[i];
   }
+  clearUnusedMemory();
   return *this;
 }
 
@@ -83,7 +85,9 @@ UnsignedExtendedInt UnsignedExtendedInt::operator+(const UnsignedExtendedInt& ob
 
 
 UnsignedExtendedInt UnsignedExtendedInt::operator-(const UnsignedExtendedInt& obj) const {
-  return this->operator+(~obj + 1);
+  UnsignedExtendedInt returnValue(this->operator+(~obj + 1));
+  returnValue.clearUnusedMemory();
+  return returnValue;
 }
 
 
@@ -152,7 +156,7 @@ bool UnsignedExtendedInt::operator==(const UnsignedExtendedInt& obj) const {
 
 
 bool UnsignedExtendedInt::operator!=(const UnsignedExtendedInt& obj) const {
-  return !this->operator==(obj);
+  return !(this->operator==(obj));
 }
 
 
@@ -283,13 +287,12 @@ bool UnsignedExtendedInt::operator<=(const UnsignedExtendedInt& obj) const {
 UnsignedExtendedInt UnsignedExtendedInt::operator>>(const UnsignedExtendedInt& obj) const {
   unsigned long long x = 0;
   unsigned long long y = 0;
-  UnsignedExtendedInt returnValue;
-  returnValue.newArraySize(arraySize);
+  UnsignedExtendedInt returnValue(*this);
   unsigned long long shiftVal = obj.ext_int[0];                         // extract 64bits since that limits shift to 2^64
   shiftVal = (shiftVal > arraySize * 32 ? arraySize * 32 : shiftVal);   // bound maximum shift
   while (shiftVal > 0) {
     for (unsigned int i = 0; i < arraySize; i++) {
-      x = returnValue.ext_int[i];                                       // get bottom 32bits
+      x = returnValue.ext_int[i];                                       // get lower 32 bits
       x = x << 32;                                                      // left shift to upper 32bits
       x = x >> (shiftVal > 32 ? 32 : shiftVal);                         // perform shift
       returnValue.ext_int[i] = (x & 0xFFFFFFFF00000000) >> 32;          // upper 32bits are the result
@@ -303,22 +306,102 @@ UnsignedExtendedInt UnsignedExtendedInt::operator>>(const UnsignedExtendedInt& o
     }
     shiftVal = (shiftVal >= 32 ? shiftVal - 32 : 0);
   }
+  returnValue.clearUnusedMemory();
   return returnValue;
 }
 
 
-UnsignedExtendedInt UnsignedExtendedInt::operator<<(const UnsignedExtendedInt& shiftVal) const {
-  UnsignedExtendedInt returnValue;
-  
-  
+UnsignedExtendedInt UnsignedExtendedInt::operator<<(const UnsignedExtendedInt& obj) const {
+  unsigned long long x = 0;
+  unsigned long long y = 0;
+  UnsignedExtendedInt returnValue(*this);
+  unsigned long long shiftVal = obj.ext_int[0];                         // extract 64bits since that limits shift to 2^64
+  shiftVal = (shiftVal > arraySize * 32 ? arraySize * 32 : shiftVal);   // bound maximum shift
+  while (shiftVal > 0) {
+    for (int i = arraySize - 1; i >= 0; i--) {
+      x = returnValue.ext_int[i];                                       // get bottom 32 bits
+      x = x << (shiftVal > 32 ? 32 : shiftVal);                         // perform shift
+      returnValue.ext_int[i] = x & 0xFFFFFFFF;                          // lower 32bits are the result
+      if (i < (int) arraySize - 1) {
+        y = returnValue.ext_int[i + 1];                                 // get result of previous shift
+
+        // upper 32bits of previous shift ORd with previous entry since these bits
+        // were shifted into the adjacent 32bits
+        returnValue.ext_int[i + 1] =
+          (unsigned int) ((x & 0xFFFFFFFF00000000) >> 32 | y);
+      }
+    }
+    shiftVal = (shiftVal >= 32 ? shiftVal - 32 : 0);
+  }
+  returnValue.clearUnusedMemory();
   return returnValue;
 }
 
 
-UnsignedExtendedInt UnsignedExtendedInt::divideModOperator(const UnsignedExtendedInt& obj, const ExtendedInt::DIVIDE_OPERATION op) const {
+UnsignedExtendedInt UnsignedExtendedInt::operator&(const UnsignedExtendedInt& obj) const {
+  unsigned int minArraySize = arraySize;
   UnsignedExtendedInt returnValue;
-  returnValue.newArraySize(arraySize);
-  // todo
+  if (arraySize != obj.arraySize) {
+    minArraySize = (arraySize > obj.arraySize ? obj.arraySize : arraySize);
+    returnValue.newArraySize(minArraySize);
+  }
+  for (unsigned int i = 0; i < minArraySize; i++) {
+    returnValue.ext_int[i] = ext_int[i] & obj.ext_int[i];
+  }
+  return returnValue;
+}
+
+
+UnsignedExtendedInt UnsignedExtendedInt::operator|(const UnsignedExtendedInt& obj) const {
+  unsigned int minArraySize = arraySize;
+  UnsignedExtendedInt returnValue;
+  if (arraySize != obj.arraySize) {
+    minArraySize = (arraySize > obj.arraySize ? obj.arraySize : arraySize);
+    returnValue.newArraySize(minArraySize);
+  }
+  for (unsigned int i = 0; i < minArraySize; i++) {
+    returnValue.ext_int[i] = ext_int[i] | obj.ext_int[i];
+  }
+  return returnValue;
+}
+
+
+UnsignedExtendedInt UnsignedExtendedInt::operator^(const UnsignedExtendedInt& obj) const {
+  unsigned int minArraySize = arraySize;
+  UnsignedExtendedInt returnValue;
+  if (arraySize != obj.arraySize) {
+    minArraySize = (arraySize > obj.arraySize ? obj.arraySize : arraySize);
+    returnValue.newArraySize(minArraySize);
+  }
+  for (unsigned int i = 0; i < minArraySize; i++) {
+    returnValue.ext_int[i] = ext_int[i] ^ obj.ext_int[i];
+  }
+  return returnValue;
+}
+
+
+UnsignedExtendedInt& UnsignedExtendedInt::operator++() {
+  *this = *this + 1ULL;
+  return *this;
+}
+
+
+UnsignedExtendedInt UnsignedExtendedInt::operator++(int) {
+  UnsignedExtendedInt returnValue(*this);
+  *this = *this + 1ULL;
+  return returnValue;
+}
+
+
+UnsignedExtendedInt& UnsignedExtendedInt::operator--() {
+  *this = *this - 1ULL;
+  return *this;
+}
+
+
+UnsignedExtendedInt UnsignedExtendedInt::operator--(int) {
+  UnsignedExtendedInt returnValue(*this);
+  *this = *this - 1ULL;
   return returnValue;
 }
 
@@ -329,5 +412,39 @@ UnsignedExtendedInt UnsignedExtendedInt::operator~() const {
   for (unsigned int i = 0; i < arraySize; i++) {
     returnValue.ext_int[i] = ~ext_int[i];
   }
+  return returnValue;
+}
+
+
+
+UnsignedExtendedInt UnsignedExtendedInt::divideModOperator(const UnsignedExtendedInt& divisor, const ExtendedInt::DIVIDE_OPERATION op) const {
+  UnsignedExtendedInt returnValue;
+  returnValue.newArraySize(arraySize);
+  if (divisor == 0) {
+    throw DivideByZeroException();
+  }
+  if (*this < divisor) {                          // if dividend is smaller than divisor (e.g. 10 / 20 = 0)
+    if (op == ExtendedInt::DIVIDE_OP) {
+      return returnValue;
+    }
+    else {                                        // op == ExtendedInt::MOD_OP
+      return *this;
+    }
+  }
+  unsigned int maxArraySize = (arraySize > divisor.arraySize ? arraySize : divisor.arraySize);
+  UnsignedExtendedInt nonConstThis(*this);
+  UnsignedExtendedInt nonConstDivisor(divisor);
+  if (arraySize > divisor.arraySize) {            // make sure both arrays are of the same size
+    nonConstDivisor.increaseArraySizeTo(maxArraySize);
+  }
+  else if (divisor.arraySize > arraySize) {
+    nonConstThis.increaseArraySizeTo(maxArraySize);
+  }
+  UnsignedExtendedInt maskBit;
+  maskBit.newArraySize(maxArraySize);
+  maskBit.setValueAtIndex(1, 0);
+  int i = 32 * maxArraySize;
+  maskBit = maskBit << (i - 1);
+  // todo
   return returnValue;
 }

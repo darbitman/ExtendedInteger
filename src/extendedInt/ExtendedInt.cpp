@@ -1,5 +1,7 @@
 #include "ExtendedInt.h"
 
+unsigned int ExtendedInt::MIN_ARRAY_SIZE = 4;
+
 
 void ExtendedInt::setValueAtIndex(const unsigned long long val, const unsigned int index) {
   if (index >= arraySize) {
@@ -61,10 +63,10 @@ void ExtendedInt::newArraySize(unsigned int newArraySize) {
 
 void ExtendedInt::increaseArraySizeTo(unsigned int newArraySize) {
   unsigned int* newExtIntPtr = new unsigned int[newArraySize];
-  for (unsigned int i = 0; i < newArraySize; i++) {   // clear new array
+  for (unsigned int i = 0; i < newArraySize; i++) {         // clear new array
     newExtIntPtr[i] = 0;
   }
-  for (unsigned int i = 0; i < arraySize; i++) {          // copy over previous values
+  for (unsigned int i = 0; i < arraySize; i++) {            // copy over previous values
     newExtIntPtr[i] = ext_int[i];
   }
   delete[] ext_int;
@@ -74,22 +76,30 @@ void ExtendedInt::increaseArraySizeTo(unsigned int newArraySize) {
 
 
 void ExtendedInt::decreaseArraySizeTo(unsigned int newArraySize) {
-  unsigned int* newExtIntPtr = new unsigned int[newArraySize];
-  for (unsigned int i = 0; i < newArraySize; i++) {       // clear new array
-    newExtIntPtr[i] = 0;
+  try {
+    if (newArraySize < MIN_ARRAY_SIZE) {
+      throw MinArraySizeExceededException();
+    }
+    unsigned int* newExtIntPtr = new unsigned int[newArraySize];
+    for (unsigned int i = 0; i < newArraySize; i++) {       // clear new array
+      newExtIntPtr[i] = 0;
+    }
+    for (unsigned int i = 0; i < newArraySize; i++) {       // copy over previous values
+      newExtIntPtr[i] = ext_int[i];
+    }
+    delete[] ext_int;
+    ext_int = newExtIntPtr;
+    arraySize = newArraySize;
   }
-  for (unsigned int i = 0; i < newArraySize; i++) {       // copy over previous values
-    newExtIntPtr[i] = ext_int[i];
+  catch (const Exception& e) {
+    e.printError();
   }
-  delete[] ext_int;
-  ext_int = newExtIntPtr;
-  arraySize = newArraySize;
 }
 
 
 void ExtendedInt::clearUnusedMemory() {
   unsigned int numEntriesToDelete = 0;
-  for (int i = arraySize - 1; i >= 0; i--) {
+  for (int i = arraySize - 1; i >= 0; i--) {                // count how many consecutive 0s there are MSByte -> LSByte
     if (ext_int[i] == 0) {
       numEntriesToDelete++;
     }
@@ -99,6 +109,7 @@ void ExtendedInt::clearUnusedMemory() {
   }
   if (numEntriesToDelete > 0) {
     unsigned int newArraySize = arraySize - numEntriesToDelete;
+    newArraySize = (newArraySize > 3 ? newArraySize : 4);   // minimum array size is 4
     decreaseArraySizeTo(newArraySize);
   }
 }

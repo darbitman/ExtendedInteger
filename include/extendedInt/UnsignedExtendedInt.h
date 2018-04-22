@@ -13,12 +13,11 @@ public:
   //UnsignedExtendedInt(const char* s);
   ~UnsignedExtendedInt();
   UnsignedExtendedInt operator=(const UnsignedExtendedInt& obj);
-  //UnsignedExtendedInt operator=(int obj);
   UnsignedExtendedInt operator+(const UnsignedExtendedInt& obj) const;
   UnsignedExtendedInt operator-(const UnsignedExtendedInt& obj) const;
   UnsignedExtendedInt operator*(const UnsignedExtendedInt& obj) const;
-  UnsignedExtendedInt operator/(const UnsignedExtendedInt& obj) const;
-  UnsignedExtendedInt operator%(const UnsignedExtendedInt& obj) const;
+  UnsignedExtendedInt operator/(const UnsignedExtendedInt& divisor) const;
+  UnsignedExtendedInt operator%(const UnsignedExtendedInt& divisor) const;
 
   bool operator==(const UnsignedExtendedInt& obj) const;
   bool operator!=(const UnsignedExtendedInt& obj) const;
@@ -28,6 +27,13 @@ public:
   bool operator<=(const UnsignedExtendedInt& obj) const;
   UnsignedExtendedInt operator>>(const UnsignedExtendedInt& shiftVal) const;
   UnsignedExtendedInt operator<<(const UnsignedExtendedInt& shiftVal) const;
+  UnsignedExtendedInt operator&(const UnsignedExtendedInt& obj) const;
+  UnsignedExtendedInt operator|(const UnsignedExtendedInt& obj) const;
+  UnsignedExtendedInt operator^(const UnsignedExtendedInt& obj) const;
+  UnsignedExtendedInt& operator++();
+  UnsignedExtendedInt operator++(int);
+  UnsignedExtendedInt& operator--();
+  UnsignedExtendedInt operator--(int);
   UnsignedExtendedInt operator~() const;
 protected:
   //void stringToExtendedInt(const char* s);

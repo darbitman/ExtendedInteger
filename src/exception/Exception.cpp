@@ -25,3 +25,8 @@ void InputStringInvalidCharacterException::printError() const {
 void IndexOutOfBoundsException::printError() const {
   std::cout << "ERROR: Index out of bounds" << std::endl;
 }
+
+
+void MinArraySizeExceededException::printError() const {
+  std::cout << "ERROR: Attempted to set array size less than 4" << std::endl;
+}

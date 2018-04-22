@@ -28,3 +28,8 @@ class IndexOutOfBoundsException : public Exception {
 public:
   virtual void printError() const;
 };
+
+class MinArraySizeExceededException : public Exception {
+public:
+  virtual void printError() const;
+};
