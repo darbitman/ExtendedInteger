@@ -76,7 +76,7 @@ UnsignedExtendedInt UnsignedExtendedInt::operator+(const UnsignedExtendedInt& ob
     carryBit = (result & 0x100000000) >> 32;                // extract the carry bit if it exists
   }
   if (carryBit) {                                           // if carryBit overflows, need to increase array size
-    returnValue.increaseArraySizeTo(arraySize + 1);           // increase array size by 1 word
+    returnValue.increaseArraySizeTo(arraySize + 1);         // increase array size by 1 word
     returnValue.ext_int[returnValue.getArraySize() - 1] = carryBit & 0x1;
   }
   return returnValue;
@@ -86,6 +86,7 @@ UnsignedExtendedInt UnsignedExtendedInt::operator+(const UnsignedExtendedInt& ob
 UnsignedExtendedInt UnsignedExtendedInt::operator-(const UnsignedExtendedInt& obj) const {
   UnsignedExtendedInt returnValue(this->operator+(~obj + 1));
   returnValue.clearUnusedMemory();
+  returnValue.decreaseArraySizeTo(returnValue.arraySize - 1);                   // subtraction can sometimes lead to overflow, so need to delete the carry bit that was generated
   return returnValue;
 }
 
@@ -145,7 +146,7 @@ bool UnsignedExtendedInt::operator==(const UnsignedExtendedInt& obj) const {
     }
   }
   unsigned int minArraySize = arraySize > obj.arraySize ? obj.arraySize : arraySize;
-  for (unsigned int i = 0; i < minArraySize; i--) {
+  for (unsigned int i = 0; i < minArraySize; i++) {
     if (ext_int[i] != obj.ext_int[i]) {
       return false;
     }
@@ -175,7 +176,7 @@ bool UnsignedExtendedInt::operator>(const UnsignedExtendedInt& obj) const {
     }
   }
   unsigned int minArraySize = arraySize > obj.arraySize ? obj.arraySize : arraySize;
-  for (int i = minArraySize - 1; i >= 0; i++) {
+  for (int i = minArraySize - 1; i >= 0; i--) {
     if (ext_int[i] > obj.ext_int[i]) {
       return true;
     }
@@ -206,7 +207,7 @@ bool UnsignedExtendedInt::operator>=(const UnsignedExtendedInt& obj) const {
     }
   }
   unsigned int minArraySize = arraySize > obj.arraySize ? obj.arraySize : arraySize;
-  for (int i = minArraySize - 1; i >= 0; i++) {
+  for (int i = minArraySize - 1; i >= 0; i--) {
     if (ext_int[i] > obj.ext_int[i]) {
       return true;
     }
@@ -237,7 +238,7 @@ bool UnsignedExtendedInt::operator<(const UnsignedExtendedInt& obj) const {
     }
   }
   unsigned int minArraySize = arraySize > obj.arraySize ? obj.arraySize : arraySize;
-  for (int i = minArraySize - 1; i >= 0; i++) {
+  for (int i = minArraySize - 1; i >= 0; i--) {
     if (ext_int[i] < obj.ext_int[i]) {
       return true;
     }
@@ -268,7 +269,7 @@ bool UnsignedExtendedInt::operator<=(const UnsignedExtendedInt& obj) const {
     }
   }
   unsigned int minArraySize = arraySize > obj.arraySize ? obj.arraySize : arraySize;
-  for (int i = minArraySize - 1; i >= 0; i++) {
+  for (int i = minArraySize - 1; i >= 0; i--) {
     if (ext_int[i] < obj.ext_int[i]) {
       return true;
     }
@@ -422,18 +423,18 @@ UnsignedExtendedInt UnsignedExtendedInt::divideModOperator(const UnsignedExtende
   if (divisor == 0) {
     throw DivideByZeroException();
   }
-  if (*this < divisor) {                          // if dividend is smaller than divisor (e.g. 10 / 20 = 0)
+  if (*this < divisor) {                                // if dividend is smaller than divisor (e.g. 10 / 20 = 0)
     if (op == ExtendedInt::DIVIDE_OP) {
       return returnValue;
     }
-    else {                                        // op == ExtendedInt::MOD_OP
+    else {                                              // op == ExtendedInt::MOD_OP
       return *this;
     }
   }
   unsigned int maxArraySize = (arraySize > divisor.arraySize ? arraySize : divisor.arraySize);
   UnsignedExtendedInt dividend;
   UnsignedExtendedInt nonConstDivisor(divisor);
-  if (arraySize > divisor.arraySize) {            // make sure both arrays are of the same size
+  if (arraySize > divisor.arraySize) {                  // make sure both arrays are of the same size
     nonConstDivisor.increaseArraySizeTo(maxArraySize);
   }
   else if (divisor.arraySize > arraySize) {
