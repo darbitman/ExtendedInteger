@@ -2,12 +2,8 @@
 
 
 int main() {
-  UnsignedExtendedInt a;
-  a.setValueAtIndex(0xa, 0);
-  UnsignedExtendedInt b;
-  b.setValueAtIndex(0x5, 0);
-  UnsignedExtendedInt c;
-  a.increaseArraySizeTo(10);
-  a.decreaseArraySizeTo(5);
+  UnsignedExtendedInt a(0x1000000);
+  UnsignedExtendedInt b(0x10);
+  a / b;
   return 0;
 }

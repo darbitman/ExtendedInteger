@@ -49,7 +49,7 @@ Create an empty bag
 */
 template<typename T>
 Bag<T>::Bag() {
-  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+  if (LOGGER_VERBOSITY == Logger::Verbose) {
     std::string s = "Creating empty bag";
     Logger::getInstance().addEntry(s.c_str());
   }
@@ -91,7 +91,7 @@ Bag<T>::Bag(const Bag& rhs) {
 
 template<typename T>
 Bag<T>::~Bag() {
-  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+  if (LOGGER_VERBOSITY == Logger::Verbose) {
     std::string s = "Bag destructor called";
     Logger::getInstance().addEntry(s.c_str());
   }
@@ -110,7 +110,7 @@ Add element to the end of the bag
 */
 template<typename T>
 void Bag<T>::add(T data) {
-  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+  if (LOGGER_VERBOSITY == Logger::Verbose) {
     std::string s = "Adding bag element: ";
     s = s + std::to_string(data);
     Logger::getInstance().addEntry(s.c_str());
@@ -134,7 +134,7 @@ Returns true if bag is empty
 */
 template<typename T>
 bool Bag<T>::isEmpty() const {
-  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+  if (LOGGER_VERBOSITY == Logger::Verbose) {
     std::string s = "Checking if bag is empty";
     Logger::getInstance().addEntry(s.c_str());
   }
@@ -169,7 +169,7 @@ Increments the iterator after returning the current data iterator points to
 */
 template<typename T>
 typename Bag<T>::iterator Bag<T>::iterator::operator++(int) {
-  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+  if (LOGGER_VERBOSITY == Logger::Verbose) {
     std::string s = "Post-increment iterator";
     Logger::getInstance().addEntry(s.c_str());
   }
@@ -198,7 +198,7 @@ Dereference the iterator
 */
 template<typename T>
 T Bag<T>::iterator::operator*() const {
-  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+  if (LOGGER_VERBOSITY == Logger::Verbose) {
     std::string s = "Dereference bag iterator";
     Logger::getInstance().addEntry(s.c_str());
   }
@@ -211,7 +211,7 @@ Compares equality of two iterators
 */
 template<typename T>
 bool Bag<T>::iterator::operator==(const iterator& rhs) {
-  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+  if (LOGGER_VERBOSITY == Logger::Verbose) {
     std::string s = "Comparing if two bag iterators are equal";
     Logger::getInstance().addEntry(s.c_str());
   }
@@ -224,7 +224,7 @@ Compares inequality of two iterators
 */
 template<typename T>
 bool Bag<T>::iterator::operator!=(const iterator& rhs) {
-  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+  if (LOGGER_VERBOSITY == Logger::Verbose) {
     std::string s = "Comparing if two bag iterators are not equal";
     Logger::getInstance().addEntry(s.c_str());
   }
@@ -237,7 +237,7 @@ Get an iterator to the beginning of the bag
 */
 template<typename T>
 typename Bag<T>::iterator Bag<T>::begin() const {
-  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+  if (LOGGER_VERBOSITY == Logger::Verbose) {
     std::string s = "Getting bag iterator to the beginning";
     Logger::getInstance().addEntry(s.c_str());
   }
@@ -250,7 +250,7 @@ Get an iterator to the end of the bag
 */
 template<typename T>
 typename Bag<T>::iterator Bag<T>::end() const {
-  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+  if (LOGGER_VERBOSITY == Logger::Verbose) {
     std::string s = "Getting bag iterator to the end";
     Logger::getInstance().addEntry(s.c_str());
   }

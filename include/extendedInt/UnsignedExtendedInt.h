@@ -18,7 +18,7 @@ public:
   UnsignedExtendedInt operator*(const UnsignedExtendedInt& obj) const;
   UnsignedExtendedInt operator/(const UnsignedExtendedInt& divisor) const;
   UnsignedExtendedInt operator%(const UnsignedExtendedInt& divisor) const;
-
+protected:
   bool operator==(const UnsignedExtendedInt& obj) const;
   bool operator!=(const UnsignedExtendedInt& obj) const;
   bool operator>(const UnsignedExtendedInt& obj) const;

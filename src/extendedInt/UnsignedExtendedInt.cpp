@@ -43,7 +43,6 @@ UnsignedExtendedInt UnsignedExtendedInt::operator=(const UnsignedExtendedInt& ob
   // will need to make sure both objects are of the same size
   // to ensure no data loss and to save memory
   if (arraySize != obj.arraySize) {
-    unsigned int newArraySize = (arraySize > obj.arraySize ? arraySize : obj.arraySize);
     if (arraySize > obj.arraySize) {
       decreaseArraySizeTo(obj.arraySize);
     }
@@ -432,19 +431,40 @@ UnsignedExtendedInt UnsignedExtendedInt::divideModOperator(const UnsignedExtende
     }
   }
   unsigned int maxArraySize = (arraySize > divisor.arraySize ? arraySize : divisor.arraySize);
-  UnsignedExtendedInt nonConstThis(*this);
+  UnsignedExtendedInt dividend;
   UnsignedExtendedInt nonConstDivisor(divisor);
   if (arraySize > divisor.arraySize) {            // make sure both arrays are of the same size
     nonConstDivisor.increaseArraySizeTo(maxArraySize);
   }
   else if (divisor.arraySize > arraySize) {
-    nonConstThis.increaseArraySizeTo(maxArraySize);
+    dividend.newArraySize(maxArraySize);
   }
   UnsignedExtendedInt maskBit;
   maskBit.newArraySize(maxArraySize);
   maskBit.setValueAtIndex(1, 0);
   int i = 32 * maxArraySize;
   maskBit = maskBit << (i - 1);
-  // todo
-  return returnValue;
+  while (--i >= 0) {
+    if (nonConstDivisor > dividend) {
+      // extract bit in position i starting with MSBit to perform long division
+      dividend = (((*this & maskBit) >> i) | (dividend << 1));
+      maskBit = maskBit >> 1;
+    }
+    else {
+      returnValue = returnValue | (maskBit << 1);
+      dividend = dividend - nonConstDivisor;
+      i++;
+    }
+  }
+  
+  // extract bit 0 of the quotient
+  if (nonConstDivisor <= dividend) {
+    maskBit.setValueAtIndex(1, 0);
+    returnValue = returnValue | maskBit;
+    dividend = dividend - nonConstDivisor;              // remainder
+  }
+  if (op == ExtendedInt::DIVIDE_OP) {
+    return returnValue;                                 // return result
+  }
+  return dividend;                                      // return remainder
 }

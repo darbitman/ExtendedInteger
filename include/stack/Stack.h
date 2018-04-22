@@ -22,7 +22,7 @@ public:
 
 template<typename T>
 Stack<T>::Stack() {
-  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+  if (LOGGER_VERBOSITY == Logger::Verbose) {
     std::string s = "Creating a new stack";
     Logger::getInstance().addEntry(s.c_str());
   }
@@ -34,7 +34,7 @@ Stack<T>::Stack() {
 
 template<typename T>
 Stack<T>::Stack(const Stack<T>& rhs) {
-  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+  if (LOGGER_VERBOSITY == Logger::Verbose) {
     std::string s = "Calling stack copy constructor";
     s = s + std::to_string(stackPtr[numEntries - 1]);
     Logger::getInstance().addEntry(s.c_str());
@@ -50,7 +50,7 @@ Stack<T>::Stack(const Stack<T>& rhs) {
 
 template<typename T>
 Stack<T>::~Stack() {
-  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+  if (LOGGER_VERBOSITY == Logger::Verbose) {
     std::string s = "Deleting stack";
     Logger::getInstance().addEntry(s.c_str());
   }
@@ -60,7 +60,7 @@ Stack<T>::~Stack() {
 
 template<typename T>
 bool Stack<T>::isEmpty() const {
-  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+  if (LOGGER_VERBOSITY == Logger::Verbose) {
     std::string s = "Checking if stack is empty";
     Logger::getInstance().addEntry(s.c_str());
   }
@@ -70,7 +70,7 @@ bool Stack<T>::isEmpty() const {
 
 template<typename T>
 void Stack<T>::push(T data) {
-  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+  if (LOGGER_VERBOSITY == Logger::Verbose) {
     std::string s = "Adding stack entry: ";
     s = s + std::to_string(data);
     Logger::getInstance().addEntry(s.c_str());
@@ -98,7 +98,7 @@ T Stack<T>::pop() {
   if (numEntries == 0) {
     throw StackEmptyException();
   }
-  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+  if (LOGGER_VERBOSITY == Logger::Verbose) {
     std::string s = "Popping stack entry: ";
     s = s + std::to_string(stackPtr[numEntries - 1]);
     Logger::getInstance().addEntry(s.c_str());
@@ -127,7 +127,7 @@ T Stack<T>::peek() const {
   if (numEntries == 0) {
     throw StackEmptyException();
   }
-  if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
+  if (LOGGER_VERBOSITY == Logger::Verbose) {
     std::string s = "Peeking stack entry: ";
     s = s + std::to_string(stackPtr[numEntries - 1]);
     Logger::getInstance().addEntry(s.c_str());
