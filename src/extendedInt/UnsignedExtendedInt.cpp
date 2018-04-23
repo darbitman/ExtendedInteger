@@ -469,3 +469,13 @@ UnsignedExtendedInt UnsignedExtendedInt::divideModOperator(const UnsignedExtende
   }
   return dividend;                                      // return remainder
 }
+
+
+void UnsignedExtendedInt::stringToExtendedInt(const char* s) {
+  clearValue();
+  unsigned int hexVal = 0;
+  unsigned int strLength = 0;
+  while (s[strLength] != 0) {                           // compute string length
+    strLength++;
+  }
+}

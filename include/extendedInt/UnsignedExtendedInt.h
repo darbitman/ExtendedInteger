@@ -36,6 +36,6 @@ protected:
   UnsignedExtendedInt operator--(int);
   UnsignedExtendedInt operator~() const;
 protected:
-  //void stringToExtendedInt(const char* s);
   UnsignedExtendedInt divideModOperator(const UnsignedExtendedInt& obj, const ExtendedInt::DIVIDE_OPERATION op) const;
+  void stringToExtendedInt(const char* s);
 };
