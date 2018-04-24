@@ -1,16 +1,10 @@
 #include "UnsignedExtendedInt.h"
 
 
-UnsignedExtendedInt::UnsignedExtendedInt() : ExtendedInt() {
-  ext_int = new unsigned int[arraySize];
-  clearValue();
-}
+UnsignedExtendedInt::UnsignedExtendedInt() : ExtendedInt() {}
 
 
-UnsignedExtendedInt::UnsignedExtendedInt(const UnsignedExtendedInt& obj) : ExtendedInt() {
-  arraySize = obj.arraySize;
-  ext_int = new unsigned int[arraySize];
-  clearValue();
+UnsignedExtendedInt::UnsignedExtendedInt(const UnsignedExtendedInt& obj) : ExtendedInt(obj.arraySize) {
   for (unsigned int i = 0; i < arraySize; i++) {
     ext_int[i] = obj.ext_int[i];
   }
@@ -18,24 +12,28 @@ UnsignedExtendedInt::UnsignedExtendedInt(const UnsignedExtendedInt& obj) : Exten
 
 
 UnsignedExtendedInt::UnsignedExtendedInt(unsigned long long obj) : ExtendedInt() {
-  ext_int = new unsigned int[arraySize];
-  clearValue();
   ext_int[0] = obj & 0xFFFFFFFF;
   ext_int[1] = (obj >> 32) & 0xFFFFFFFF;
 }
 
 
 UnsignedExtendedInt::UnsignedExtendedInt(long long obj) : ExtendedInt() {
-  ext_int = new unsigned int[arraySize];
-  clearValue();
   ext_int[0] = obj & 0xFFFFFFFF;
 }
 
 
 UnsignedExtendedInt::UnsignedExtendedInt(int obj) : ExtendedInt() {
-  ext_int = new unsigned int[arraySize];
-  clearValue();
   ext_int[0] = obj & 0xFFFFFFFF;
+}
+
+
+UnsignedExtendedInt::UnsignedExtendedInt(const char* s) : ExtendedInt() {
+  try {
+    stringToExtendedInt(s);
+  }
+  catch (const Exception& e) {
+    e.printError();
+  }
 }
 
 
@@ -53,7 +51,6 @@ UnsignedExtendedInt UnsignedExtendedInt::operator=(const UnsignedExtendedInt& ob
   for (unsigned int i = 0; i < arraySize; i++) {
     ext_int[i] = obj.ext_int[i];
   }
-  clearUnusedMemory();
   return *this;
 }
 
@@ -62,15 +59,24 @@ UnsignedExtendedInt::~UnsignedExtendedInt() {}
 
 
 UnsignedExtendedInt UnsignedExtendedInt::operator+(const UnsignedExtendedInt& obj) const {
+  unsigned int maxArraySize = (arraySize > obj.arraySize ? arraySize : obj.arraySize);
   UnsignedExtendedInt returnValue;
-  returnValue.newArraySize(arraySize > obj.arraySize ? arraySize : obj.arraySize);
+  returnValue.newArraySize(maxArraySize);
+  UnsignedExtendedInt obj1(*this);                          // make local copies to allow the objects to change size
+  UnsignedExtendedInt obj2(obj);                            // make local copies to allow the objects to change size
+  if (obj1.arraySize > obj2.arraySize) {
+    obj2.increaseArraySizeTo(maxArraySize);
+  }
+  else if (obj2.arraySize > obj1.arraySize) {
+    obj1.increaseArraySizeTo(maxArraySize);
+  }
   unsigned long long x = 0;
   unsigned long long y = 0;
   unsigned long long result = 0;
   unsigned long long carryBit = 0;
-  for (unsigned int i = 0; i < arraySize; i++) {
-    x = ext_int[i];
-    y = obj.ext_int[i];
+  for (unsigned int i = 0; i < maxArraySize; i++) {
+    x = obj1.ext_int[i];
+    y = obj2.ext_int[i];
     result = x + y + carryBit;                              // perform 32bit addition of left and right operand plus carry bit from previous addition
     returnValue.ext_int[i] = result & 0xFFFFFFFF;           // extract bottom 32bits of the result of the addition
     carryBit = (result & 0x100000000) >> 32;                // extract the carry bit if it exists
@@ -79,14 +85,14 @@ UnsignedExtendedInt UnsignedExtendedInt::operator+(const UnsignedExtendedInt& ob
     returnValue.increaseArraySizeTo(arraySize + 1);         // increase array size by 1 word
     returnValue.ext_int[returnValue.getArraySize() - 1] = carryBit & 0x1;
   }
+  returnValue.clearUnusedMemory();
   return returnValue;
 }
 
 
 UnsignedExtendedInt UnsignedExtendedInt::operator-(const UnsignedExtendedInt& obj) const {
   UnsignedExtendedInt returnValue(this->operator+(~obj + 1));
-  returnValue.clearUnusedMemory();
-  returnValue.decreaseArraySizeTo(returnValue.arraySize - 1);                   // subtraction can sometimes lead to overflow, so need to delete the carry bit that was generated
+  returnValue.decreaseArraySizeTo(returnValue.arraySize - 1);   // subtraction can sometimes lead to overflow, so need to delete the carry bit that was generated
   return returnValue;
 }
 
@@ -94,18 +100,18 @@ UnsignedExtendedInt UnsignedExtendedInt::operator-(const UnsignedExtendedInt& ob
 UnsignedExtendedInt UnsignedExtendedInt::operator*(const UnsignedExtendedInt& obj) const {
   unsigned int resultArraySize = arraySize + obj.arraySize;
   UnsignedExtendedInt returnValue;
-  returnValue.increaseArraySizeTo(resultArraySize);
+  returnValue.newArraySize(resultArraySize);
   unsigned int leftShiftValue = 0;
   unsigned long long x = 0;
   unsigned long long y = 0;
   unsigned long long z = 0;
   UnsignedExtendedInt intermediateResult;
-  intermediateResult.increaseArraySizeTo(resultArraySize);
+  intermediateResult.newArraySize(resultArraySize);
   for (unsigned int i = 0; i < arraySize; i++) {
     for (unsigned int j = 0; j < obj.arraySize; j++) {
       leftShiftValue = i + j;
       x = ext_int[i];
-      y = obj.ext_int[i];
+      y = obj.ext_int[j];
       z = x * y;
       if (leftShiftValue > 0) {                                                 // ensure valid memory can be accessed
         intermediateResult.ext_int[leftShiftValue - 1] = 0;                     // clear previously set lower 32bits because they will introduce a summation error
@@ -472,10 +478,36 @@ UnsignedExtendedInt UnsignedExtendedInt::divideModOperator(const UnsignedExtende
 
 
 void UnsignedExtendedInt::stringToExtendedInt(const char* s) {
-  clearValue();
-  unsigned int hexVal = 0;
+  bool isHexVal = false;
   unsigned int strLength = 0;
   while (s[strLength] != 0) {                           // compute string length
     strLength++;
+  }
+  // TODO Validate string here
+
+  if (s[0] == '0' && s[1] == 'x') {
+    isHexVal = true;
+  }
+  UnsignedExtendedInt baseValue;
+  UnsignedExtendedInt powersOfBaseValue(1);
+  if (isHexVal) {
+    baseValue.setValueAtIndex(16, 0);
+  }
+  else {
+    baseValue.setValueAtIndex(10, 0);
+  }
+  UnsignedExtendedInt readInt;                          // single char -> int
+  for (int i = strLength - 1; i >= 0; i--) {
+    if (isHexVal && (i == 0 || i == 1)) {                // if hex value, ignore bit 0 and bit 1 for ('0x')
+      continue;
+    }
+    if (isHexVal) {
+      // TODO implement conversion from hex input
+    }
+    else {
+      readInt.setValueAtIndex(s[i] - '0', 0);
+    }
+    *this = *this + (powersOfBaseValue * readInt);
+    powersOfBaseValue = powersOfBaseValue * baseValue;
   }
 }

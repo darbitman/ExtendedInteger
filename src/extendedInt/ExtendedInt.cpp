@@ -24,7 +24,10 @@ unsigned int ExtendedInt::getArraySize() const {
 }
 
 
-ExtendedInt::ExtendedInt(unsigned int arrSize) : arraySize(arrSize) {}
+ExtendedInt::ExtendedInt(unsigned int arrSize) : arraySize(arrSize) {
+  ext_int = new unsigned int[arraySize];
+  clearValue();
+}
 
 
 ExtendedInt::~ExtendedInt() {
@@ -52,7 +55,7 @@ NFA& ExtendedInt::getNFAInstance() {
 
 
 void ExtendedInt::newArraySize(unsigned int newArraySize) {
-  if (newArraySize > arraySize) {
+  if (newArraySize != arraySize) {
     arraySize = newArraySize;
     delete[] ext_int;
     ext_int = new unsigned int[newArraySize];

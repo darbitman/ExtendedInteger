@@ -10,7 +10,7 @@ public:
   UnsignedExtendedInt(unsigned long long obj);
   UnsignedExtendedInt(long long obj);
   UnsignedExtendedInt(int obj);
-  //UnsignedExtendedInt(const char* s);
+  UnsignedExtendedInt(const char* s);
   ~UnsignedExtendedInt();
   UnsignedExtendedInt operator=(const UnsignedExtendedInt& obj);
   UnsignedExtendedInt operator+(const UnsignedExtendedInt& obj) const;
