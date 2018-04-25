@@ -2,7 +2,7 @@
 
 
 int main() {
-  UnsignedExtendedInt a("123456789123456789123456789123456789123456789");
+  UnsignedExtendedInt a("12345678912345678912345678912345678912345");
   std::cout << a;
   return 0;
 }
