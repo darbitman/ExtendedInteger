@@ -35,7 +35,10 @@ protected:
   UnsignedExtendedInt& operator--();
   UnsignedExtendedInt operator--(int);
   UnsignedExtendedInt operator~() const;
+
+  friend std::ostream& operator<<(std::ostream& os, const UnsignedExtendedInt& obj);
 protected:
   UnsignedExtendedInt divideModOperator(const UnsignedExtendedInt& obj, const ExtendedInt::DIVIDE_OPERATION op) const;
   void stringToExtendedInt(const char* s);
+  std::string extendedIntToString() const;
 };

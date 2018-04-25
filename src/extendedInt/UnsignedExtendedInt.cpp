@@ -170,7 +170,7 @@ bool UnsignedExtendedInt::operator>(const UnsignedExtendedInt& obj) const {
   if (arraySize > obj.arraySize) {                // if calling object has upper bits not 0, then can't be equal
     for (unsigned int i = obj.arraySize; i < arraySize; i++) {
       if (ext_int[i] != 0) {
-        return false;
+        return true;
       }
     }
   }
@@ -345,12 +345,14 @@ UnsignedExtendedInt UnsignedExtendedInt::operator<<(const UnsignedExtendedInt& o
 
 
 UnsignedExtendedInt UnsignedExtendedInt::operator&(const UnsignedExtendedInt& obj) const {
-  unsigned int minArraySize = arraySize;
+  unsigned int maxArraySize = (arraySize > obj.arraySize ? arraySize : obj.arraySize);
+  unsigned int minArraySize = (arraySize > obj.arraySize ? obj.arraySize : arraySize);
   UnsignedExtendedInt returnValue;
-  if (arraySize != obj.arraySize) {
-    minArraySize = (arraySize > obj.arraySize ? obj.arraySize : arraySize);
-    returnValue.newArraySize(minArraySize);
+  if (returnValue.arraySize != maxArraySize) {
+    returnValue.newArraySize(maxArraySize);
   }
+  // need to AND only the same indices
+  // any array entries between minArraySize and maxArraySize will be 0 so don't need to loop over those
   for (unsigned int i = 0; i < minArraySize; i++) {
     returnValue.ext_int[i] = ext_int[i] & obj.ext_int[i];
   }
@@ -359,14 +361,21 @@ UnsignedExtendedInt UnsignedExtendedInt::operator&(const UnsignedExtendedInt& ob
 
 
 UnsignedExtendedInt UnsignedExtendedInt::operator|(const UnsignedExtendedInt& obj) const {
-  unsigned int minArraySize = arraySize;
+  unsigned int maxArraySize = (arraySize > obj.arraySize ? arraySize : obj.arraySize);
   UnsignedExtendedInt returnValue;
-  if (arraySize != obj.arraySize) {
-    minArraySize = (arraySize > obj.arraySize ? obj.arraySize : arraySize);
-    returnValue.newArraySize(minArraySize);
+  if (returnValue.arraySize != maxArraySize) {
+    returnValue.newArraySize(maxArraySize);
   }
-  for (unsigned int i = 0; i < minArraySize; i++) {
-    returnValue.ext_int[i] = ext_int[i] | obj.ext_int[i];
+  UnsignedExtendedInt lhs(*this);
+  UnsignedExtendedInt rhs(obj);
+  if (lhs.arraySize != maxArraySize) {
+    lhs.increaseArraySizeTo(maxArraySize);
+  }
+  if (rhs.arraySize != maxArraySize) {
+    rhs.increaseArraySizeTo(maxArraySize);
+  }
+  for (unsigned int i = 0; i < maxArraySize; i++) {
+    returnValue.ext_int[i] = lhs.ext_int[i] | rhs.ext_int[i];
   }
   return returnValue;
 }
@@ -440,10 +449,10 @@ UnsignedExtendedInt UnsignedExtendedInt::divideModOperator(const UnsignedExtende
   unsigned int maxArraySize = (arraySize > divisor.arraySize ? arraySize : divisor.arraySize);
   UnsignedExtendedInt dividend;
   UnsignedExtendedInt nonConstDivisor(divisor);
-  if (arraySize > divisor.arraySize) {                  // make sure both arrays are of the same size
+  if (dividend.arraySize > nonConstDivisor.arraySize) {                  // make sure both arrays are of the same size
     nonConstDivisor.increaseArraySizeTo(maxArraySize);
   }
-  else if (divisor.arraySize > arraySize) {
+  else if (nonConstDivisor.arraySize > dividend.arraySize) {
     dividend.newArraySize(maxArraySize);
   }
   UnsignedExtendedInt maskBit;
@@ -488,13 +497,10 @@ void UnsignedExtendedInt::stringToExtendedInt(const char* s) {
   if (s[0] == '0' && s[1] == 'x') {
     isHexVal = true;
   }
-  UnsignedExtendedInt baseValue;
+  UnsignedExtendedInt baseValue(10);
   UnsignedExtendedInt powersOfBaseValue(1);
   if (isHexVal) {
     baseValue.setValueAtIndex(16, 0);
-  }
-  else {
-    baseValue.setValueAtIndex(10, 0);
   }
   UnsignedExtendedInt readInt;                          // single char -> int
   for (int i = strLength - 1; i >= 0; i--) {
@@ -510,4 +516,26 @@ void UnsignedExtendedInt::stringToExtendedInt(const char* s) {
     *this = *this + (powersOfBaseValue * readInt);
     powersOfBaseValue = powersOfBaseValue * baseValue;
   }
+}
+
+
+std::string UnsignedExtendedInt::extendedIntToString() const {
+  std::string extIntString;
+  UnsignedExtendedInt dividend(*this);
+  UnsignedExtendedInt remainder;
+  remainder.newArraySize(arraySize);
+  UnsignedExtendedInt TEN(10);
+  TEN.increaseArraySizeTo(arraySize);
+  while (dividend > 0) {
+    remainder = dividend % TEN;
+    dividend = dividend / TEN;
+    extIntString = (char) ((remainder.ext_int[0] & 0xFF) + 48) + extIntString;
+  }
+  return extIntString;
+}
+
+
+std::ostream& operator<<(std::ostream& os, const UnsignedExtendedInt& obj) {
+  os << obj.extendedIntToString();
+  return os;
 }
