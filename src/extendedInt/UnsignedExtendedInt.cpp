@@ -312,7 +312,7 @@ UnsignedExtendedInt UnsignedExtendedInt::operator>>(const UnsignedExtendedInt& o
     }
     shiftVal = (shiftVal >= 32 ? shiftVal - 32 : 0);
   }
-  returnValue.clearUnusedMemory();
+
   return returnValue;
 }
 
@@ -339,7 +339,7 @@ UnsignedExtendedInt UnsignedExtendedInt::operator<<(const UnsignedExtendedInt& o
     }
     shiftVal = (shiftVal >= 32 ? shiftVal - 32 : 0);
   }
-  returnValue.clearUnusedMemory();
+
   return returnValue;
 }
 
@@ -449,7 +449,7 @@ UnsignedExtendedInt UnsignedExtendedInt::divideModOperator(const UnsignedExtende
   unsigned int maxArraySize = (arraySize > divisor.arraySize ? arraySize : divisor.arraySize);
   UnsignedExtendedInt dividend;
   UnsignedExtendedInt nonConstDivisor(divisor);
-  if (dividend.arraySize > nonConstDivisor.arraySize) {                  // make sure both arrays are of the same size
+  if (dividend.arraySize > nonConstDivisor.arraySize) { // make sure both arrays are of the same size
     nonConstDivisor.increaseArraySizeTo(maxArraySize);
   }
   else if (nonConstDivisor.arraySize > dividend.arraySize) {
