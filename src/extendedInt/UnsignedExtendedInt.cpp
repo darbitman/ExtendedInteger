@@ -37,6 +37,9 @@ UnsignedExtendedInt::UnsignedExtendedInt(const char* s) : ExtendedInt() {
 }
 
 
+UnsignedExtendedInt::~UnsignedExtendedInt() {}
+
+
 UnsignedExtendedInt UnsignedExtendedInt::operator=(const UnsignedExtendedInt& obj) {
   // will need to make sure both objects are of the same size
   // to ensure no data loss and to save memory
@@ -53,9 +56,6 @@ UnsignedExtendedInt UnsignedExtendedInt::operator=(const UnsignedExtendedInt& ob
   }
   return *this;
 }
-
-
-UnsignedExtendedInt::~UnsignedExtendedInt() {}
 
 
 UnsignedExtendedInt UnsignedExtendedInt::operator+(const UnsignedExtendedInt& obj) const {
@@ -108,9 +108,9 @@ UnsignedExtendedInt UnsignedExtendedInt::operator*(const UnsignedExtendedInt& ob
   UnsignedExtendedInt intermediateResult;
   intermediateResult.newArraySize(resultArraySize);
   for (unsigned int i = 0; i < arraySize; i++) {
+    x = ext_int[i];
     for (unsigned int j = 0; j < obj.arraySize; j++) {
       leftShiftValue = i + j;
-      x = ext_int[i];
       y = obj.ext_int[j];
       z = x * y;
       if (leftShiftValue > 0) {                                                 // ensure valid memory can be accessed

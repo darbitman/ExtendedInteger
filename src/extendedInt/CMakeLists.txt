@@ -11,6 +11,7 @@ target_sources(ExtendedInt
 target_link_libraries(ExtendedInt
                       NFA
                       Exception)
+
 add_library(UnsignedExtendedInt STATIC "")
 set(UnsignedExtendedInt_Sources
     UnsignedExtendedInt.cpp
@@ -24,3 +25,17 @@ add_executable(UnsignedExtendedIntTest
                UnsignedExtendedIntTest.cpp)
 target_link_libraries(UnsignedExtendedIntTest
                       UnsignedExtendedInt)
+
+add_library(SignedExtendedInt STATIC "")
+set(SignedExtendedInt_Sources
+    SignedExtendedInt.cpp
+    "../../include/extendedInt/SignedExtendedInt.h")
+target_sources(SignedExtendedInt
+               PRIVATE
+               ${SignedExtendedInt_Sources})
+target_link_libraries(SignedExtendedInt
+                      ExtendedInt)
+add_executable(SignedExtendedIntTest
+               SignedExtendedIntTest.cpp)
+target_link_libraries(SignedExtendedIntTest
+                      SignedExtendedInt)

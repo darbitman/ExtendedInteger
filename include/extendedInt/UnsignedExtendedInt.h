@@ -1,6 +1,5 @@
 #pragma once
 #include "ExtendedInt.h"
-#include "UnsignedExtendedInt.h"
 
 
 class UnsignedExtendedInt : public ExtendedInt {

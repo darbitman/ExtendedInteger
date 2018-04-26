@@ -24,7 +24,7 @@ unsigned int ExtendedInt::getArraySize() const {
 }
 
 
-ExtendedInt::ExtendedInt(unsigned int arrSize) : arraySize(arrSize) {
+ExtendedInt::ExtendedInt(bool signBit, unsigned int arrSize) : arraySize(arrSize), isSigned(signBit) {
   ext_int = new unsigned int[arraySize];
   clearValue();
 }
@@ -66,23 +66,31 @@ void ExtendedInt::newArraySize(unsigned int newArraySize) {
 
 void ExtendedInt::increaseArraySizeTo(unsigned int newArraySize) {
   unsigned int* newExtIntPtr = new unsigned int[newArraySize];
-  for (unsigned int i = 0; i < newArraySize; i++) {         // clear new array
+  for (unsigned int i = 0; i < newArraySize; i++) {           // clear new array
     newExtIntPtr[i] = 0;
   }
-  for (unsigned int i = 0; i < arraySize; i++) {            // copy over previous values
+  for (unsigned int i = 0; i < arraySize; i++) {              // copy over previous values
     newExtIntPtr[i] = ext_int[i];
   }
   delete[] ext_int;
   ext_int = newExtIntPtr;
+  if (isSigned && (ext_int[arraySize - 1] & 0x80000000)) {    // check if SignedExtendedInt and if sign bit is set
+    for (unsigned int i = arraySize; i < newArraySize; i++) { // extend sign bit to all newly added words
+      ext_int[i] = 0xFFFFFFFF;
+    }
+  }
   arraySize = newArraySize;
 }
 
 
 void ExtendedInt::decreaseArraySizeTo(unsigned int newArraySize) {
+AfterExceptionCaught:
   try {
     if (newArraySize < MIN_ARRAY_SIZE) {
+      newArraySize = MIN_ARRAY_SIZE;                        // force newArraySize
       throw MinArraySizeExceededException();
     }
+
     unsigned int* newExtIntPtr = new unsigned int[newArraySize];
     for (unsigned int i = 0; i < newArraySize; i++) {       // clear new array
       newExtIntPtr[i] = 0;
@@ -93,10 +101,13 @@ void ExtendedInt::decreaseArraySizeTo(unsigned int newArraySize) {
     delete[] ext_int;
     ext_int = newExtIntPtr;
     arraySize = newArraySize;
+    return;
   }
   catch (const Exception& e) {
     e.printError();
+    goto AfterExceptionCaught;
   }
+  // TODO handle isSigned case
 }
 
 
@@ -115,4 +126,5 @@ void ExtendedInt::clearUnusedMemory() {
     newArraySize = (newArraySize > 3 ? newArraySize : 4);   // minimum array size is 4
     decreaseArraySizeTo(newArraySize);
   }
+  // TODO handle isSigned case (i.e. if MSBytes are 0xFFFFFFFF)
 }
