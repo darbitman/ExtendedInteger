@@ -111,20 +111,33 @@ AfterExceptionCaught:
 }
 
 
+// delete unnecessary 1's or 0's to save memory
 void ExtendedInt::clearUnusedMemory() {
   unsigned int numEntriesToDelete = 0;
-  for (int i = arraySize - 1; i >= 0; i--) {                // count how many consecutive 0s there are MSByte -> LSByte
-    if (ext_int[i] == 0) {
-      numEntriesToDelete++;
+  bool isNegative = false;
+  if (isSigned && (ext_int[arraySize - 1] & 0x80000000)) {              // check if negative
+    isNegative = true;
+  }
+  for (int i = arraySize - 1; i >= (int)MIN_ARRAY_SIZE; i--) {          // count how many consecutive 0's or 1's there are MSWord -> LSWord
+    if (isNegative) {
+      if (ext_int[i] == 0xFFFFFFFF && (ext_int[i - 1] & 0x80000000))  { // if word == 0xFFFFFFFF and the next word has upper bit set then 0xFFFFFFFF is unnecessary
+        numEntriesToDelete++;
+      }
+      else {                                                            // break from counting the rest once it doesn't match
+        break;
+      }
     }
     else {
-      break;
+      if (ext_int[i] == 0) {
+        numEntriesToDelete++;
+      }
+      else {                                                            // break from counting adjacent 0 on first nonzero word
+        break;
+      }
     }
   }
   if (numEntriesToDelete > 0) {
     unsigned int newArraySize = arraySize - numEntriesToDelete;
-    newArraySize = (newArraySize > 3 ? newArraySize : 4);   // minimum array size is 4
     decreaseArraySizeTo(newArraySize);
   }
-  // TODO handle isSigned case (i.e. if MSBytes are 0xFFFFFFFF)
 }
