@@ -121,3 +121,34 @@ bool SignedExtendedInt::operator==(const SignedExtendedInt& obj) const {
 bool SignedExtendedInt::operator!=(const SignedExtendedInt& obj) const {
   return !(this->operator==(obj));
 }
+
+
+bool SignedExtendedInt::operator>(const SignedExtendedInt& obj) const {
+  SignedExtendedInt lhsObj(*this);
+  SignedExtendedInt rhsObj(obj);
+  unsigned int maxArraySize = (lhsObj.arraySize > rhsObj.arraySize ? lhsObj.arraySize : rhsObj.arraySize);
+  lhsObj.increaseArraySizeTo(maxArraySize);
+  rhsObj.increaseArraySizeTo(maxArraySize);
+  bool isNegativeLhs = lhsObj.ext_int[lhsObj.arraySize - 1] & 0x80000000;
+  bool isNegativeRhs = rhsObj.ext_int[rhsObj.arraySize - 1] & 0x80000000;
+  if (isNegativeLhs && !isNegativeRhs) {
+    return false;
+  }
+  else if (isNegativeRhs && !isNegativeLhs) {
+    return true;
+  }
+  else {
+    for (int i = maxArraySize - 1; i >= 0; i--) {
+      if (lhsObj.ext_int[i] > rhsObj.ext_int[i]) {
+        return true;
+      }
+      else if (lhsObj.ext_int[i] == rhsObj.ext_int[i]) {
+        continue;
+      }
+      else {
+        return false;
+      }
+    }
+    return false;
+  }
+}

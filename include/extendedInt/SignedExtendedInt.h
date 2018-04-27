@@ -19,7 +19,7 @@ public:
   //SignedExtendedInt operator%(const SignedExtendedInt& divisor) const;
   bool operator==(const SignedExtendedInt& obj) const;
   bool operator!=(const SignedExtendedInt& obj) const;
-  //bool operator>(const SignedExtendedInt& obj) const;
+  bool operator>(const SignedExtendedInt& obj) const;
   //bool operator>=(const SignedExtendedInt& obj) const;
   //bool operator<(const SignedExtendedInt& obj) const;
   //bool operator<=(const SignedExtendedInt& obj) const;
