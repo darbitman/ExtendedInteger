@@ -17,9 +17,8 @@ public:
   //SignedExtendedInt operator*(const SignedExtendedInt& obj) const;
   //SignedExtendedInt operator/(const SignedExtendedInt& divisor) const;
   //SignedExtendedInt operator%(const SignedExtendedInt& divisor) const;
-protected:
-  //bool operator==(const SignedExtendedInt& obj) const;
-  //bool operator!=(const SignedExtendedInt& obj) const;
+  bool operator==(const SignedExtendedInt& obj) const;
+  bool operator!=(const SignedExtendedInt& obj) const;
   //bool operator>(const SignedExtendedInt& obj) const;
   //bool operator>=(const SignedExtendedInt& obj) const;
   //bool operator<(const SignedExtendedInt& obj) const;
@@ -34,9 +33,8 @@ protected:
   //SignedExtendedInt& operator--();
   //SignedExtendedInt operator--(int);
   //SignedExtendedInt operator~() const;
-
   //friend std::ostream& operator<<(std::ostream& os, const SignedExtendedInt& obj);
-protected:
+//protected:
   //SignedExtendedInt divideModOperator(const SignedExtendedInt& obj, const ExtendedInt::DIVIDE_OPERATION op) const;
   //void stringToExtendedInt(const char* s);
   //std::string extendedIntToString() const;

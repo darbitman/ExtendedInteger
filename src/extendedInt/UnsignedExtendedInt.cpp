@@ -42,14 +42,9 @@ UnsignedExtendedInt::~UnsignedExtendedInt() {}
 
 UnsignedExtendedInt UnsignedExtendedInt::operator=(const UnsignedExtendedInt& obj) {
   // will need to make sure both objects are of the same size
-  // to ensure no data loss and to save memory
+  // to ensure no data loss and not accessing unallocated memory
   if (arraySize != obj.arraySize) {
-    if (arraySize > obj.arraySize) {
-      decreaseArraySizeTo(obj.arraySize);
-    }
-    else {
-      increaseArraySizeTo(obj.arraySize);
-    }
+    newArraySize(obj.arraySize);
   }
   for (unsigned int i = 0; i < arraySize; i++) {
     ext_int[i] = obj.ext_int[i];
@@ -492,8 +487,9 @@ void UnsignedExtendedInt::stringToExtendedInt(const char* s) {
   while (s[strLength] != 0) {                           // compute string length
     strLength++;
   }
-  // TODO Validate string here
-
+  if (!validateString(s, strLength)) {
+    throw InputStringInvalidCharacterException();
+  }
   if (s[0] == '0' && s[1] == 'x') {
     isHexVal = true;
   }

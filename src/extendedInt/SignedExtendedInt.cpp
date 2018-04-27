@@ -15,7 +15,9 @@ SignedExtendedInt::SignedExtendedInt(long long obj): ExtendedInt(true) {
   ext_int[0] = obj & 0xFFFFFFFF;
   ext_int[1] = (obj >> 32) & 0xFFFFFFFF;
   if (obj < 0) {
-    ext_int[arraySize - 1] = 0x80000000;
+    for (unsigned int i = 2; i < arraySize; i++) {    // fill in 1's if negative
+      ext_int[i] = 0xFFFFFFFF;
+    }
   }
 }
 
@@ -23,7 +25,9 @@ SignedExtendedInt::SignedExtendedInt(long long obj): ExtendedInt(true) {
 SignedExtendedInt::SignedExtendedInt(int obj): ExtendedInt(true) {
   ext_int[0] = obj & 0xFFFFFFFF;
   if (obj < 0) {
-    ext_int[arraySize - 1] = 0x80000000;
+    for (unsigned int i = 1; i < arraySize; i++) {    // fill in 1's if negative
+      ext_int[i] = 0xFFFFFFFF;
+    }
   }
 }
 
@@ -36,26 +40,23 @@ SignedExtendedInt::SignedExtendedInt(const char* s) : ExtendedInt(true) {
 SignedExtendedInt::~SignedExtendedInt() {}
 
 
-//SignedExtendedInt SignedExtendedInt::operator=(const SignedExtendedInt& obj) {
-//  if (arraySize != obj.arraySize) {
-//    if (arraySize > obj.arraySize) {
-//      decreaseArraySizeTo(obj.arraySize);
-//    }
-//    else {
-//      increaseArraySizeTo(obj.arraySize);
-//    }
-//  }
-//  for (unsigned int i = 0; i < arraySize; i++) {
-//    ext_int[i] = obj.ext_int[i];
-//  }
-//  return *this;
-//}
+SignedExtendedInt SignedExtendedInt::operator=(const SignedExtendedInt& obj) {
+  // will need to make sure both objects are of the same size
+  // to ensure no data loss and not accessing unallocated memory
+  if (arraySize != obj.arraySize) {
+    newArraySize(obj.arraySize);
+  }
+  for (unsigned int i = 0; i < arraySize; i++) {
+    ext_int[i] = obj.ext_int[i];
+  }
+  return *this;
+}
 
 
 SignedExtendedInt SignedExtendedInt::operator+(const SignedExtendedInt& obj) const {
   SignedExtendedInt obj1(*this);                                // make local copies to allow the objects to change size
   SignedExtendedInt obj2(obj);
-  obj1.increaseArraySizeTo(obj1.arraySize + 1);                 // need extra word to store signs in case of overflow
+  obj1.increaseArraySizeTo(obj1.arraySize + 1);                 // need extra word to store sign bits in case of overflow
   obj2.increaseArraySizeTo(obj2.arraySize + 1);
   unsigned int maxArraySize = (obj1.arraySize > obj2.arraySize ? obj1.arraySize : obj2.arraySize);
   SignedExtendedInt returnValue;
@@ -90,3 +91,33 @@ SignedExtendedInt SignedExtendedInt::operator+(const SignedExtendedInt& obj) con
 //  SignedExtendedInt returnValue(this->operator+(~obj + 1));
 //  return returnValue;
 //}
+
+
+bool SignedExtendedInt::operator==(const SignedExtendedInt& obj) const {
+  if (arraySize > obj.arraySize) {                // if calling object has upper bits not 0, then can't be equal
+    for (unsigned int i = obj.arraySize; i < arraySize; i++) {
+      if (ext_int[i] != 0) {
+        return false;
+      }
+    }
+  }
+  if (obj.arraySize > arraySize) {                // if object being compared to has its upper bits not 0, then can't be equal
+    for (unsigned int i = arraySize; i < obj.arraySize; i++) {
+      if (obj.ext_int[i] != 0) {
+        return false;
+      }
+    }
+  }
+  unsigned int minArraySize = arraySize > obj.arraySize ? obj.arraySize : arraySize;
+  for (unsigned int i = 0; i < minArraySize; i++) {
+    if (ext_int[i] != obj.ext_int[i]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+
+bool SignedExtendedInt::operator!=(const SignedExtendedInt& obj) const {
+  return !(this->operator==(obj));
+}

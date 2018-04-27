@@ -64,6 +64,7 @@ void ExtendedInt::newArraySize(unsigned int newArraySize) {
 }
 
 
+
 void ExtendedInt::increaseArraySizeTo(unsigned int newArraySize) {
   unsigned int* newExtIntPtr = new unsigned int[newArraySize];
   for (unsigned int i = 0; i < newArraySize; i++) {           // clear new array
@@ -87,15 +88,15 @@ void ExtendedInt::decreaseArraySizeTo(unsigned int newArraySize) {
 AfterExceptionCaught:
   try {
     if (newArraySize < MIN_ARRAY_SIZE) {
-      newArraySize = MIN_ARRAY_SIZE;                        // force newArraySize
+      newArraySize = MIN_ARRAY_SIZE;                          // force newArraySize
       throw MinArraySizeExceededException();
     }
 
     unsigned int* newExtIntPtr = new unsigned int[newArraySize];
-    for (unsigned int i = 0; i < newArraySize; i++) {       // clear new array
+    for (unsigned int i = 0; i < newArraySize; i++) {         // clear new array
       newExtIntPtr[i] = 0;
     }
-    for (unsigned int i = 0; i < newArraySize; i++) {       // copy over previous values
+    for (unsigned int i = 0; i < newArraySize; i++) {         // copy over previous values
       newExtIntPtr[i] = ext_int[i];
     }
     delete[] ext_int;
