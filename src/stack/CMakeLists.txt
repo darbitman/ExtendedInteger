@@ -1,11 +1,15 @@
+add_library(Stack "")
 include_directories("../../include/stack"
                     "../../include/exception"
                     "../../include/logger")
-add_executable(StackTest
-               StackTest.cpp
-               "../exception/Exception.cpp"
+target_sources(Stack
+               PRIVATE
                "../../include/stack/Stack.h"
-               "../../include/exception/Exception.h")
+               "../exception/Exception.cpp"
+               "../../include/exception/Exception.h"
+               "../logger/Logger.cpp"
+               "../../include/logger/Logger.h")
+add_executable(StackTest
+               StackTest.cpp)
 target_link_libraries(StackTest
-                      Exception
-                      Logger)
+                      Stack)
