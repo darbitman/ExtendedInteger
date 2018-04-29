@@ -13,5 +13,14 @@ int main() {
   assert((d > b) == true);
   assert((d > d) == false);
   assert((b > d) == false);
+
+  SignedExtendedInt aa;
+  aa.setValueAtIndex(0x80000000, 3);
+  SignedExtendedInt bb;
+  bb.newArraySize(5);
+  bb.setValueAtIndex(0x80000000, 3);
+  aa / bb;
+  SignedExtendedInt cc("-123456789012345678901234567890123456789012345678901234567890");
+  std::cout << cc;
   return 0;
 }

@@ -23,8 +23,8 @@ public:
   bool operator>=(const UnsignedExtendedInt& obj) const;
   bool operator<(const UnsignedExtendedInt& obj) const;
   bool operator<=(const UnsignedExtendedInt& obj) const;
-  UnsignedExtendedInt operator>>(const UnsignedExtendedInt& shiftVal) const;
-  UnsignedExtendedInt operator<<(const UnsignedExtendedInt& shiftVal) const;
+  UnsignedExtendedInt operator>>(const UnsignedExtendedInt& obj) const;
+  UnsignedExtendedInt operator<<(const UnsignedExtendedInt& obj) const;
   UnsignedExtendedInt operator&(const UnsignedExtendedInt& obj) const;
   UnsignedExtendedInt operator|(const UnsignedExtendedInt& obj) const;
   UnsignedExtendedInt operator^(const UnsignedExtendedInt& obj) const;

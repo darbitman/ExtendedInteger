@@ -30,3 +30,8 @@ void IndexOutOfBoundsException::printError() const {
 void MinArraySizeExceededException::printError() const {
   std::cout << "ERROR: Attempted to set array size less than 4" << std::endl;
 }
+
+
+void NegativeShiftValueException::printError() const {
+  std::cout << "ERROR: Attempting to shift by a negative value" << std::endl;
+}

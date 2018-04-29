@@ -33,3 +33,8 @@ class MinArraySizeExceededException : public Exception {
 public:
   virtual void printError() const;
 };
+
+class NegativeShiftValueException : public Exception {
+public:
+  virtual void printError() const;
+};

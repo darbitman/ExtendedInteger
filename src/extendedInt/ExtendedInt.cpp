@@ -24,7 +24,7 @@ unsigned int ExtendedInt::getArraySize() const {
 }
 
 
-ExtendedInt::ExtendedInt(bool signBit, unsigned int arrSize) : arraySize(arrSize), isSigned(signBit) {
+ExtendedInt::ExtendedInt(bool isSigned, unsigned int arrSize) : arraySize(arrSize), isSignedType(isSigned) {
   ext_int = new unsigned int[arraySize];
   clearValue();
 }
@@ -66,20 +66,20 @@ void ExtendedInt::newArraySize(unsigned int newArraySize) {
 
 
 void ExtendedInt::increaseArraySizeTo(unsigned int newArraySize) {
-  if (arraySize == newArraySize) {                            // don't need to adjust size
+  if (arraySize == newArraySize) {                              // don't need to adjust size
     return;
   }
   unsigned int* newExtIntPtr = new unsigned int[newArraySize];
-  for (unsigned int i = 0; i < newArraySize; i++) {           // clear new array
+  for (unsigned int i = 0; i < newArraySize; i++) {             // clear new array
     newExtIntPtr[i] = 0;
   }
-  for (unsigned int i = 0; i < arraySize; i++) {              // copy over previous values
+  for (unsigned int i = 0; i < arraySize; i++) {                // copy over previous values
     newExtIntPtr[i] = ext_int[i];
   }
   delete[] ext_int;
   ext_int = newExtIntPtr;
-  if (isSigned && (ext_int[arraySize - 1] & 0x80000000)) {    // check if SignedExtendedInt and if sign bit is set
-    for (unsigned int i = arraySize; i < newArraySize; i++) { // extend sign bit to all newly added words
+  if (isSignedType && (ext_int[arraySize - 1] & 0x80000000)) {  // check if SignedExtendedInt and if sign bit is set
+    for (unsigned int i = arraySize; i < newArraySize; i++) {   // extend sign bit to all newly added words
       ext_int[i] = 0xFFFFFFFF;
     }
   }
@@ -114,7 +114,7 @@ void ExtendedInt::decreaseArraySizeTo(unsigned int newArraySize) {
     e.printError();
     goto AfterExceptionCaught;
   }
-  // TODO handle isSigned case
+  // TODO handle isSignedType case
 }
 
 
@@ -122,7 +122,7 @@ void ExtendedInt::decreaseArraySizeTo(unsigned int newArraySize) {
 void ExtendedInt::clearUnusedMemory() {
   unsigned int numEntriesToDelete = 0;
   bool isNegative = false;
-  if (isSigned && (ext_int[arraySize - 1] & 0x80000000)) {              // check if negative
+  if (isSignedType && (ext_int[arraySize - 1] & 0x80000000)) {          // check if negative
     isNegative = true;
   }
   for (int i = arraySize - 1; i >= (int)MIN_ARRAY_SIZE; i--) {          // count how many consecutive 0's or 1's there are MSWord -> LSWord
@@ -135,10 +135,15 @@ void ExtendedInt::clearUnusedMemory() {
       }
     }
     else {
-      if (ext_int[i] == 0) {
+      // if signedType and positive, make sure that deleting all zero upper words will not leave the MSWord with MSBit = 1
+      // because that will turn into a negative number
+      if (isSignedType && ext_int[i] == 0 && (!(ext_int[i - 1] & 0x80000000))) {
         numEntriesToDelete++;
       }
-      else {                                                            // break from counting adjacent 0 on first nonzero word
+      else if (!isSignedType && (ext_int[i] == 0)) {
+        numEntriesToDelete++;
+      }
+      else {
         break;
       }
     }

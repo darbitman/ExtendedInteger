@@ -122,12 +122,22 @@ UnsignedExtendedInt UnsignedExtendedInt::operator*(const UnsignedExtendedInt& ob
 
 
 UnsignedExtendedInt UnsignedExtendedInt::operator/(const UnsignedExtendedInt& obj) const {
-  return divideModOperator(obj, ExtendedInt::DIVIDE_OP);
+  try {
+    return divideModOperator(obj, ExtendedInt::DIVIDE_OP);
+  }
+  catch (const Exception& e) {
+    e.printError();
+  }
 }
 
 
 UnsignedExtendedInt UnsignedExtendedInt::operator%(const UnsignedExtendedInt& obj) const {
-  return divideModOperator(obj, ExtendedInt::MOD_OP);
+  try {
+    return divideModOperator(obj, ExtendedInt::MOD_OP);
+  }
+  catch (const Exception& e) {
+    e.printError();
+  }
 }
 
 
@@ -307,7 +317,6 @@ UnsignedExtendedInt UnsignedExtendedInt::operator>>(const UnsignedExtendedInt& o
     }
     shiftVal = (shiftVal >= 32 ? shiftVal - 32 : 0);
   }
-
   return returnValue;
 }
 
@@ -334,7 +343,6 @@ UnsignedExtendedInt UnsignedExtendedInt::operator<<(const UnsignedExtendedInt& o
     }
     shiftVal = (shiftVal >= 32 ? shiftVal - 32 : 0);
   }
-
   return returnValue;
 }
 
@@ -377,14 +385,21 @@ UnsignedExtendedInt UnsignedExtendedInt::operator|(const UnsignedExtendedInt& ob
 
 
 UnsignedExtendedInt UnsignedExtendedInt::operator^(const UnsignedExtendedInt& obj) const {
-  unsigned int minArraySize = arraySize;
+  unsigned int maxArraySize = (arraySize > obj.arraySize ? arraySize : obj.arraySize);
   UnsignedExtendedInt returnValue;
-  if (arraySize != obj.arraySize) {
-    minArraySize = (arraySize > obj.arraySize ? obj.arraySize : arraySize);
-    returnValue.newArraySize(minArraySize);
+  if (returnValue.arraySize != maxArraySize) {
+    returnValue.newArraySize(maxArraySize);
   }
-  for (unsigned int i = 0; i < minArraySize; i++) {
-    returnValue.ext_int[i] = ext_int[i] ^ obj.ext_int[i];
+  UnsignedExtendedInt lhs(*this);
+  UnsignedExtendedInt rhs(obj);
+  if (lhs.arraySize != maxArraySize) {
+    lhs.increaseArraySizeTo(maxArraySize);
+  }
+  if (rhs.arraySize != maxArraySize) {
+    rhs.increaseArraySizeTo(maxArraySize);
+  }
+  for (unsigned int i = 0; i < maxArraySize; i++) {
+    returnValue.ext_int[i] = lhs.ext_int[i] ^ rhs.ext_int[i];
   }
   return returnValue;
 }
@@ -425,6 +440,11 @@ UnsignedExtendedInt UnsignedExtendedInt::operator~() const {
   return returnValue;
 }
 
+
+std::ostream& operator<<(std::ostream& os, const UnsignedExtendedInt& obj) {
+  os << obj.extendedIntToString();
+  return os;
+}
 
 
 UnsignedExtendedInt UnsignedExtendedInt::divideModOperator(const UnsignedExtendedInt& divisor, const ExtendedInt::DIVIDE_OPERATION op) const {
@@ -500,7 +520,7 @@ void UnsignedExtendedInt::stringToExtendedInt(const char* s) {
   }
   UnsignedExtendedInt readInt;                          // single char -> int
   for (int i = strLength - 1; i >= 0; i--) {
-    if (isHexVal && (i == 0 || i == 1)) {                // if hex value, ignore bit 0 and bit 1 for ('0x')
+    if (isHexVal && (i == 0 || i == 1)) {               // if hex value, ignore bit 0 and bit 1 for ('0x')
       continue;
     }
     if (isHexVal) {
@@ -528,10 +548,4 @@ std::string UnsignedExtendedInt::extendedIntToString() const {
     extIntString = (char) ((remainder.ext_int[0] & 0xFF) + 48) + extIntString;
   }
   return extIntString;
-}
-
-
-std::ostream& operator<<(std::ostream& os, const UnsignedExtendedInt& obj) {
-  os << obj.extendedIntToString();
-  return os;
 }
