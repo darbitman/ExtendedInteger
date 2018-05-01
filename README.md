@@ -21,18 +21,23 @@ This library allows users to utilize signed and unsigned integers that are large
 > extint bar4(0x123ABC)  
 #### In order to achieve the arbitrarily large size, you MUST use the string input
 ### Supported operations
-> operator=  
-> operator+  
-> operator*  
-> operator/  
-> operator%  
-> operator==  
-> operator!=  
-> operator\>  
-> operator\>=  
-> operator<  
-> operator<=  
+> operator= (assignment)  
+> operator+ (addition)  
+> operator* (multiplication)  
+> operator/ (division)  
+> operator% (mod)
+> operator== (relational equality)  
+> operator!= (relational inequality)  
+> operator\> (greater than)  
+> operator\>= (greater than or equal)  
+> operator< (less than)  
+> operator<= (less than or equal)  
 > operator>> (shift)  
 > operator<< (shift)  
-> operator&  
-> operator|  
+> operator& (bitwise and)  
+> operator| (bitwise or)  
+> operator^ (bitwise xor)  
+> operator++ (pre-/post-fix increment)  
+> operator-- (pre-/post-fix decrement)  
+> operator~ (bitwise not)  
+> operator<< (ostream)  
