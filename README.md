@@ -20,3 +20,19 @@ This library allows users to utilize signed and unsigned integers that are large
 > extint bar3(123456)  
 > extint bar4(0x123ABC)  
 #### In order to achieve the arbitrarily large size, you MUST use the string input
+### Supported operations
+> operator=  
+> operator+  
+> operator*  
+> operator/  
+> operator%  
+> operator==  
+> operator!=  
+> operator\>  
+> operator\>=  
+> operator<  
+> operator<=  
+> operator>> (shift)  
+> operator<< (shift)  
+> operator&  
+> operator|  
