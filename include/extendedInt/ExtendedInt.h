@@ -10,7 +10,7 @@ public:
   virtual void setValueAtIndex(const unsigned long long val, const unsigned int index);
   virtual unsigned int getValueAtIndex(const unsigned int index) const;
   virtual unsigned int getArraySize() const;
-//protected:
+protected:
   static unsigned int MIN_ARRAY_SIZE;                                 // absolute minimum array size
   bool isSignedType;                                                  // if set to true, then signed (not necessarily negative)
   ExtendedInt(bool isSigned = false, unsigned int arrSize = 4);       // default type = unsigned, default array size = 4
