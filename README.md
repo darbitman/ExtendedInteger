@@ -1,10 +1,6 @@
-# extendedmath
-
-This library allows users to utilize signed and unsigned integers that are larger than native 64-bit integers. This library dynamically adjusts the internal memory structure to store whatever size that is required to store your ExtendedIntegers.
-
-### Usage
-
-
+# ExtendedInteger  
+This library allows users to utilize signed and unsigned integers that are larger than native 64-bit integers. This library dynamically adjusts the internal memory structure to store whatever size that is required to store your ExtendedIntegers.  
+## Usage  
 ### Here are some examples of how to declare/define extended integers  
 > uextint foo("1234567890")  
 > uextint foo2(123456)  
