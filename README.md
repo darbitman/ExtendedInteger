@@ -6,9 +6,9 @@ This library allows users to utilize signed and unsigned integers that are large
 2. Build project files/makefiles using cmake  
 3. Install library  
 4. Add the following to your cmake project
-   find_package(ExtendedInteger REQUIRED)
-   target_include_directories(main PRIVATE ${EXTENDEDINTEGER_INCLUDE_DIRS})
-   target_link_libraries(<your_target> PRIVATE ${EXTENDEDINTEGER_LIBRARIES})
+   find_package(ExtendedInteger REQUIRED)  
+   target_include_directories(main PRIVATE ${EXTENDEDINTEGER_INCLUDE_DIRS}) 
+   target_link_libraries(<your_target> PRIVATE ${EXTENDEDINTEGER_LIBRARIES})  
 4. include header in your project  
   #include "ExtendedInteger.h"  
 ### Here are some examples of how to declare/define extended integers  
