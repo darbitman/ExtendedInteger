@@ -1,10 +1,10 @@
 #pragma once
 
 
-namespace ExtendedIntegerMathOperations {
+namespace ExtendedMath {
   template<typename T>
   T log(T val, const T& base) {
-    T returnValue(0ULL);
+    T returnValue(0);
     while (val >= base) {
       ++returnValue;
       val = val / base;
@@ -29,7 +29,7 @@ namespace ExtendedIntegerMathOperations {
       returnValue.setValueAtIndex(1, 0);
       return returnValue;
     }
-    for (; exp > 0ULL; exp--) {
+    for (; exp > 0; exp--) {
       returnValue = returnValue * val;
     }
     return returnValue;
