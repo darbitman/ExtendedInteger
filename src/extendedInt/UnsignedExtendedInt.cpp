@@ -4,7 +4,7 @@
 UnsignedExtendedInt::UnsignedExtendedInt() : ExtendedInt() {}
 
 
-UnsignedExtendedInt::UnsignedExtendedInt(const UnsignedExtendedInt& obj) : ExtendedInt(obj.arraySize) {
+UnsignedExtendedInt::UnsignedExtendedInt(const UnsignedExtendedInt& obj) : ExtendedInt(false, obj.arraySize) {
   for (unsigned int i = 0; i < arraySize; i++) {
     ext_int[i] = obj.ext_int[i];
   }

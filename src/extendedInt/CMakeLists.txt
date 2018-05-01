@@ -62,7 +62,9 @@ target_sources(ExtendedInteger
                ${ExtendedInt_Sources}
                ${SignedExtendedInt_Sources}
                ${UnsignedExtendedInt_Sources}
-               ${StringValidation_Sources})
-
-configure_file(ExtendedInteger-config.cmake.in "${CMAKE_BINARY_DIR}/ExtendedInteger-config.cmake")
-install(TARGETS ExtendedInteger DESTINATION lib)
+               ${StringValidation_Sources}
+               "../../include/extendedInt/ExtendedInteger.h")
+add_executable(ExtendedIntegerTest
+               ExtendedIntegerTest.cpp)
+target_link_libraries(ExtendedIntegerTest
+                      ExtendedInteger)

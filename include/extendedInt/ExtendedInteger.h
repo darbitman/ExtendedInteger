@@ -3,5 +3,5 @@
 #include "SignedExtendedInt.h"
 
 
-typedef UnsignedExtendedInt uextint_t;
-typedef SignedExtendedInt    extint_t;
+typedef UnsignedExtendedInt uextint;
+typedef SignedExtendedInt extint;
