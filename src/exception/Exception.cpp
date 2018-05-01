@@ -20,3 +20,18 @@ void DivideByZeroException::printError() const {
 void InputStringInvalidCharacterException::printError() const {
   std::cout << "ERROR: Input string contains an invalid character" << std::endl;
 }
+
+
+void IndexOutOfBoundsException::printError() const {
+  std::cout << "ERROR: Index out of bounds" << std::endl;
+}
+
+
+void MinArraySizeExceededException::printError() const {
+  std::cout << "ERROR: Attempted to set array size less than 4" << std::endl;
+}
+
+
+void NegativeShiftValueException::printError() const {
+  std::cout << "ERROR: Attempting to shift by a negative value" << std::endl;
+}

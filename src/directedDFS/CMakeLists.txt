@@ -5,17 +5,13 @@ include_directories("../../include/directedDFS"
                     "../../include/logger")
 target_sources(DirectedDFS PRIVATE
                DirectedDFS.cpp
-               "../digraph/Digraph.cpp"
                "../../include/directedDFS/DirectedDFS.h"
+               "../digraph/Digraph.cpp"
                "../../include/digraph/Digraph.h"
-               "../../include/bag/Bag.h")
+               "../../include/bag/Bag.h"
+               "../logger/Logger.cpp"
+               "../../include/logger/Logger.h")
 add_executable(DirectedDFSTest
-               DirectedDFSTest.cpp
-               DirectedDFS.cpp
-               "../digraph/Digraph.cpp"
-               "../../include/directedDFS/DirectedDFS.h"
-               "../../include/digraph/Digraph.h"
-               "../../include/bag/Bag.h")
+               DirectedDFSTest.cpp)
 target_link_libraries(DirectedDFSTest
-                      DirectedDFS
-                      Logger)
+                      DirectedDFS)

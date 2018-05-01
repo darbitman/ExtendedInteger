@@ -5,12 +5,10 @@ include_directories("../../include/digraph"
 target_sources(Digraph PRIVATE
                Digraph.cpp
                "../../include/digraph/Digraph.h"
-               "../../include/bag/Bag.h")
+               "../../include/bag/Bag.h"
+               "../logger/Logger.cpp"
+               "../../include/logger/Logger.h")
 add_executable(DigraphTest
-               DigraphTest.cpp
-               Digraph.cpp
-               "../../include/digraph/Digraph.h"
-               "../../include/bag/Bag.h")
+               DigraphTest.cpp)
 target_link_libraries(DigraphTest
-                      Digraph
-                      Logger)
+                      Digraph)
