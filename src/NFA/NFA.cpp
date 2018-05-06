@@ -7,9 +7,7 @@
 #include "Logger.h"
 
 
-/**
-Create an NFA to represent a regular expression
-*/
+
 NFA::NFA(const char* regExp, unsigned int numChars) {
   if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
     std::string s = "Creating an NFA with reg exp: ";
@@ -50,9 +48,6 @@ NFA::~NFA() {
 }
 
 
-/**
-Build epsilond transition digraph given regular expression
-*/
 void NFA::buildEpsilonTransitionDigraph() {
   if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
     std::string s = "Building the epsilon transition graph using Digraph class";
@@ -121,9 +116,6 @@ void NFA::buildEpsilonTransitionDigraph() {
 }
 
 
-/**
-Returns true if string txt matches reg exp
-*/
 bool NFA::validateTxt(const char* txt) {
   if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
     std::string s = "Checking if string (";
@@ -150,10 +142,6 @@ bool NFA::validateTxt(const char* txt, unsigned int txtLength) {
 }
 
 
-
-/**
-Returns true if string txt matches reg exp
-*/
 bool NFA::recognizes(const char* txt, unsigned int txtLength) {
   Bag<unsigned int>* reachableStates = new Bag<unsigned int>();   // declare a bag that will be used for all reachable states via epsilon transitions
   DirectedDFS* dfs = new DirectedDFS(graphPtr, 0);                // find all reachable states starting from state 0

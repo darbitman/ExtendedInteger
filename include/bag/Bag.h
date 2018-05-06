@@ -17,11 +17,35 @@ private:
   BagObject* lastObjectPtr;
   unsigned int numOfObjects;
 public:
+  /**
+  Create an empty bag
+  */
   Bag();
+
+  /**
+  Bag copy constructor
+  */
   Bag(const Bag& rhs);
+
+  /**
+  Clean up bag memory
+  */
   ~Bag();
+
+  /**
+  Add element to the end of the bag
+  */
   void add(T data);
+
+
+  /**
+  Returns true if bag is empty
+  */
   bool isEmpty() const;
+
+  /**
+  Returns number of items in the bag
+  */
   unsigned int size() const;
 
 
@@ -44,9 +68,6 @@ public:
 };
 
 
-/**
-Create an empty bag
-*/
 template<typename T>
 Bag<T>::Bag() {
   if (LOGGER_VERBOSITY == Logger::Verbose) {
@@ -59,9 +80,6 @@ Bag<T>::Bag() {
 }
 
 
-/**
-Bag copy constructor
-*/
 template<typename T>
 Bag<T>::Bag(const Bag& rhs) {
   if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
@@ -105,9 +123,7 @@ Bag<T>::~Bag() {
 }
 
 
-/**
-Add element to the end of the bag
-*/
+
 template<typename T>
 void Bag<T>::add(T data) {
   if (LOGGER_VERBOSITY == Logger::Verbose) {
@@ -129,9 +145,6 @@ void Bag<T>::add(T data) {
 }
 
 
-/**
-Returns true if bag is empty
-*/
 template<typename T>
 bool Bag<T>::isEmpty() const {
   if (LOGGER_VERBOSITY == Logger::Verbose) {
@@ -142,9 +155,7 @@ bool Bag<T>::isEmpty() const {
 }
 
 
-/**
-Returns number of items in the bag
-*/
+
 template<typename T>
 unsigned int Bag<T>::size() const {
   if (LOGGER_VERBOSITY == Logger::LogLevel::Verbose) {
