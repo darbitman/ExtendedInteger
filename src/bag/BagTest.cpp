@@ -1,6 +1,7 @@
 #include "Bag.h"
 #include <iostream>
 
+
 int main() {
     Bag<unsigned int> b;
     b.add(12);

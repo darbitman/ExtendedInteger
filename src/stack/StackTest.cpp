@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-int main() {
+int main(int argc, char* argv[]) {
   Stack<unsigned int>* s = new Stack<unsigned int>();
   for (unsigned int i = 0; i < 10; i++) {
     s->push(i);
