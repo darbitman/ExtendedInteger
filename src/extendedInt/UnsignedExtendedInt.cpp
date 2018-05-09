@@ -15,22 +15,12 @@ UnsignedExtendedInt::UnsignedExtendedInt(const UnsignedExtendedInt& obj) : Exten
 UnsignedExtendedInt::UnsignedExtendedInt(unsigned long long obj) : ExtendedInt() {
   ext_int[0] = obj & 0xFFFFFFFF;
   ext_int[1] = (obj >> 32) & 0xFFFFFFFF;
-  if (LOGGER_VERBOSITY == Logger::Verbose) {
-    std::string s = "Creating an UnsignedExtendedInt with value: ";
-    s = s + extendedIntToString();
-    Logger::getInstance().addEntry(s.c_str());
-  }
 }
 
 
 UnsignedExtendedInt::UnsignedExtendedInt(long long obj) : ExtendedInt() {
   ext_int[0] = obj & 0xFFFFFFFF;
   ext_int[1] = (obj >> 32) & 0xFFFFFFFF;
-  if (LOGGER_VERBOSITY == Logger::Verbose) {
-    std::string s = "Creating an UnsignedExtendedInt with value: ";
-    s = s + extendedIntToString();
-    Logger::getInstance().addEntry(s.c_str());
-  }
 }
 
 
